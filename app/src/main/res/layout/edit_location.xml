@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/progressbg"
+        android:elevation="2dp"
+        android:indeterminateDrawable="@drawable/custom_progressdialog"
+        android:visibility="gone" />
+
+    <androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/silver"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/ltxt"
+            android:text="Location Name"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/loc"
+            android:inputType="textCapSentences"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="0dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/silver"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/phtxt"
+            android:text="Phone Number"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/phno"
+            android:inputType="phone"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="0dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/silver"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/changetxt"
+            android:text="Change Pin"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/setpin"
+            android:maxLength="4"
+            android:inputType="number"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="0dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/silver"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/reptxt"
+            android:text="Re - Pin"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="@dimen/textregular14"
+            android:inputType="number"
+            android:id="@+id/repin"
+            android:maxLength="4"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/black"
+            android:layout_marginRight="0dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/silver"
+            android:textSize="@dimen/textregular14"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/location"
+            android:text="Change your shop location"/>
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/save"
+            android:visibility="visible"
+            android:textColor="@android:color/white"
+            android:background="@color/colorPrimary"
+            android:text="Update"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

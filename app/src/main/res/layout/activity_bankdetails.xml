@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/progressbg"
+        android:elevation="2dp"
+        android:indeterminateDrawable="@drawable/custom_progressdialog"
+        android:visibility="gone" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/fname_txt"
+            android:text="Full Name"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/full_name"
+            android:textSize="@dimen/textregular14"
+            android:inputType="none"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/black"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/actno_txt"
+            android:text="Account Number"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/acct_no"
+            android:textSize="@dimen/textregular14"
+            android:inputType="number"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/black"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/bname_txt"
+            android:text="Bank Name"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/bank_name"
+            android:backgroundTint="@color/colorPrimary"
+            android:textSize="@dimen/textregular14"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="textCapSentences"
+            android:textColor="@color/black"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/ifsc_txt"
+            android:text="IFSC Code"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ifsc_code"
+            android:textSize="@dimen/textregular14"
+            android:clickable="false"
+            android:inputType="textCapWords"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/black"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

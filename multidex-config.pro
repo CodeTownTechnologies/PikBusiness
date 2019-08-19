@@ -1,0 +1,2 @@
+-keep class com.myhexaville.MyClass
+-keep class com.myhexaville.SecondClass

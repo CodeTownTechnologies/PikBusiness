@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "392868338496",
+    "firebase_url": "https://pik-business.firebaseio.com",
+    "project_id": "pik-business",
+    "storage_bucket": "pik-business.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392868338496:android:fda80cfa1f800454",
+        "android_client_info": {
+          "package_name": "com.pikbusiness"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392868338496-p3hcl15fkplu6eps0d21tmpuajudgqm6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn0VCMYRhjpy4Nevvuu3Trgvmfnn1IqAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392868338496-p3hcl15fkplu6eps0d21tmpuajudgqm6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

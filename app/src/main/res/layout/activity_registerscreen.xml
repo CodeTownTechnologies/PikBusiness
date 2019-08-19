@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+  >
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/progressbg"
+        android:elevation="2dp"
+        android:indeterminateDrawable="@drawable/custom_progressdialog"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textheader16"
+            android:id="@+id/reg_htxt"
+            android:text="REGISTER"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/email_txtv"
+            android:text="Email"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/email_edittext"
+            android:textSize="@dimen/textregular14"
+            android:maxLines="1"
+            android:inputType="textEmailAddress"
+            android:scrollHorizontally="true"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:textCursorDrawable="@drawable/edittextviw_cursor"
+            app:backgroundTint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="20dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/pws_txt"
+            android:text="Password"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/pwd_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@android:color/white"
+                android:drawablePadding="10dp"
+                android:textSize="@dimen/textregular14"
+                android:maxLines="1"
+                android:textCursorDrawable="@drawable/edittextviw_cursor"
+                android:inputType="textPassword"
+                android:maxLength="10"
+                android:textColor="@android:color/white"
+                />
+
+            <ImageView
+                android:id="@+id/visible_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignRight="@id/pwd_edittext"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/eyehide"
+                android:visibility="visible" />
+        </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/repws_txt"
+            android:text="Re - password"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/repwd_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@android:color/white"
+                android:drawablePadding="10dp"
+                android:textSize="@dimen/textregular14"
+                android:maxLines="1"
+                android:inputType="textPassword"
+                android:maxLength="10"
+                android:textCursorDrawable="@drawable/edittextviw_cursor"
+                android:textColor="@android:color/white"
+                />
+
+
+            <ImageView
+                android:id="@+id/visible_icon2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignRight="@id/repwd_edittext"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/eyehide"
+                android:visibility="visible" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="match_parent">
+            <CheckBox android:id="@+id/check"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="0.35"
+                android:scaleY="0.35"
+                android:layout_marginLeft="7dp"
+                android:button="@drawable/checkbox_background"
+                android:checked="false"/>
+
+            <TextView
+                android:id="@+id/terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Terms, Conditions and Privacy Policies"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/textregular14" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_marginBottom="100dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/register"
+            android:textSize="@dimen/textregular14"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:background="@color/white"
+            android:text="REGISTER"/>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.pikbusiness"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 2
+        versionName "1.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+//    buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
+//    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            multiDexKeepFile file('multidex-config.txt')
+//            multiDexKeepProguard file('multidex-config.pro')
+        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+}
+
+//dependencies {
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.core:core:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    //parse sdk
+    implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.20.0'
+    implementation 'com.elmargomez.typer:typerlib:1.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.20.0"
+    implementation 'com.google.firebase:firebase-messaging:17.6.0'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    // check updates of appp
+    implementation 'com.google.android.play:core:1.5.0'
+    // For countires list phone number
+    implementation 'com.hbb20:ccp:2.2.6'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+        transitive = true;
+    }
+    // enter 4 digits pin design
+    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.0.1'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+repositories {
+    mavenCentral()
+    google()
+}

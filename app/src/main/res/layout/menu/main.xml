@@ -1,0 +1,13 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.nyros.myapplication.MainActivity">
+
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/edit4"
+        android:title="Edit"
+        android:iconTint="@color/white"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="top"
+        android:gravity="center|left"
+        android:layout_height="40dp">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/edit"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/texthight18"
+            android:id="@+id/edittxt"
+            android:text="Edit"/>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textheader16"
+                android:id="@+id/menuitem"
+                android:textColor="@color/black"
+                android:text=""/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:gravity="right|center"
+                android:text=""
+                android:background="@null"
+                android:textSize="@dimen/textheader16"
+              android:inputType="number"
+                android:id="@+id/mprice"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textheader16"
+                android:id="@+id/cur"
+                android:textAllCaps="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:layout_marginRight="20dp"
+                android:text=""/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
+            android:layout_marginRight="20dp"
+            android:layout_height="2dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/dynamiclay"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:id="@+id/sizelay"
+            android:paddingTop="5dp"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+       <CheckBox
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:checked="true"
+           android:buttonTint="@color/colorPrimary"
+           android:id="@+id/sizechk"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textheader16"
+            android:textColor="@color/gray"
+            android:layout_weight="1"
+            android:id="@+id/titlesz"
+            android:text="Sizes"/>
+            <ImageView
+                android:layout_width="17dp"
+                android:src="@drawable/dropdown"
+                android:tint="@color/gray"
+                android:layout_height="17dp" />
+        </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sizeslist"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/silver"
+            android:background="@null"
+            android:id="@+id/cancel"
+            android:layout_marginRight="10dp"
+            android:text="cancel"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:id="@+id/save"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/colorPrimary"
+            android:text="save"/>
+    </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

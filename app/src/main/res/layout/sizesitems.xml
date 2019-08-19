@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center|left"
+        android:id="@+id/sizelay"
+        android:paddingTop="5dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:buttonTint="@color/colorPrimary"
+            android:id="@+id/sizechk"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textheader16"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/titlenm"
+            android:textColor="@color/black"
+            android:text="Sizes"/>
+       <EditText
+           android:layout_width="wrap_content"
+           android:layout_weight="1"
+           android:background="@null"
+           android:gravity="right"
+           android:textColor="@color/black"
+           android:text=""
+           android:paddingRight="10dp"
+           android:focusableInTouchMode="true"
+           android:clickable="true"
+           android:focusable="true"
+           android:cursorVisible="false"
+           android:id="@+id/pricedit"
+           android:textSize="@dimen/textheader16"
+           android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/black"
+            android:id="@+id/curr"
+            android:textSize="@dimen/textheader16"
+            android:textAllCaps="true"/>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="35dp"
+        android:background="@color/colorPrimary"/>
+</LinearLayout>

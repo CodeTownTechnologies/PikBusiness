@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_ndeal"
+            android:icon="@drawable/my_deals"
+            android:title="@string/createdeal" />
+
+
+        <item
+            android:id="@+id/Branches"
+            android:icon="@drawable/icaccess"
+            android:title="@string/create_access" />
+        <item
+            android:id="@+id/Coupons"
+            android:icon="@drawable/iccoupon2"
+            android:title="@string/create_coupon" />
+
+    </group>
+
+</menu>

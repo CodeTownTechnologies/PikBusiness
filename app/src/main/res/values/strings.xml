@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Pik Business</string>
+    <string name="appid">Ut8ls4jolah6BeJj</string>
+    <string name="serverurl">https://coffeepik.net:1337/parse</string>
+    <!--<string name="serverurl">http://46.101.81.115:1337/parse</string>-->
+    <!--http://68.183.42.196:1337/parse-->
+    <!--http://46.101.81.115:1337/parse-->
+    <!--https://coffeepik.net:1337/parse-->
+    <string name="clientkey">BbhVp6SyBVp63fUH</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <!--AIzaSyDkvhztyLJ6eAJ7VAwnSQl3QB8PEPDdgvY-->
+    <string name="apikey">AIzaSyDkvhztyLJ6eAJ7VAwnSQl3QB8PEPDdgvY</string>
+    <string name="title_activity_maps">Map</string>
+    <!--AIzaSyCuo57Wiz_enWUJ7TfvjUnTnf6WK-GSkME-->
+</resources>

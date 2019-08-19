@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/texthight18"
+        android:id="@+id/title"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/black"
+        android:text="Are you sure you want to cancel the order ?"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textheader16"
+        android:id="@+id/desc"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/gray"
+        android:text=""/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:paddingLeft="2dp"
+        android:paddingTop="2dp"
+        android:hint="Enter a note"
+        android:textSize="@dimen/textheader16"
+        android:inputType="textMultiLine|textCapSentences"
+        android:lines="4"
+        android:background="#F5F5F5"
+        android:minLines="4"
+        android:gravity="top|left"
+        android:maxLines="5"
+        android:scrollbars="vertical"
+        android:id="@+id/note"
+
+        android:textColor="@color/black"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:background="@null"
+            android:id="@+id/disagree"
+            android:layout_marginRight="10dp"
+            android:text="DISAGREE"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:id="@+id/agree"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/gray"
+            android:text="AGREE"/>
+    </LinearLayout>
+</LinearLayout>

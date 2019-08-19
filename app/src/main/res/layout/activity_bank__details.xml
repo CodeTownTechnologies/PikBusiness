@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/progressbg"
+        android:elevation="2dp"
+        android:indeterminateDrawable="@drawable/custom_progressdialog"
+        android:visibility="gone" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textheader16"
+            android:id="@+id/bank_htxt"
+            android:text="BANK DETAILS"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/fname_txt"
+            android:text="Full Name"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/full_name"
+            android:textSize="@dimen/textregular14"
+            android:textCursorDrawable="@drawable/edittextviw_cursor"
+            android:inputType="textCapSentences"
+            app:backgroundTint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no"
+            tools:targetApi="o" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/actno_txt"
+            android:text="Account Number"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/acct_no"
+            android:textSize="@dimen/textregular14"
+            android:inputType="number"
+            android:textIsSelectable="true"
+            android:textCursorDrawable="@drawable/edittextviw_cursor"
+            app:backgroundTint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no"
+            tools:targetApi="o" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/bname_txt"
+            android:text="Bank Name"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/bank_name"
+            app:backgroundTint="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:textCursorDrawable="@drawable/edittextviw_cursor"
+            android:inputType="textCapSentences"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no"
+            tools:targetApi="o" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/textregular14"
+            android:id="@+id/ifsc_txt"
+            android:text="IBAN "/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/ifsc_code"
+            android:textSize="@dimen/textregular14"
+            android:hint="Eg:AE070331234567890123456"
+            android:textColorHint="@color/gray"
+            android:inputType="textCapCharacters"
+            android:textCursorDrawable="@drawable/edittextviw_cursor"
+            app:backgroundTint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="20dp"
+            android:importantForAutofill="no"
+            tools:targetApi="o" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/done"
+            android:layout_marginBottom="20dp"
+            android:textSize="@dimen/textregular14"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:background="@android:color/white"
+            android:text="DONE"/>
+    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

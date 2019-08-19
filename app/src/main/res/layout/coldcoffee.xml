@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipe_refresh">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/editmenu"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_height="match_parent"/>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>
