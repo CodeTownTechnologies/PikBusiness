@@ -220,7 +220,6 @@ public class Shop_locations extends RecyclerView.Adapter<Shop_locations.MyViewHo
         query.getInBackground(id, new GetCallback<ParseObject>() {
             public void done(ParseObject shop, ParseException e) {
                 if (e == null) {
-                    // Now let's update it with some new data.
                     shop.put("shopStatus",sts);
                     shop.saveInBackground(new SaveCallback() {
                         @Override
