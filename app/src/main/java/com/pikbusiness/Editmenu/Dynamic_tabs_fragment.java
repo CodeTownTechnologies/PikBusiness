@@ -157,9 +157,9 @@ public class Dynamic_tabs_fragment extends Fragment {
            ParseObject objectid = ParseObject.createWithoutData("Category",
                    getArguments().getString("objid"));
            query.setLimit(1000);
-           Log.d("chk", "getmenuitems: "+getArguments().getString("objid"));
+//           Log.d("chk", "getmenuitems: "+getArguments().getString("objid"));
            query.whereEqualTo("category", objectid);
-           Log.d("chk", "getmenuitems:cat "+objectid);
+//           Log.d("chk", "getmenuitems:cat "+objectid);
            query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
            query.findInBackground(new FindCallback<ParseObject>() {
                public void done(List<ParseObject> object, ParseException e) {

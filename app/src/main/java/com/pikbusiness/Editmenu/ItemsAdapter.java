@@ -131,13 +131,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
                                     holder.cost.setTextColor(context.getResources().getColor(R.color.black));
                                      // for owner
                                      checkupdate("1",buttonView,user.getObjectId());
-                                    Log.d("chk", "done:checkox true "+user.getObjectId());
+//                                    Log.d("chk", "done:checkox true "+user.getObjectId());
 
                                 }else {
                                     holder.it_name.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                                     holder.cost.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                                       checkupdate("0",buttonView,user.getObjectId());
-                                    Log.d("chk", "done:checkox false "+user.getObjectId());
+//                                    Log.d("chk", "done:checkox false "+user.getObjectId());
                                 }
                             });
                                  holder.itemView.setOnClickListener(new View.OnClickListener() {

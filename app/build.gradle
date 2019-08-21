@@ -7,6 +7,7 @@ repositories {
 }
 android {
     compileSdkVersion 28
+    flavorDimensions "default"
     defaultConfig {
         applicationId "com.pikbusiness"
         minSdkVersion 19
@@ -33,7 +34,7 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            multiDexKeepFile file('multidex-config.txt')
-//            multiDexKeepProguard file('multidex-config.pro')
+            multiDexKeepProguard file('multidex-config.pro')
         }
     }
     compileOptions {
