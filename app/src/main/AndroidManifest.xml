@@ -117,7 +117,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCuo57Wiz_enWUJ7TfvjUnTnf6WK-GSkME" />
+            android:value="AIzaSyBo3JQRDrhaI42OdRkGj-wMRHKFzW-8AP4" />
 
         <activity
             android:name=".Loginmodule.Bank_Details"
