@@ -343,13 +343,13 @@ public class Orderslist extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 //                        Log.d("chk", "done:shopsts "+shopsts);
-                        if(switch1.isChecked()){
-                            dialog.dismiss();
-                            Toast.makeText(Orderslist.this, "Please make it Shop is offline", Toast.LENGTH_SHORT).show();
-                        }else{
+//                        if(switch1.isChecked()){
+//                            dialog.dismiss();
+//                            Toast.makeText(Orderslist.this, "Please make it Shop is offline", Toast.LENGTH_SHORT).show();
+//                        }else{
                             apr_msg(v);
                             dialog.dismiss();
-                        }
+//                        }
 
                     }
                 });
