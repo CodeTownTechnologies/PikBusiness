@@ -303,7 +303,7 @@ public  void deletepopup(View view,String name,String objid){
     query.getInBackground(id, new GetCallback<ParseObject>() {
         public void done(ParseObject shop, ParseException e) {
             if (e == null) {
-                // Now let's update it with some new data.
+
                 shop.put("shopStatus", Integer.parseInt("2"));
                 shop.saveInBackground(new SaveCallback() {
                     @Override
