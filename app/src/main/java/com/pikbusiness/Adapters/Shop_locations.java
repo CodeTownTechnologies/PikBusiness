@@ -195,7 +195,7 @@ public class Shop_locations extends RecyclerView.Adapter<Shop_locations.MyViewHo
                 popup.dismiss();
 
                 deletepopup(anchorView, dataa.get(position).get("locationname"),
-                        dataa.get(position).get("objectid"));
+                        dataa.get(position).get("objectid"),position);
 
             }
         });
@@ -257,7 +257,7 @@ public class Shop_locations extends RecyclerView.Adapter<Shop_locations.MyViewHo
         });
     }
 
-public  void deletepopup(View view,String name,String objid){
+public  void deletepopup(View view, String name, String objid, int position){
 
     LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View layout = inflater.inflate(R.layout.waitverify,null);
@@ -275,7 +275,7 @@ public  void deletepopup(View view,String name,String objid){
     txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
     alertbox.setPositiveButton("YES", new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int id) {
-          deletecall(objid);
+          deletecall(objid,position);
           alertDialog.dismiss();
         }
     });
@@ -295,7 +295,7 @@ public  void deletepopup(View view,String name,String objid){
 
     }
 
- public void deletecall(String id){
+ public void deletecall(String id, int position){
 
     ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
      query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
@@ -311,10 +311,13 @@ public  void deletepopup(View view,String name,String objid){
 
                         if (e == null) {
 
-                            Intent i = new Intent(context,Dashboard.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            context.startActivity(i);
+
+                            dataa.remove(position);
+                            notifyDataSetChanged();
+//                            Intent i = new Intent(context,Dashboard.class);
+//                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                            context.startActivity(i);
 
                         } else {
 
