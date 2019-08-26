@@ -311,9 +311,11 @@ public  void deletepopup(View view, String name, String objid, int position){
 
                         if (e == null) {
 
-
                             dataa.remove(position);
-                            notifyDataSetChanged();
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position,dataa.size());
+//
+//                            notifyItemChanged(position);
 //                            Intent i = new Intent(context,Dashboard.class);
 //                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
