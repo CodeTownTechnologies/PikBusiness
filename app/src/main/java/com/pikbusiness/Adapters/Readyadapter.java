@@ -428,7 +428,7 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                                                 dataa.get(position).get("tranRef"),
                                                 dataa.get(position).get("discountAmount"),
                                                 dataa.get(position).get("offerDetails"),
-                                                dataa.get(position).get("offerEnabled"));
+                                                dataa.get(position).get("offerEnabled"),position);
                                     } catch (ParseException r) {
                                         r.printStackTrace();
                                     }
@@ -557,7 +557,7 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                             String refundper, String pikCharges, String pikPercentage,
                             String userid, String refundForBusiness, String shop_name,
                             String shop_phno, String tranRef,
-                            String discountAmount, String offerDetails, String offerEnabled) {
+                            String discountAmount, String offerDetails, String offerEnabled, int position) {
         String sts = "4";
         LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.cancelorder,null);
@@ -608,7 +608,8 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                             lname,sname,lat,log,shopStatus,pin,phoneNo,id,v,
                             notes,total,subtotal,taxid,tax,order,jsonArray,tot,ispaid,date,
                             refundtrans,refundper,pikCharges,pikPercentage,
-                            userid,refundForBusiness,shop_name,shop_phno,tranRef,offerDetails,offerEnabled,discountAmount);
+                            userid,refundForBusiness,shop_name,shop_phno,tranRef,offerDetails,
+                            offerEnabled,discountAmount,position);
                 }else{
                     Toast.makeText(context, "Please provide cancel reason", Toast.LENGTH_SHORT).show();
                 }
@@ -636,7 +637,7 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                            String ispaid, Date date, String refundtrans, String refundper,
                            String pikCharges, String pikPercentage, String userid,
                            String refundForBusiness, String shop_name, String shop_phno,
-                           String tranRef, String offerDetails, String offerEnabled, String discountAmount){
+                           String tranRef, String offerDetails, String offerEnabled, String discountAmount, int position){
         ParseObject shop = new ParseObject("OrderHistory");
         ParseObject obj = ParseObject.createWithoutData("ShopLocations",id);
         shop.put("shop", obj);
@@ -750,54 +751,58 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                                 }
                             });
                             dialog.dismiss();
-                            Intent i = new Intent(v.getContext(),Orderslist.class);
-                            i.putExtra("lname",lname);
-                            i.putExtra("bname",sname);
-                            i.putExtra("id",id);
-                            i.putExtra("lat",lat);
-                            i.putExtra("log",log);
-                            i.putExtra("shopStatus",shopStatus);
-                            i.putExtra("pin",pin);
-                            i.putExtra("phoneNo",phoneNo);
-                            if(dataa.size() == 1){
-                                i.putExtra("lastitem","1");
-                            }
-                            i.putExtra("stschk", "2");
-                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            v.getContext().startActivity(i);
-                            HashMap<String, String> params2 = new HashMap<>();
-                            params2.put("busObjId", ParseUser.getCurrentUser().getObjectId());
-                            params2.put("busName", ParseUser.getCurrentUser().getString("Business_name"));
-                            params2.put("busPhno",
-                                    String.valueOf(ParseUser.getCurrentUser().getNumber("phoneNumber")));
-                            params2.put("busEmail", ParseUser.getCurrentUser().getEmail());
-                            params2.put("shopName",shop_name);
-                            params2.put("shopPhno", shop_phno);
-                            params2.put("orderNo", id);
-                            params2.put("totalCost", total);
-                            params2.put("cancelledBy", cancelby);
-                            params2.put("cancelNote",cancelnote);
-                            params2.put("pikPercentage", pikPercentage);
-                            params2.put("pikCharges", String.valueOf(pikstr));
-                            params2.put("tax",tax);
-                            params2.put("tranRef", tranRef);
-                            params2.put("refundString", refd);
-                            params2.put("refundForBusiness", refundForBusiness);
-                            params2.put("refundTime","1");
-                            params2.put("refundCost", String.valueOf(refdd));
-                            params2.put("refundPercentage",refundper);
-                            params2.put("refundTrans",refundtrans);
-//                            Log.d("chk", "done: "+params2.toString());
-                            ParseCloud.callFunctionInBackground("emailAtCancel",
-                                    params2,(FunctionCallback<Map<String,
-                                            List<ParseObject>>>) (object3, re) -> {
-                                        if (re == null) {
-                                            Log.d("chk", "done:ank cancel at reg success ");
-                                        }
-                                        else{
-                                            Log.d("chk", "done:error emailatreg"+re.getMessage());
-                                        }
-                                    });
+                            dataa.remove(position);
+                            notifyDataSetChanged();
+                            ((Orderslist)context).updateReadyCount(dataa);
+
+//                            Intent i = new Intent(v.getContext(),Orderslist.class);
+//                            i.putExtra("lname",lname);
+//                            i.putExtra("bname",sname);
+//                            i.putExtra("id",id);
+//                            i.putExtra("lat",lat);
+//                            i.putExtra("log",log);
+//                            i.putExtra("shopStatus",shopStatus);
+//                            i.putExtra("pin",pin);
+//                            i.putExtra("phoneNo",phoneNo);
+//                            if(dataa.size() == 1){
+//                                i.putExtra("lastitem","1");
+//                            }
+//                            i.putExtra("stschk", "2");
+//                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                            v.getContext().startActivity(i);
+//                            HashMap<String, String> params2 = new HashMap<>();
+//                            params2.put("busObjId", ParseUser.getCurrentUser().getObjectId());
+//                            params2.put("busName", ParseUser.getCurrentUser().getString("Business_name"));
+//                            params2.put("busPhno",
+//                                    String.valueOf(ParseUser.getCurrentUser().getNumber("phoneNumber")));
+//                            params2.put("busEmail", ParseUser.getCurrentUser().getEmail());
+//                            params2.put("shopName",shop_name);
+//                            params2.put("shopPhno", shop_phno);
+//                            params2.put("orderNo", id);
+//                            params2.put("totalCost", total);
+//                            params2.put("cancelledBy", cancelby);
+//                            params2.put("cancelNote",cancelnote);
+//                            params2.put("pikPercentage", pikPercentage);
+//                            params2.put("pikCharges", String.valueOf(pikstr));
+//                            params2.put("tax",tax);
+//                            params2.put("tranRef", tranRef);
+//                            params2.put("refundString", refd);
+//                            params2.put("refundForBusiness", refundForBusiness);
+//                            params2.put("refundTime","1");
+//                            params2.put("refundCost", String.valueOf(refdd));
+//                            params2.put("refundPercentage",refundper);
+//                            params2.put("refundTrans",refundtrans);
+////                            Log.d("chk", "done: "+params2.toString());
+//                            ParseCloud.callFunctionInBackground("emailAtCancel",
+//                                    params2,(FunctionCallback<Map<String,
+//                                            List<ParseObject>>>) (object3, re) -> {
+//                                        if (re == null) {
+//                                            Log.d("chk", "done:ank cancel at reg success ");
+//                                        }
+//                                        else{
+//                                            Log.d("chk", "done:error emailatreg"+re.getMessage());
+//                                        }
+//                                    });
 //                            update(dataa);
                             Toast.makeText(context,"Order cancelled ", Toast.LENGTH_SHORT).show();
                         } else {

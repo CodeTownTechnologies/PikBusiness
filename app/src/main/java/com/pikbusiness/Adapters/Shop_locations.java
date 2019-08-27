@@ -159,7 +159,6 @@ public class Shop_locations extends RecyclerView.Adapter<Shop_locations.MyViewHo
             public void onClick(View v) {
                 if(switch1.isChecked()){
 //                    Log.d("chk", "onClick:"+position);
-
                     txt_switch.setText("Online");
                     onoff(dataa.get(position).get("objectid"),1,"You will receive orders now",switch1,txt_switch);
                 }else{

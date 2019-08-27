@@ -93,6 +93,8 @@ public class Orderslist extends AppCompatActivity {
 //    ArrayList<HashMap<String, String>> maplist1,maplist2,maplist3;
     private AlertDialog alertDialog1;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -929,9 +931,9 @@ public class Orderslist extends AppCompatActivity {
                     String s1 = String.valueOf(neworders_hashmap.size());
                     String s2 = String.valueOf(inprogress_hashmap.size());
                     String s3 = String.valueOf(reay_hashmap.size());
-                    txt_neworder.setText("NEW ORDER" + " - " + s1);
-                    txt_inprogress.setText("IN PROGRESS" + " - " + s2);
-                    txt_ready.setText("READY FOR PICK UP" + " - " + s3);
+                    txt_neworder.setText("NEW ORDER" + " - " + neworders_hashmap.size());
+                    txt_inprogress.setText("IN PROGRESS" + " - " + inprogress_hashmap.size());
+                    txt_ready.setText("READY FOR PICK UP" + " - " + reay_hashmap.size());
                     if (neworders_hashmap.size() > 0 || inprogress_hashmap.size() > 0 || reay_hashmap.size() > 0) {
 //                        offlinepopup();
                         sts1 = true;
@@ -1428,5 +1430,22 @@ public class Orderslist extends AppCompatActivity {
         }
         // The directory is now empty so delete it
         return dir.delete();
+    }
+
+
+    public void updateNewOrderCount(ArrayList<HashMap<String, String>> data) {
+        String s1 = String.valueOf(data.size());
+        txt_neworder.setText("NEW ORDER" + " - " + s1);
+    }
+
+    public void updateInProgressCount(ArrayList<HashMap<String, String>> data) {
+        String s2 = String.valueOf(data.size());
+        txt_inprogress.setText("IN PROGRESS" + " - " + s2);
+    }
+
+    public void updateReadyCount(ArrayList<HashMap<String, String>> data) {
+        String s3 = String.valueOf(data.size());
+        txt_ready.setText("READY FOR PICK UP" + " - " + s3);
+
     }
 }

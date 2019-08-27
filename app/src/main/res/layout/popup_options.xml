@@ -37,7 +37,7 @@
         android:track="@drawable/switch_status"/>
 </LinearLayout>
     <TextView
-        android:layout_width="match_parent "
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit"
         android:textColor="@color/black"
@@ -46,7 +46,7 @@
         android:id="@+id/edit"
         android:textSize="@dimen/textheader16"/>
     <TextView
-        android:layout_width="match_parent "
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Delete"
         android:textColor="@color/black"
