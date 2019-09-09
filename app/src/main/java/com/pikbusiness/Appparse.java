@@ -6,10 +6,11 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
-import com.pikbusiness.Response.Business;
-import com.pikbusiness.Response.BusinessEstimatedData;
-import com.pikbusiness.Response.EstimatedData;
-import com.pikbusiness.Response.Location;
+import com.pikbusiness.model.Response.Business;
+import com.pikbusiness.model.Response.BusinessEstimatedData;
+import com.pikbusiness.model.Response.EstimatedData;
+import com.pikbusiness.model.Response.Location;
+
 
 import androidx.multidex.MultiDexApplication;
 

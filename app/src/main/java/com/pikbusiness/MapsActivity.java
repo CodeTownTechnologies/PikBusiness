@@ -92,7 +92,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                     }else if(sts.equals("1")){
-                        Intent i = new Intent(MapsActivity.this,EditLocation.class);
+                        Intent i = new Intent(MapsActivity.this, EditLocationActivity.class);
                         Bundle b = new Bundle();
                         b.putDouble("latt", l1);
                         b.putDouble("logg", l2);
@@ -120,7 +120,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }else if(sts.equals("1")){
-                Intent i = new Intent(MapsActivity.this,EditLocation.class);
+                Intent i = new Intent(MapsActivity.this, EditLocationActivity.class);
                 Bundle b = new Bundle();
                 b.putDouble("latt", l1);
                 b.putDouble("logg", l2);
@@ -147,7 +147,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 }else{
-                    Intent i = new Intent(MapsActivity.this,EditLocation.class);
+                    Intent i = new Intent(MapsActivity.this, EditLocationActivity.class);
                     Bundle b = new Bundle();
                     b.putDouble("latt", l1);
                     b.putDouble("logg", l2);

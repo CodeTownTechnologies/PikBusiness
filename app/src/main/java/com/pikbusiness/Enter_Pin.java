@@ -62,7 +62,7 @@ public class Enter_Pin extends AppCompatActivity {
                 Toast.makeText(Enter_Pin.this, "Please enter shop password", Toast.LENGTH_SHORT).show();
             }
             else if(pin.equals(totpin)){
-                String lname = getIntent().getStringExtra("lname");
+                String lname = getIntent().getStringExtra("locationName");
                 String bname = getIntent().getStringExtra("bname");
                 String id1 = getIntent().getStringExtra("id");
                 String shopstatus = getIntent().getStringExtra("shopStatus");
@@ -91,7 +91,7 @@ public class Enter_Pin extends AppCompatActivity {
                     session.logoutUser();
                 }
                 Intent i = new Intent(Enter_Pin.this,Orderslist.class);
-                i.putExtra("lname",lname);
+                i.putExtra("locationName",lname);
                 i.putExtra("bname",bname);
                 i.putExtra("id", id1);
                 i.putExtra("lat",getIntent().getStringExtra("lat"));

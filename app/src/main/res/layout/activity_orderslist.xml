@@ -68,7 +68,7 @@
                 android:maxHeight ="10dp"
                 android:checked ="false"
                 android:gravity ="center"
-                android:id="@+id/switch1"
+                android:id="@+id/toggle_switch"
                 android:switchMinWidth="0dp"
                 android:textColor ="@android:color/white"
                 android:textSize ="@dimen/textregular14"

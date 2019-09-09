@@ -53,10 +53,10 @@ import com.parse.SaveCallback;
 import com.pikbusiness.Adapters.ShopLocationAdapter;
 import com.pikbusiness.Editmenu.EditMenutabs;
 import com.pikbusiness.Loginmodule.SessionManager;
-import com.pikbusiness.Response.Business;
-import com.pikbusiness.Response.BusinessEstimatedData;
-import com.pikbusiness.Response.EstimatedData;
-import com.pikbusiness.Response.Location;
+import com.pikbusiness.model.Response.Business;
+import com.pikbusiness.model.Response.BusinessEstimatedData;
+import com.pikbusiness.model.Response.EstimatedData;
+import com.pikbusiness.model.Response.Location;
 import com.pikbusiness.services.Alertservice;
 import com.pikbusiness.services.Toasty;
 
@@ -114,7 +114,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         if (checkInternetConenction()) {
             checkData();
             addListItems();
-          //  checkData();
+            //  checkData();
         }
 
         mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -204,8 +204,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     public void firstTimeLoginCheck() {
         if (firstTimeLogin != null) {
-            if (firstTimeLogin)
-            {
+            if (firstTimeLogin) {
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("business_name", ParseUser.getCurrentUser().getString("Business_name"));
                 params.put("business_objectid", ParseUser.getCurrentUser().getObjectId());
@@ -313,6 +312,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     public void addListItems() {
         if (ParseUser.getCurrentUser() != null) {
+            estimateDataList.clear();
             ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
             query.whereEqualTo("menu", ParseUser.getCurrentUser());
             query.whereEqualTo("business", ParseUser.getCurrentUser());
@@ -340,7 +340,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                     estimatedData.setPhoneNo(user.getInt("phoneNo"));
                                     estimatedData.setShopStatus(user.getInt("shopStatus"));
                                     ParseObject pr = user.getParseObject("business");
-                                    estimatedData.setApprove(accountStatus);
+                                    estimatedData.setApproveStatus(accountStatus);
                                     Business business = new Business();
                                     BusinessEstimatedData businessEstimateData = new BusinessEstimatedData();
                                     businessEstimateData.setBusinessName(pr.getString("Business_name"));
@@ -351,6 +351,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                         Location location = new Location();
                                         location.setLatitude(loc.getLatitude());
                                         location.setLongitude(loc.getLongitude());
+                                        estimatedData.setLocation(location);
                                     }
 
                                     Bundle bundle = new Bundle();

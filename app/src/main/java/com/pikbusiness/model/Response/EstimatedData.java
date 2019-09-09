@@ -1,4 +1,4 @@
-package com.pikbusiness.Response;
+package com.pikbusiness.model.Response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -32,9 +32,9 @@ public class EstimatedData extends ParseObject {
     @SerializedName("business")
     @Expose
     private Business business;
-    @SerializedName("approve")
+    @SerializedName("approveStatus")
     @Expose
-    private String approve;
+    private String approveStatus;
 
 
     public Integer getShopStatus() {
@@ -142,16 +142,16 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public String getApprove() {
-        return approve;
+    public String getApproveStatus() {
+        return approveStatus;
     }
 
-    public void setApprove(String approve) {
-        this.approve = approve;
+    public void setApproveStatus(String approveStatus) {
+        this.approveStatus = approveStatus;
     }
 
     public EstimatedData withApprove(String approve) {
-        this.approve = approve;
+        this.approveStatus = approve;
         return this;
     }
 

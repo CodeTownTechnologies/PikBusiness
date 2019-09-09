@@ -153,7 +153,7 @@
 
         </activity>
         <activity
-            android:name=".EditLocation"
+            android:name=".EditLocationActivity"
             android:label="Edit Location"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">

@@ -96,10 +96,10 @@ public class Createloctaion extends AppCompatActivity  implements GoogleMap.OnMy
         ccp.registerCarrierNumberEditText(editText);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0);
         SharedPreferences.Editor editor = pref.edit();
-        loc_name = pref.getString("lname", null);
+        loc_name = pref.getString("locationName", null);
         phoneno_string = pref.getString("phone", null);
-        setpin_string = pref.getString("setpin", null);
-        repin_string = pref.getString("repin", null);
+        setpin_string = pref.getString("tvSetPin", null);
+        repin_string = pref.getString("tvRepin", null);
         location.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
         editText.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
         locname.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));

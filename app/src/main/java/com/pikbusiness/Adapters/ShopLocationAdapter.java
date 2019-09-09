@@ -1,39 +1,51 @@
 package com.pikbusiness.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.pikbusiness.EditLocationActivity;
 import com.pikbusiness.R;
-import com.pikbusiness.Response.EstimatedData;
+import com.pikbusiness.model.Response.EstimatedData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
 
 public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapter.MyViewHolder> {
 
-    ArrayList<HashMap<String, String>> dataa;
+
     Context context;
-    String approv;
     AlertDialog alertDialog;
     AlertDialog alertDialog1;
-    Switch switch1;
+    Switch toggleSwitch;
     private List<EstimatedData> estimateDataList;
 
-    public ShopLocationAdapter(Context context, ArrayList<HashMap<String, String>> aryList) {
-        this.context = context;
-        this.dataa = aryList;
-    }
 
     public ShopLocationAdapter(Context context, List<EstimatedData> dataList) {
         this.context = context;
@@ -53,23 +65,7 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
 
         holder.tvLocationName.setText(estimateDataList.get(position).getLocationName());
         holder.tvBusinessName.setText(estimateDataList.get(position).getBusiness().getBusinessEstimatedData().getBusinessName());
-//        ParseQuery<ParseUser> userQueryu = ParseUser.getQuery();
-//        userQueryu.whereEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
-//        userQueryu.findInBackground(new FindCallback<ParseUser>() {
-//            @Override
-//            public void done(List<ParseUser> userList, ParseException e) {
-//                if (e == null) {
-//                    //Retrieve user data
-//                    if (userList.size() > 0) {
-//                        for (ParseUser user : userList) {
-//
-//                            approv = String.valueOf(user.getInt("accountStatus"));
-////                            Log.d("chk", "onClick:parse "+approv);
-//                        }
-//                    }
-//                }
-//            }
-//        });
+
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -77,7 +73,7 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
 //                if (approv != null) {
 //                    if (approv.equals("0")) {
 //
-//                        apr_msg(view, "Your account verification is under process");
+//                        approveAlert(view, "Your account verification is under process");
 //                    } else if (approv.equals("1")) {
 //                        Intent i = new Intent(context, Enter_Pin.class);
 //                        i.putExtra("lname", dataa.get(position).get("locationname"));
@@ -92,199 +88,191 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
 //                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                        context.startActivity(i);
 //                    } else {
-//                        apr_msg(view, "Please contact support team");
+//                        approveAlert(view, "Please contact support team");
 //                    }
 //                }
 //            }
 //        });
 
-//        holder.more.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if (approv.equals("0")) {
-//                    apr_msg(v, "Your account verification is under process");
-//                } else if (approv.equals("1")) {
-//                    displayPopupWindow(v, position, dataa.get(position).get("shopStatus"));
-//                } else {
-//                    apr_msg(v, "Please contact support team");
-//                }
-//            }
-//        });
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (estimateDataList.get(position).getApproveStatus().equals("0")) {
+                    approveAlert(v, "Your account verification is under process");
+                } else if (estimateDataList.get(position).getApproveStatus().equals("1")) {
+                    displayPopupWindow(v, position, estimateDataList.get(position).getShopStatus());
+                } else {
+                    approveAlert(v, "Please contact support team");
+                }
+            }
+        });
     }
 
-    /*    private void displayPopupWindow(View anchorView, int position,String shopStatus) {
-            PopupWindow popup = new PopupWindow(context);
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-            View layout = inflater.inflate(R.layout.popup_options, null);
-            popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            popup.setContentView(layout);
-            // Set content width and height
-            popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-            popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-            // Closes the popup window when touch outside of it - when looses focus
-            popup.setOutsideTouchable(true);
-            popup.setFocusable(true);
-            TextView txt_switch = layout.findViewById(R.id.txt_switch);
-            TextView edit = layout.findViewById(R.id.edit);
-            TextView delete = layout.findViewById(R.id.delete);
-              switch1 = layout.findViewById(R.id.switch1);
+    private void displayPopupWindow(View anchorView, int position, int shopStatus) {
+        PopupWindow popup = new PopupWindow(context);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popup_options, null);
+        popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popup.setContentView(layout);
+        // Set content width and height
+        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        // Closes the popup window when touch outside of it - when looses focus
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        TextView txt_switch = layout.findViewById(R.id.txt_switch);
+        TextView edit = layout.findViewById(R.id.edit);
+        TextView delete = layout.findViewById(R.id.delete);
+        toggleSwitch = layout.findViewById(R.id.toggle_switch);
 
-            txt_switch.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-            edit.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-            delete.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-    //        Log.d("chk", "displayPopupWindow: "+shopStatus);
-            if(shopStatus.equals("1")){
-                txt_switch.setText("Online");
-                switch1.setChecked(true);
-            }else if(shopStatus.equals("0")){
-                txt_switch.setText("Offline");
-                switch1.setChecked(false);
-            }
-            switch1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(switch1.isChecked()){
-    //                    Log.d("chk", "onClick:"+position);
-                        txt_switch.setText("Online");
-                        onoff(dataa.get(position).get("objectid"),1,"You will receive orders now",switch1,txt_switch);
-                    }else{
-    //                    Log.d("chk", "onClick:"+position);
-    //                    checkorders(dataa.get(position).get("objectid"));
-                        txt_switch.setText("Offline");
-                        onoff(dataa.get(position).get("objectid"),0,"You will not receive orders", switch1, txt_switch);
-                    }
-                }
-            });
-
-    //        edit.setOnClickListener(new View.OnClickListener() {
-    //            @Override
-    //            public void onClick(View v) {
-    //                popup.dismiss();
-    //                Intent e = new Intent(context, EditLocation.class);
-    //                e.putExtra("lname", dataa.get(position).get("locationname"));
-    //                e.putExtra("id", dataa.get(position).get("objectid"));
-    //                e.putExtra("lat", dataa.get(position).get("lat"));
-    //                e.putExtra("log", dataa.get(position).get("log"));
-    //                e.putExtra("pin", dataa.get(position).get("pin"));
-    //                e.putExtra("tax",dataa.get(position).get("tax"));
-    //                e.putExtra("shopStatus", dataa.get(position).get("shopStatus"));
-    //                e.putExtra("phoneNo", dataa.get(position).get("phoneNo"));
-    //                e.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //                context.startActivity(e);
-    //
-    //            }
-    //        });
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popup.dismiss();
-
-                    deletepopup(anchorView, dataa.get(position).get("locationname"),
-                            dataa.get(position).get("objectid"),position);
-
-                }
-            });
-            //First we get the position of the menu icon in the screen
-            int[] values = new int[2];
-            anchorView.getLocationInWindow(values);
-            int positionOfIcon = values[1];
-            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            int height = (displayMetrics.heightPixels * 2) / 3;
-
-            if (positionOfIcon > height) {
-                popup.showAsDropDown(anchorView, 0, -320);
-            } else {
-                popup.showAsDropDown(anchorView, 0, 0);
-            }
-            popup.showAsDropDown(anchorView);
+        txt_switch.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
+        edit.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
+        delete.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
+        //        Log.d("chk", "displayPopupWindow: "+shopStatus);
+        if (shopStatus == 1) {
+            txt_switch.setText("Online");
+            toggleSwitch.setChecked(true);
+        } else if (shopStatus == 0) {
+            txt_switch.setText("Offline");
+            toggleSwitch.setChecked(false);
         }
-        public void onoff(String id, int sts, String msg, Switch switch1, TextView txt_switch){
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
-            query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
-            query.whereEqualTo("business",ParseUser.getCurrentUser().getObjectId());
-            query.getInBackground(id, new GetCallback<ParseObject>() {
-                public void done(ParseObject shop, ParseException e) {
-                    if (e == null) {
-                        shop.put("shopStatus",sts);
-                        shop.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
+        toggleSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (toggleSwitch.isChecked()) {
+                    txt_switch.setText("Online");
+                    shopStatusOnOff(estimateDataList.get(position).getObjectId(), 1, "You will receive orders now", toggleSwitch, txt_switch, position);
+                } else {
+                    txt_switch.setText("Offline");
+                    shopStatusOnOff(estimateDataList.get(position).getObjectId(), 0, "You will not receive orders", toggleSwitch, txt_switch, position);
+                }
+            }
+        });
 
-                                if (e == null) {
-                                    if(sts == 1){
-                                        txt_switch.setText("Online");
-                                        switch1.setChecked(true);
-                                       Intent i = new Intent(context,DashboardActivity.class);
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                       context.startActivity(i);
-                                    }
-                                    else
-                                    {
-                                        txt_switch.setText("Offline");
-                                        switch1.setChecked(false);
-                                        Intent i = new Intent(context,DashboardActivity.class);
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                        context.startActivity(i);
-                                    }
-                                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                                }
-                                else {
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+                Intent e = new Intent(context, EditLocationActivity.class);
+                e.putExtra("location_name", estimateDataList.get(position).getLocationName());
+                e.putExtra("id", estimateDataList.get(position).getObjectId());
+                e.putExtra("latitude", estimateDataList.get(position).getLocation().getLatitude());
+                e.putExtra("longitude", estimateDataList.get(position).getLocation().getLongitude());
+                e.putExtra("pin", estimateDataList.get(position).getPin());
+                e.putExtra("tax", estimateDataList.get(position).getTax());
+                e.putExtra("shopStatus", estimateDataList.get(position).getShopStatus());
+                e.putExtra("phoneNo", estimateDataList.get(position).getPhoneNo());
+                context.startActivity(e);
 
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+
+                deletePopUp(anchorView, estimateDataList.get(position).getLocationName(),
+                        estimateDataList.get(position).getObjectId(), position);
+
+
+            }
+        });
+        //First we get the position of the menu icon in the screen
+        int[] values = new int[2];
+        anchorView.getLocationInWindow(values);
+        int positionOfIcon = values[1];
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int height = (displayMetrics.heightPixels * 2) / 3;
+
+        if (positionOfIcon > height) {
+            popup.showAsDropDown(anchorView, 0, -320);
+        } else {
+            popup.showAsDropDown(anchorView, 0, 0);
+        }
+        popup.showAsDropDown(anchorView);
+    }
+
+    public void shopStatusOnOff(String id, int status, String msg, Switch switch1, TextView txt_switch, int position) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
+        query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
+        query.whereEqualTo("business", ParseUser.getCurrentUser().getObjectId());
+        query.getInBackground(id, new GetCallback<ParseObject>() {
+            public void done(ParseObject shop, ParseException e) {
+                if (e == null) {
+                    shop.put("shopStatus", status);
+                    shop.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+
+                            if (e == null) {
+                                if (status == 1) {
+                                    txt_switch.setText("Online");
+                                    switch1.setChecked(true);
+                                    estimateDataList.get(position).setShopStatus(status);
+                                    notifyDataSetChanged();
+
+                                } else {
+                                    txt_switch.setText("Offline");
+                                    switch1.setChecked(false);
+                                    estimateDataList.get(position).setShopStatus(status);
+                                    notifyDataSetChanged();
                                 }
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                            } else {
+
                             }
-                        });
-                    } else {
-                        e.printStackTrace();
-                    }
+                        }
+                    });
+                } else {
+                    e.printStackTrace();
                 }
-            });
-        }
+            }
+        });
+    }
 
-    public  void deletepopup(View view, String name, String objid, int position){
+    public void deletePopUp(View view, String name, String objectId, int position) {
 
-        LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.waitverify,null);
-        AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
-        alertbox.setView(layout);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.waitverify, null);
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getRootView().getContext());
+        alertBox.setView(layout);
 
         TextView txt = layout.findViewById(R.id.msg);
         Button login = layout.findViewById(R.id.login);
         ImageView img = layout.findViewById(R.id.img);
         img.setVisibility(View.GONE);
         login.setVisibility(View.GONE);
-        alertbox.setCancelable(true);
+        alertBox.setCancelable(true);
         login.setText("OKAY");
-        txt.setText("Are you sure you want to delete "+name+ " location");
+        txt.setText("Are you sure you want to delete " + name + " location");
         txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-        alertbox.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertBox.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-              deletecall(objid,position);
-              alertDialog.dismiss();
+                deleteCall(objectId, position);
+                alertDialog.dismiss();
             }
         });
 
-        alertbox.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertBox.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               alertDialog.dismiss();
+                alertDialog.dismiss();
             }
         });
-        alertDialog = alertbox.create();
+        alertDialog = alertBox.create();
         alertDialog.setCancelable(true);
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context,R.color.blue));
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context,R.color.blue));
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.blue));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.blue));
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(Typer.set(context).getFont(Font.ROBOTO_MEDIUM));
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTypeface(Typer.set(context).getFont(Font.ROBOTO_MEDIUM));
 
-        }
+    }
 
-     public void deletecall(String id, int position){
+    public void deleteCall(String id, int position) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
-         query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
+        query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
         query.whereEqualTo("business", ParseUser.getCurrentUser().getObjectId());
         query.getInBackground(id, new GetCallback<ParseObject>() {
             public void done(ParseObject shop, ParseException e) {
@@ -297,15 +285,17 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
 
                             if (e == null) {
 
-                                dataa.remove(position);
-                                notifyItemRemoved(position);
-                                notifyItemRangeChanged(position,dataa.size());
-    //
-    //                            notifyItemChanged(position);
-    //                            Intent i = new Intent(context,DashboardActivity.class);
-    //                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-    //                            context.startActivity(i);
+                                estimateDataList.remove(position);
+                                notifyDataSetChanged();
+//                                dataa.remove(position);
+//                                notifyItemRemoved(position);
+//                                notifyItemRangeChanged(position, dataa.size());
+                                //
+                                //                            notifyItemChanged(position);
+                                //                            Intent i = new Intent(context,DashboardActivity.class);
+                                //                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                //                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                //                            context.startActivity(i);
 
                             } else {
 
@@ -319,31 +309,32 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
         });
     }
 
-        public void apr_msg(View view,String msg) {
-            LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.waitverify,null);
-            AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
-                 alertbox.setView(layout);
+    public void approveAlert(View view, String msg) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.waitverify, null);
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
+        alertbox.setView(layout);
 
-            TextView txt = layout.findViewById(R.id.msg);
-            Button login = layout.findViewById(R.id.login);
-            txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-            login.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-            alertbox.setCancelable(true);
-            login.setText("OKAY");
-            txt.setText(msg);
-            txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-          AlertDialog alertDialog = alertbox.create();
-            alertDialog.setCancelable(true);
+        TextView txt = layout.findViewById(R.id.msg);
+        Button login = layout.findViewById(R.id.login);
+        txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
+        login.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
+        alertbox.setCancelable(true);
+        login.setText("OKAY");
+        txt.setText(msg);
+        txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
+        AlertDialog alertDialog = alertbox.create();
+        alertDialog.setCancelable(true);
 
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  alertDialog.dismiss();
-                }
-            });
-                alertDialog.show();
-        }*/
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
     @Override
     public int getItemCount() {
         return estimateDataList.size();

@@ -72,7 +72,7 @@ public class Orderslist extends AppCompatActivity {
     @BindView(R.id.shopname)TextView shopname;
     @BindView(R.id.shoploc)TextView shoploc;
     @BindView(R.id.txt_switch)TextView txtswitch;
-    @BindView(R.id.switch1) Switch switch1;
+    @BindView(R.id.toggle_switch) Switch switch1;
     @BindView(R.id.scrollview)NestedScrollView scrollview;
     @BindView(R.id.more) LinearLayout options;
     @BindView(R.id.txt_neworder)TextView txt_neworder;
@@ -107,7 +107,7 @@ public class Orderslist extends AppCompatActivity {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         pass = pref.getString("Pass", null);
-        String chk = pref.getString("lname", null);
+        String chk = pref.getString("locationName", null);
         String pinn = pref.getString("pin", null);
         if(pinn != null){
             if (pinn.equals("")) {
@@ -169,13 +169,13 @@ public class Orderslist extends AppCompatActivity {
 
 //        Log.d("chk", "done:chkkk =new");
         if (chk != null) {
-            lname = pref.getString("lname", null);
+            lname = pref.getString("locationName", null);
             bname = pref.getString("bname", null);
             idd = pref.getString("id", null);
             lat = pref.getString("lat", null);
             logg = pref.getString("log", null);
         } else {
-            lname = getIntent().getStringExtra("lname");
+            lname = getIntent().getStringExtra("locationName");
             bname = getIntent().getStringExtra("bname");
             idd = getIntent().getStringExtra("id");
         }
@@ -270,7 +270,7 @@ public class Orderslist extends AppCompatActivity {
 //                if (switch1.isChecked()) {
 
 //                        txtswitch.setText("Online");
-//                        onoff(idd, 1, "You will receive orders now");
+//                        onoff(objectId, 1, "You will receive orders now");
 //                } else {
 //                    if(sts1){
 //                        offlinepopup();
@@ -278,7 +278,7 @@ public class Orderslist extends AppCompatActivity {
 //                        txtswitch.setText("Online");
 //                    }else{
 //                        txtswitch.setText("Offline");
-//                        onoff(idd, 0, "You will not receive orders");
+//                        onoff(objectId, 0, "You will not receive orders");
 //                    }
 //                }
             }
@@ -308,7 +308,7 @@ public class Orderslist extends AppCompatActivity {
                     public void onClick(View v) {
                         dialog.dismiss();
                         Intent e = new Intent(Orderslist.this,EditMenutabs.class);
-                        e.putExtra("lname",lname);
+                        e.putExtra("locationName",lname);
                         e.putExtra("id", idd);
                         e.putExtra("lat", lat);
                         e.putExtra("log",logg);
@@ -722,7 +722,7 @@ public class Orderslist extends AppCompatActivity {
                                 map.put("shop_phno",shop_phno);
                                 String customer_phno = String.valueOf(
                                         customer.fetchIfNeeded().getNumber("phoneNumber"));
-                                map.put("phno", customer_phno);
+                                map.put("tvPhoneNo", customer_phno);
                                 map.put("username", name);
                                 map.put("car", car);
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
@@ -786,7 +786,7 @@ public class Orderslist extends AppCompatActivity {
                                 map.put("shop_phno",shop_phno);
 
                                 String phno = String.valueOf(customer.fetchIfNeeded().getNumber("phoneNumber"));
-                                map.put("phno", phno);
+                                map.put("tvPhoneNo", phno);
                                 map.put("username", name);
                                 map.put("car", car);
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
@@ -846,7 +846,7 @@ public class Orderslist extends AppCompatActivity {
                                 map.put("shop_name",shop_name);
                                 map.put("shop_phno",shop_phno);
                                 String phno = String.valueOf(customer.fetchIfNeeded().getNumber("phoneNumber"));
-                                map.put("phno", phno);
+                                map.put("tvPhoneNo", phno);
                                 map.put("username", name);
                                 map.put("car", car);
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
@@ -940,7 +940,7 @@ public class Orderslist extends AppCompatActivity {
                     } else {
                         sts1 = false;
 //                        txtswitch.setText("Offline");
-//                        onoff(idd, 0, "You will not receive orders");
+//                        onoff(objectId, 0, "You will not receive orders");
                     }
 
                 } else {
@@ -1027,7 +1027,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("shop_name",shop_name);
                             map.put("shop_phno",shop_phno);
                                 String phno = String.valueOf(customer.fetchIfNeeded().getNumber("phoneNumber"));
-                                map.put("phno", phno);
+                                map.put("tvPhoneNo", phno);
                                 map.put("username", name);
                                 map.put("car", car);
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
@@ -1170,7 +1170,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("shop_name",shop_name);
                             map.put("shop_phno",shop_phno);
                                 String phno = String.valueOf(customer.fetchIfNeeded().getNumber("phoneNumber"));
-                                map.put("phno", phno);
+                                map.put("tvPhoneNo", phno);
                                 map.put("username", name);
                                 map.put("car", car);
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
@@ -1299,7 +1299,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("shop_name",shop_name);
                             map.put("shop_phno",shop_phno);
                                 String phno = String.valueOf(customer.fetchIfNeeded().getNumber("phoneNumber"));
-                                map.put("phno", phno);
+                                map.put("tvPhoneNo", phno);
                                 map.put("username", name);
                                 map.put("car", car);
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
