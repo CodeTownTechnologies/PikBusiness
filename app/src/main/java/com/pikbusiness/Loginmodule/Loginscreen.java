@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.pikbusiness.Dashboard;
+import com.pikbusiness.DashboardActivity;
 import com.pikbusiness.Orderslist;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
@@ -205,7 +205,7 @@ public class Loginscreen extends AppCompatActivity {
 
                                        }else{
                                            saveinstall();
-                                           Intent intent = new Intent(Loginscreen.this, Dashboard.class);
+                                           Intent intent = new Intent(Loginscreen.this, DashboardActivity.class);
                                            startActivity(intent);
                                            finish();
                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -230,7 +230,7 @@ public class Loginscreen extends AppCompatActivity {
 
                                    }else{
                                        saveinstall();
-                                       Intent intent = new Intent(Loginscreen.this, Dashboard.class);
+                                       Intent intent = new Intent(Loginscreen.this, DashboardActivity.class);
                                        startActivity(intent);
                                        finish();
                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

@@ -305,7 +305,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
     }
     public void checkupdate(String sts, View v, String objid2){
 
-//        Log.d("chk", "checkupdate: "+objid2);
+//        Log.d("chk", "checkUpdate: "+objid2);
         if(ParseUser.getCurrentUser()!= null) {
 
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Menus");

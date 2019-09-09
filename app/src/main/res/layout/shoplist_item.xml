@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text=""
+            android:text="dsjhsdjksahdkja"
             android:textAllCaps="true"
             android:id="@+id/bname"
             android:textSize="@dimen/textregular14"

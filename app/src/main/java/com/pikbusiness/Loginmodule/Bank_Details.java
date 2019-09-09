@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.pikbusiness.Dashboard;
+import com.pikbusiness.DashboardActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
@@ -235,7 +235,7 @@ public class Bank_Details extends AppCompatActivity {
                                         }
                                     });
                                 }else if(approv_status.equals("1")){
-                                    Intent intent = new Intent(Bank_Details.this, Dashboard.class);
+                                    Intent intent = new Intent(Bank_Details.this, DashboardActivity.class);
                                     startActivity(intent);
                                     finish();
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

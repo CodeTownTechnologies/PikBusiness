@@ -23,11 +23,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pikbusiness.Adapters.Shop_locations;
-import com.pikbusiness.Editmenu.EditMenutabs;
-import com.pikbusiness.Loginmodule.SessionManager;
-import com.pikbusiness.services.Alertservice;
-import com.pikbusiness.services.Toasty;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.crashlytics.android.Crashlytics;
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
@@ -42,46 +50,51 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.pikbusiness.Adapters.ShopLocationAdapter;
+import com.pikbusiness.Editmenu.EditMenutabs;
+import com.pikbusiness.Loginmodule.SessionManager;
+import com.pikbusiness.Response.Business;
+import com.pikbusiness.Response.BusinessEstimatedData;
+import com.pikbusiness.Response.EstimatedData;
+import com.pikbusiness.Response.Location;
+import com.pikbusiness.services.Alertservice;
+import com.pikbusiness.services.Toasty;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 import static android.text.Html.fromHtml;
 
-public class Dashboard extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ArrayList<HashMap<String, String>> maplist;
+
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
-    @BindView(R.id.recycler_view) RecyclerView list;
-    @BindView(R.id.nolocation)LinearLayout nolocation;
-    @BindView(R.id.createbtn)Button create;
-    @BindView(R.id.swipe_refresh)SwipeRefreshLayout mSwipeRefreshLayout;
-    String approv = "",pik,appversion;
+    @BindView(R.id.recycler_view)
+    RecyclerView mShopRecyclerView;
+    @BindView(R.id.nolocation)
+    LinearLayout nolocation;
+    @BindView(R.id.createbtn)
+    Button create;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    String accountStatus = "", pik, appversion;
     SessionManager session;
     AlertDialog alertDialog;
-    Boolean firsttime_login ;
+    Boolean firstTimeLogin;
     AlertDialog alertDialog1;
-    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private List<EstimatedData> estimateDataList = new ArrayList<>();
+    private ShopLocationAdapter mAdapter;
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,48 +103,59 @@ public class Dashboard extends AppCompatActivity
         Fabric.with(this, new Crashlytics());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         session = new SessionManager(this);
-        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this,R.color.colorPrimary));
+        mContext = DashboardActivity.this;
+
+        mAdapter = new ShopLocationAdapter(mContext, estimateDataList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        mShopRecyclerView.setLayoutManager(mLayoutManager);
+        mShopRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mShopRecyclerView.setAdapter(mAdapter);
+
+        if (checkInternetConenction()) {
+            checkData();
+            addListItems();
+          //  checkData();
+        }
+
+        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(checkInternetConenction()){
-                    addlistitems();
-                    checkdata();
+                if (checkInternetConenction()) {
+                    addListItems();
                 }
             }
         });
-        stopService(new Intent(Dashboard.this, Alertservice.class));
-//       updateApp(this);
-        checkupdate();
+        stopService(new Intent(DashboardActivity.this, Alertservice.class));
+        updateApp(this);
+        checkUpdate();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         String pin = pref.getString("pin", null);
-        if (pin != null){
-             if(pin.equals("")){
+        if (pin != null) {
+            if (pin.equals("")) {
 
-             }else{
-                 if(pin.length() > 0){
-                     Intent intent = new Intent(Dashboard.this, Orderslist.class);
-                     startActivity(intent);
-                 }
-             }
+            } else {
+                if (pin.length() > 0) {
+                    Intent intent = new Intent(DashboardActivity.this, Orderslist.class);
+                    startActivity(intent);
+                }
+            }
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-         checkAndRequestPermissions();
+        checkAndRequestPermissions();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if(checkInternetConenction()){
-            addlistitems();
-            checkdata();
-        }
+
 
     }
+
     @SuppressWarnings("deprecation")
     public static Spanned getBoldString(String textNotBoldFirst, String textToBold, String textNotBoldLast) {
         String resultant = null;
@@ -141,10 +165,11 @@ public class Dashboard extends AppCompatActivity
 
     }
 
-    public void checkdata(){
-        if(ParseUser.getCurrentUser()!=null) {
-            ParseQuery<ParseUser> userQueryu=ParseUser.getQuery();
-            userQueryu.whereEqualTo("objectId",ParseUser.getCurrentUser().getObjectId());
+    public void checkData() {
+        if (ParseUser.getCurrentUser() != null) {
+            estimateDataList.clear();
+            ParseQuery<ParseUser> userQueryu = ParseUser.getQuery();
+            userQueryu.whereEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
             userQueryu.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
             userQueryu.findInBackground(new FindCallback<ParseUser>() {
                 @Override
@@ -154,108 +179,100 @@ public class Dashboard extends AppCompatActivity
                         if (userList.size() > 0) {
                             for (ParseUser user : userList) {
 
-                                approv = String.valueOf(user.getInt("accountStatus"));
-                                firsttime_login = user.getBoolean("firstTimeLogin");
-                                flogind();
+                                accountStatus = String.valueOf(user.getInt("accountStatus"));
+                                firstTimeLogin = user.getBoolean("firstTimeLogin");
+                                firstTimeLoginCheck();
                             }
                         } else {
-//                            Crashlytics.log(Log.ERROR, "Dashboard", "error caught!");
+//                            Crashlytics.log(Log.ERROR, "DashboardActivity", "error caught!");
                             Crashlytics.logException(e);
                             // Handle the exception
                         }
 
-                    }else{
-//                        Crashlytics.log(Log.ERROR, "Dashboard", "error caught!");
+                    } else {
+//                        Crashlytics.log(Log.ERROR, "DashboardActivity", "error caught!");
                         Crashlytics.logException(e);
                     }
                 }
             });
-        }else {
+        } else {
 
 //            ParseUser.logOut();
             session.logoutUser();
         }
     }
-public void flogind(){
-    if(firsttime_login != null){
-        if (firsttime_login) {
 
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("business_name", ParseUser.getCurrentUser().getString("Business_name"));
-            params.put("business_objectid",ParseUser.getCurrentUser().getObjectId());
-            ParseCloud.callFunctionInBackground("pikPercentage", params, new FunctionCallback<Double>() {
-                public void done(Double result, ParseException e) {
-                    if (e == null) {
-                        ParseUser user = ParseUser.getCurrentUser();
-                        user.put("pikPercentage",result);
-                        user.saveInBackground(new SaveCallback()
-                        {
-                            @Override
-                            public void done(ParseException e)
-                            {
-
-                                if (e == null)
-                                {
-//                                        Log.d("chk", "done: update");
-                                }
-                                else
-                                {
-                                    Crashlytics.log(Log.ERROR, "Dasboard", "error caught!");
-                                    Crashlytics.logException(e);
-                                }
-                            }
-                        });
-                    }
-                }
-
-            });
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setMessage(getBoldString("Setup your ",
-                    "menu","items"));
-            alertDialogBuilder.setCancelable(false);
-            alertDialogBuilder.setPositiveButton("CONTINUE",
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-
+    public void firstTimeLoginCheck() {
+        if (firstTimeLogin != null) {
+            if (firstTimeLogin)
+            {
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("business_name", ParseUser.getCurrentUser().getString("Business_name"));
+                params.put("business_objectid", ParseUser.getCurrentUser().getObjectId());
+                ParseCloud.callFunctionInBackground("pikPercentage", params, new FunctionCallback<Double>() {
+                    public void done(Double result, ParseException e) {
+                        if (e == null) {
                             ParseUser user = ParseUser.getCurrentUser();
-                            Boolean tr = false;
-                            user.put("firstTimeLogin",tr);
-                            user.saveInBackground(new SaveCallback()
-                            {
+                            user.put("pikPercentage", result);
+                            user.saveInBackground(new SaveCallback() {
                                 @Override
-                                public void done(ParseException e)
-                                {
+                                public void done(ParseException e) {
 
-                                    if (e == null)
-                                    {
+                                    if (e == null) {
 //                                        Log.d("chk", "done: update");
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Crashlytics.log(Log.ERROR, "Dasboard", "error caught!");
                                         Crashlytics.logException(e);
                                     }
                                 }
                             });
-                            Intent i = new Intent(Dashboard.this,EditMenutabs.class);
-                            i.putExtra("one","1");
-                            startActivity(i);
-//                            alertDialog1.dismiss();
                         }
-                    });
+                    }
 
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
-            TextView msgTxt = alertDialog.findViewById(android.R.id.message);
-            msgTxt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
+                });
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage(getBoldString("Setup your ",
+                        "menu", "items"));
+                alertDialogBuilder.setCancelable(false);
+                alertDialogBuilder.setPositiveButton("CONTINUE",
+                        new DialogInterface.OnClickListener() {
 
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                                ParseUser user = ParseUser.getCurrentUser();
+                                Boolean tr = false;
+                                user.put("firstTimeLogin", tr);
+                                user.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+
+                                        if (e == null) {
+//                                        Log.d("chk", "done: update");
+                                        } else {
+                                            Crashlytics.log(Log.ERROR, "Dasboard", "error caught!");
+                                            Crashlytics.logException(e);
+                                        }
+                                    }
+                                });
+                                Intent i = new Intent(DashboardActivity.this, EditMenutabs.class);
+                                i.putExtra("one", "1");
+                                startActivity(i);
+//                            alertDialog1.dismiss();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
+                TextView msgTxt = alertDialog.findViewById(android.R.id.message);
+                msgTxt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
+
+            }
         }
+
     }
 
-}
     @Override
     protected void onDestroy() {
 
@@ -293,88 +310,92 @@ public void flogind(){
         // The directory is now empty so delete it
         return dir.delete();
     }
- public void addlistitems(){
-    if(ParseUser.getCurrentUser()!= null) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
-        query.whereEqualTo("menu", ParseUser.getCurrentUser());
-        query.whereEqualTo("business",ParseUser.getCurrentUser());
-        query.include("business");
-        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> object, ParseException e) {
-                if (e == null) {
-                    if (mSwipeRefreshLayout.isRefreshing()) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                    maplist = new ArrayList<>();
-                    if (object.size() > 0) {
-                        for (ParseObject user : object) {
-                            String sh = String.valueOf(user.getNumber("shopStatus"));
-                            if(sh.equals("2")){
 
-                            }else{
-                                HashMap<String, String> map = new HashMap<String, String>();
-                                map.put("locationname",user.getString("locationName"));
-                                map.put("objectid",user.getObjectId());
-                                map.put("pin", String.valueOf(user.getNumber("pin")));
-                                map.put("tax", String.valueOf(user.getNumber("tax")));
-                                map.put("shopStatus",String.valueOf(user.getNumber("shopStatus")));
-                                map.put("phoneNo",String.valueOf(user.getNumber("phoneNo")));
-                                ParseObject pr =  user.getParseObject("business");
-                                map.put("aprv",approv);
-//                                Log.d("chk", "done:aprv "+approv);
-                                map.put("business",pr.getString("Business_name"));
-                                ParseGeoPoint loc = user.getParseGeoPoint("location");
-                                if(loc != null){
-                                    map.put("lat", String.valueOf(loc.getLatitude()));
-                                    map.put("log",String.valueOf(loc.getLongitude()));
-                                }
-                                maplist.add(map);
-                                Bundle bundle = new Bundle();
-                                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, user.getObjectId());
-                                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, user.getString("locationName"));
-                                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE,pr.getString("Business_name"));
-                                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                            }
+    public void addListItems() {
+        if (ParseUser.getCurrentUser() != null) {
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
+            query.whereEqualTo("menu", ParseUser.getCurrentUser());
+            query.whereEqualTo("business", ParseUser.getCurrentUser());
+            query.include("business");
+            query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                public void done(List<ParseObject> object, ParseException e) {
+                    if (e == null) {
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
-                        Shop_locations testAdapter = new Shop_locations(getApplicationContext(), maplist);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                        list.setLayoutManager(mLayoutManager);
-                        list.setItemAnimator(new DefaultItemAnimator());
-                        list.setAdapter(testAdapter);
+                        if (object.size() > 0) {
+
+                            for (ParseObject user : object) {
+
+                                String sh = String.valueOf(user.getNumber("shopStatus"));
+                                if (sh.equals("2")) {
+
+                                } else {
+                                    EstimatedData estimatedData = new EstimatedData();
+                                    estimatedData.setLocationName(user.getString("locationName"));
+                                    estimatedData.setObjectId(user.getObjectId());
+                                    estimatedData.setPin(user.getInt("pin"));
+                                    estimatedData.setTax(user.getInt("tax"));
+                                    estimatedData.setPhoneNo(user.getInt("phoneNo"));
+                                    estimatedData.setShopStatus(user.getInt("shopStatus"));
+                                    ParseObject pr = user.getParseObject("business");
+                                    estimatedData.setApprove(accountStatus);
+                                    Business business = new Business();
+                                    BusinessEstimatedData businessEstimateData = new BusinessEstimatedData();
+                                    businessEstimateData.setBusinessName(pr.getString("Business_name"));
+                                    business.setBusinessEstimatedData(businessEstimateData);
+                                    estimatedData.setBusiness(business);
+                                    ParseGeoPoint loc = user.getParseGeoPoint(" ");
+                                    if (loc != null) {
+                                        Location location = new Location();
+                                        location.setLatitude(loc.getLatitude());
+                                        location.setLongitude(loc.getLongitude());
+                                    }
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, user.getObjectId());
+                                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, user.getString("locationName"));
+                                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, pr.getString("Business_name"));
+                                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                                    estimateDataList.add(estimatedData);
+                                }
+                            }
+                            mAdapter.notifyDataSetChanged();
 
 
+                        } else {
+                            Crashlytics.log(Log.ERROR, "DashboardActivity", "error caught!");
+                            Crashlytics.logException(e);
+                            // Handle the exception
+                        }
                     } else {
-                      Crashlytics.log(Log.ERROR, "Dashboard", "error caught!");
+                        if (e.getMessage().equals("Invalid session token")) {
+                            Toast.makeText(DashboardActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            session.logoutUser();
+                        }
+                        Crashlytics.log(Log.ERROR, "parse", "NPE caught!");
                         Crashlytics.logException(e);
-                        // Handle the exception
                     }
-                } else {
-                    if(e.getMessage().equals("Invalid session token")){
-                        Toast.makeText(Dashboard.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        session.logoutUser();
-                    }
-                    Crashlytics.log(Log.ERROR, "parse", "NPE caught!");
-                    Crashlytics.logException(e);
                 }
-            }
-        });
-    }else {
+            });
+        } else {
 //        ParseUser.logOut();
-        session.logoutUser();
+            session.logoutUser();
+        }
+
     }
 
-}
-    public void checkupdate(){
+    public void checkUpdate() {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Autoupdate");
-        query.whereEqualTo("platform","Android");
-        query.whereEqualTo("bundleIdentifier","com.pikbusiness");
+        query.whereEqualTo("platform", "Android");
+        query.whereEqualTo("bundleIdentifier", "com.pikbusiness");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             appversion = pInfo.versionName;
-//            Log.d("chk", "checkupdate:ver "+version);
+//            Log.d("chk", "checkUpdate:ver "+version);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -389,10 +410,10 @@ public void flogind(){
                             String newversion = user.getString("newVersion");
                             Number priority = user.getNumber("priority");
 
-                            if(appversion.equals(newversion)){
+                            if (appversion.equals(newversion)) {
 
-                            }else {
-                                if(priority.intValue() > 2){
+                            } else {
+                                if (priority.intValue() > 2) {
                                     updatepopup();
                                 }
                             }
@@ -401,13 +422,13 @@ public void flogind(){
                         }
 
                     } else {
-//                        Crashlytics.log(Log.ERROR, "Dashboard", "error caught!");
+//                        Crashlytics.log(Log.ERROR, "DashboardActivity", "error caught!");
 //                        Crashlytics.logException(e);
                         // Handle the exception
                     }
                 } else {
-                    if(e.getMessage().equals("Invalid session token")){
-                        Toast.makeText(Dashboard.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (e.getMessage().equals("Invalid session token")) {
+                        Toast.makeText(DashboardActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         session.logoutUser();
                     }
 //                    Crashlytics.log(Log.ERROR, "parse", "NPE caught!");
@@ -416,10 +437,11 @@ public void flogind(){
             }
         });
     }
-    public  void updatepopup(){
 
-        LayoutInflater inflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.popupupdate,null);
+    public void updatepopup() {
+
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popupupdate, null);
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
         alertbox.setView(layout);
 
@@ -445,6 +467,7 @@ public void flogind(){
         alertDialog.show();
 
     }
+
     private boolean checkInternetConenction() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // test for connection
@@ -458,11 +481,12 @@ public void flogind(){
         }
     }
 
-    private void customToast(String msg){
-        Toast toast = Toasty.error(Dashboard.this,msg, Toast.LENGTH_SHORT);
+    private void customToast(String msg) {
+        Toast toast = Toasty.error(DashboardActivity.this, msg, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 230);
         toast.show();
     }
+
     public static void updateApp(final Activity act) {
         final String appPackageName = BuildConfig.APPLICATION_ID;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
@@ -483,6 +507,7 @@ public void flogind(){
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     protected void exitByBackKey() {
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -501,7 +526,7 @@ public void flogind(){
             // do something when the button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
 
-                }
+            }
         });
 
         AlertDialog alert = dialogBuilder.create();
@@ -516,13 +541,11 @@ public void flogind(){
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(checkInternetConenction()){
-            addlistitems();
-            checkdata();
-        }
+
 
     }
-    private  boolean checkAndRequestPermissions() {
+
+    private boolean checkAndRequestPermissions() {
         int loc = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
         int loc2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         int storage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -538,10 +561,9 @@ public void flogind(){
         if (loc != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-        if (!listPermissionsNeeded.isEmpty())
-        {
-            ActivityCompat.requestPermissions(this,listPermissionsNeeded.toArray
-                    (new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
+                    (new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             return false;
         }
         return true;
@@ -553,7 +575,7 @@ public void flogind(){
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-          exitByBackKey();
+            exitByBackKey();
 //            overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
         }
     }
@@ -575,7 +597,7 @@ public void flogind(){
         //noinspection SimplifiableIfStatement
         if (id == R.id.createloc) {
 
-           Intent i = new Intent(Dashboard.this,Createloctaion.class);
+            Intent i = new Intent(DashboardActivity.this, Createloctaion.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;
@@ -591,37 +613,30 @@ public void flogind(){
         int id = item.getItemId();
 
         if (id == R.id.profile) {
-            Intent i = new Intent(Dashboard.this,Profile.class);
+            Intent i = new Intent(DashboardActivity.this, Profile.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         } else if (id == R.id.bank) {
-            Intent i = new Intent(Dashboard.this,Bankdetails.class);
+            Intent i = new Intent(DashboardActivity.this, Bankdetails.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
-        else if (id == R.id.reports) {
+        } else if (id == R.id.reports) {
             Toastyy();
 
-        }
-        else if (id == R.id.editmenu) {
-            Intent i = new Intent(Dashboard.this,EditMenutabs.class);
+        } else if (id == R.id.editmenu) {
+            Intent i = new Intent(DashboardActivity.this, EditMenutabs.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
-        else if (id == R.id.transactions) {
+        } else if (id == R.id.transactions) {
             Toastyy();
-        }
-        else if (id == R.id.settings) {
+        } else if (id == R.id.settings) {
             Toastyy();
-        }
-        else if (id == R.id.how) {
+        } else if (id == R.id.how) {
             Toastyy();
 
-        }
-        else if (id == R.id.support) {
+        } else if (id == R.id.support) {
             Toastyy();
-        }
-        else if (id == R.id.logout) {
+        } else if (id == R.id.logout) {
 //            ParseUser.logOut();
             session.logoutUser();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -631,6 +646,7 @@ public void flogind(){
 
         return false;
     }
+
     public void Toastyy() {
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);

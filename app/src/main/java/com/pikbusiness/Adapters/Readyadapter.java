@@ -757,7 +757,7 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
 
 //                            Intent i = new Intent(v.getContext(),Orderslist.class);
 //                            i.putExtra("lname",lname);
-//                            i.putExtra("bname",sname);
+//                            i.putExtra("tvBusinessName",sname);
 //                            i.putExtra("id",id);
 //                            i.putExtra("lat",lat);
 //                            i.putExtra("log",log);
@@ -937,7 +937,7 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
 //                            Log.d("chk", "done:chkkk =2");
                             Intent i = new Intent(v.getContext(),Orderslist.class);
                             i.putExtra("lname",lname);
-                            i.putExtra("bname",bname);
+                            i.putExtra("tvBusinessName",bname);
                             i.putExtra("id",id);
                             i.putExtra("lat",lat);
                             i.putExtra("log",log);

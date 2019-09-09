@@ -16,24 +16,19 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-import com.pikbusiness.Dashboard;
+import com.pikbusiness.DashboardActivity;
 import com.pikbusiness.Orderslist;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.parse.FindCallback;
-import com.parse.FunctionCallback;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Splashscreen extends AppCompatActivity {
 
@@ -149,12 +144,12 @@ public class Splashscreen extends AppCompatActivity {
                                      startActivity(intent);
                                      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                  } else {
-                                     Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                     Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                      startActivity(intent);
                                      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                  }
                              } else {
-                                 Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                 Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                  startActivity(intent);
                                  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                              }
@@ -177,12 +172,12 @@ public class Splashscreen extends AppCompatActivity {
                                          startActivity(intent);
                                          overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                      } else {
-                                         Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                         Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                          startActivity(intent);
                                          overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                      }
                                  } else {
-                                     Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                     Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                      startActivity(intent);
                                      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                  }
@@ -203,12 +198,12 @@ public class Splashscreen extends AppCompatActivity {
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 }else{
-                                    Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                    Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 }
                             }else{
-                                Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                 startActivity(intent);
                                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             }
@@ -229,13 +224,13 @@ public class Splashscreen extends AppCompatActivity {
                                  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                              }
                              else {
-                                 Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                                 Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                                  startActivity(intent);
                                  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                              }
                          }else{
 
-                             Intent intent = new Intent(Splashscreen.this, Dashboard.class);
+                             Intent intent = new Intent(Splashscreen.this, DashboardActivity.class);
                              startActivity(intent);
                              overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                          }

@@ -9,7 +9,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.Ringtone;
@@ -18,13 +17,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
-import com.pikbusiness.Dashboard;
+
+import com.pikbusiness.DashboardActivity;
 import com.pikbusiness.Orderslist;
 import com.pikbusiness.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.parse.PLog;
 import com.parse.PushRouter;
 import com.parse.fcm.ParseFCM;
 import org.json.JSONException;
@@ -75,7 +73,7 @@ public class ParseFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     DisplayNotif(title,body,contentIntent,sound);
                 }else{
-                    Intent intent = new Intent(this, Dashboard.class);
+                    Intent intent = new Intent(this, DashboardActivity.class);
                     PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0,intent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     DisplayNotif(title,body,contentIntent,sound);

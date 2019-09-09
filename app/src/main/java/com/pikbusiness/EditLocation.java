@@ -317,7 +317,7 @@ public class EditLocation extends AppCompatActivity implements OnMapReadyCallbac
                                     progressBar.setVisibility(View.VISIBLE);
                                     if (e == null) {
                                         // Saved successfully.
-                                        Intent i = new Intent(EditLocation.this,Dashboard.class);
+                                        Intent i = new Intent(EditLocation.this, DashboardActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -417,7 +417,7 @@ public class EditLocation extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (item.getItemId() == android.R.id.home) {
                     session.savesession("","", "","");
-                    Intent i = new Intent(EditLocation.this,Dashboard.class);
+                    Intent i = new Intent(EditLocation.this, DashboardActivity.class);
                     startActivity(i);
                     finish();
 //                    overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
@@ -430,7 +430,7 @@ public class EditLocation extends AppCompatActivity implements OnMapReadyCallbac
             public void onBackPressed() {
                 super.onBackPressed();
                 session.savesession("","", "","");
-                Intent i = new Intent(EditLocation.this,Dashboard.class);
+                Intent i = new Intent(EditLocation.this, DashboardActivity.class);
                 startActivity(i);
                 finish();
 //                overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);

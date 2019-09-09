@@ -131,10 +131,10 @@
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Dashboard" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity
-            android:name=".Dashboard"
+            android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -176,7 +176,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Dashboard" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity
             android:name=".Editmenu.EditMenutabs"
@@ -185,7 +185,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Dashboard" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity
             android:name=".Profile"
@@ -193,7 +193,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Dashboard" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity
             android:name=".Bankdetails"
@@ -201,7 +201,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Dashboard" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity
             android:name=".Loginmodule.Terms"

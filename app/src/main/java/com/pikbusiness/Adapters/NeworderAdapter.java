@@ -766,7 +766,7 @@ public class NeworderAdapter extends RecyclerView.Adapter<NeworderAdapter.MyView
 
 //                            Intent i = new Intent(v.getContext(), Orderslist.class);
 //                            i.putExtra("lname",lname);
-//                            i.putExtra("bname",sname);
+//                            i.putExtra("tvBusinessName",sname);
 //                            i.putExtra("id",id);
 //                            i.putExtra("lat",lat);
 //                            i.putExtra("log",log);
@@ -869,7 +869,7 @@ public class NeworderAdapter extends RecyclerView.Adapter<NeworderAdapter.MyView
                         dialog.dismiss();
                         Intent i = new Intent(v.getContext(),Orderslist.class);
                         i.putExtra("lname",lname);
-                        i.putExtra("bname",bname);
+                        i.putExtra("tvBusinessName",bname);
                         i.putExtra("id",id);
                         i.putExtra("lat",lat);
                         i.putExtra("log",log);

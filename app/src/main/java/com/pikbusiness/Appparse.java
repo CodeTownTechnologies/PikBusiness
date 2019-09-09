@@ -3,10 +3,17 @@ package com.pikbusiness;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
+import com.pikbusiness.Response.Business;
+import com.pikbusiness.Response.BusinessEstimatedData;
+import com.pikbusiness.Response.EstimatedData;
+import com.pikbusiness.Response.Location;
 
 import androidx.multidex.MultiDexApplication;
+
+import java.util.Locale;
 
 public class Appparse extends MultiDexApplication {
 
@@ -14,6 +21,10 @@ public class Appparse extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        ParseObject.registerSubclass(EstimatedData.class);
+        ParseObject.registerSubclass(Location.class);
+        ParseObject.registerSubclass(BusinessEstimatedData.class);
+        ParseObject.registerSubclass(Business.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(getString(R.string.appid))

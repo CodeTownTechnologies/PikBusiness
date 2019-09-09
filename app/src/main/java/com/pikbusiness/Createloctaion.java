@@ -298,7 +298,7 @@ public class Createloctaion extends AppCompatActivity  implements GoogleMap.OnMy
                 // TODO Auto-generated method stub
                progressBar.setVisibility(View.GONE);
                 if (e == null) {
-                    Intent i = new Intent(Createloctaion.this,Dashboard.class);
+                    Intent i = new Intent(Createloctaion.this, DashboardActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -451,7 +451,7 @@ public class Createloctaion extends AppCompatActivity  implements GoogleMap.OnMy
 
         if (item.getItemId() == android.R.id.home) {
             session.savesession("","", "","");
-            Intent i = new Intent(Createloctaion.this,Dashboard.class);
+            Intent i = new Intent(Createloctaion.this, DashboardActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -473,7 +473,7 @@ public class Createloctaion extends AppCompatActivity  implements GoogleMap.OnMy
     public void onBackPressed() {
         super.onBackPressed();
         session.savesession("","", "","");
-        Intent i = new Intent(Createloctaion.this,Dashboard.class);
+        Intent i = new Intent(Createloctaion.this, DashboardActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

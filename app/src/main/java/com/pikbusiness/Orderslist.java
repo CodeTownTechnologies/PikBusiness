@@ -582,7 +582,7 @@ public class Orderslist extends AppCompatActivity {
 //            session.logoutUser();
         }
 
-        Intent i = new Intent(Orderslist.this,Dashboard.class);
+        Intent i = new Intent(Orderslist.this, DashboardActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -1371,7 +1371,7 @@ public class Orderslist extends AppCompatActivity {
                 jsonObject.put(key, objectValue.toString());
             }
         }
-//        Log.d("list", "parseObjectToJson:chk "+jsonObject.toString());
+//        Log.d("mShopRecyclerView", "parseObjectToJson:chk "+jsonObject.toString());
         return jsonObject;
     }
     @Override

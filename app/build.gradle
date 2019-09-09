@@ -85,6 +85,7 @@ dependencies {
     }
     // enter 4 digits pin design
     implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.0.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
 
 allprojects {

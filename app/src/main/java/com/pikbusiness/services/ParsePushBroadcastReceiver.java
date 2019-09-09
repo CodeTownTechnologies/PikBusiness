@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.pikbusiness.Dashboard;
+import com.pikbusiness.DashboardActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,8 +27,8 @@ public class ParsePushBroadcastReceiver extends com.parse.ParsePushBroadcastRece
 
             Intent resultIntent = null;
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            resultIntent = new Intent(context, Dashboard.class);
-            stackBuilder.addParentStack(Dashboard.class);
+            resultIntent = new Intent(context, DashboardActivity.class);
+            stackBuilder.addParentStack(DashboardActivity.class);
 
             stackBuilder.addNextIntent(resultIntent);
             PendingIntent resultPendingIntent =
