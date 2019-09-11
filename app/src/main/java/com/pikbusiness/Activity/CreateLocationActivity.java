@@ -46,7 +46,6 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pikbusiness.Loginmodule.Loginscreen;
-import com.pikbusiness.Loginmodule.SessionManager;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 
@@ -69,7 +68,6 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
     String apikey = "";
     private LatLng latLng;
     private boolean isPermission;
-    //SessionManager session;
     @BindView(R.id.et_contact_number)
     EditText etContactNumber;
     @BindView(R.id.country_code_picker)
@@ -94,41 +92,7 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
         setContentView(R.layout.activity_create_location);
         ButterKnife.bind(this);
         Fabric.with(this, new Crashlytics());
-
-    //    session = new SessionManager(this);
         mCountryCodePicker.registerCarrierNumberEditText(etContactNumber);
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0);
-//        SharedPreferences.Editor editor = pref.edit();
-//        loc_name = pref.getString("locationName", null);
-//        phoneno_string = pref.getString("phone", null);
-//        setpin_string = pref.getString("tvSetPin", null);
-//        repin_string = pref.getString("tvRepin", null);
-//        txt_location.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        etContactNumber.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        etLocationName.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        etSetPin.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        etRePin.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        btnSave.setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
-//        ltxt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        setpintxt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-//        repintxt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-
-//        if(loc_name != null){
-//            etLocationName.setText(loc_name);
-//        }
-//        if(phoneno_string != null){
-//            etContactNumber.setText(phoneno_string);
-//        }
-//        if(setpin_string != null){
-//               etSetPin.setText(setpin_string);
-//        }
-//        if(repin_string != null){
-//           etRePin.setText(repin_string);
-//        }
-//
-//        Intent i = getIntent();
-//        latitude = i.getDoubleExtra("lat", 0.0);
-//        longitude =  i.getDoubleExtra("long",0.0);
         apikey = getApplicationContext().getResources().getString(R.string.apikey);
         if (ParseUser.getCurrentUser() != null) {
 
@@ -137,7 +101,6 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
             Intent l = new Intent(CreateLocationActivity.this, Loginscreen.class);
             startActivity(l);
             finish();
-//            overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
         }
 
         enableLocationSettings();
@@ -148,7 +111,6 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
 
         }
 
-        //  btnSave.setVisibility(View.VISIBLE);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,18 +188,6 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
             startActivityForResult(i, 2);
         });
 
-
-//        mMap.setOnMapClickListener(point -> {
-//
-////            session.savesession(etLocationName.getText().toString().trim(), etContactNumber.getText().toString().trim(),
-////                    etSetPin.getText().toString().trim(), etRePin.getText().toString().trim());
-//            Intent i = new Intent(CreateLocationActivity.this, MapActivity.class);
-//            i.putExtra("lat",latitude);
-//            i.putExtra("long",longitude);
-//            i.putExtra("sts","0");
-//            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//            startActivity(i);
-//        });
     }
 
 
@@ -275,8 +225,6 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-
-//            }
             }
         }
     }
@@ -295,21 +243,10 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
                 .position(new LatLng(arg0.getLatitude(), arg0.getLongitude()))
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-     //   Toast.makeText(this, "Current txt_location:\n" + txt_location, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-//        session.savesession(etLocationName.getText().toString().trim(), etContactNumber.getText().toString().trim(),
-//                etSetPin.getText().toString().trim(), etRePin.getText().toString().trim());
-//        Intent i = new Intent(CreateLocationActivity.this, MapActivity.class);
-//        i.putExtra("lat", latitude);
-//        i.putExtra("long", longitude);
-//        i.putExtra("sts", "0");
-//        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        startActivity(i);
-
-
         Intent i = new Intent(CreateLocationActivity.this, MapActivity.class);
         Bundle b = new Bundle();
         b.putDouble("latitude", latitude);
@@ -325,10 +262,8 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
         ParseUser user = ParseUser.getCurrentUser();
         String taxId = user.getString("taxId");
         String tax = String.valueOf(user.getNumber("tax"));
-     //   session.savesession("", "", "", "");
         progressBar.setVisibility(View.VISIBLE);
         ParseGeoPoint point = new ParseGeoPoint(latitude, longitude);
-       // ParseUser user = ParseUser.getCurrentUser();
         ParseObject shop = new ParseObject("ShopLocations");
         shop.put("locationName", etLocationName.getText().toString().trim());
         shop.put("pin", Integer.parseInt(etSetPin.getText().toString().trim()));
@@ -508,7 +443,6 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-         //   session.savesession("", "", "", "");
             Intent i = new Intent(CreateLocationActivity.this, DashboardActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -524,13 +458,11 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       // session.savesession("", "", "", "");
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-       // session.savesession("", "", "", "");
         Intent i = new Intent(CreateLocationActivity.this, DashboardActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

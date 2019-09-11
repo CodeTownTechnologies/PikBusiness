@@ -85,28 +85,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-
-                //    sts = getIntent().getStringExtra("sts");
-
                 if (latitude != 0.0 && longitude != 0.0) {
-//                    if(sts.equals("0")){
-//                        Intent i = new Intent(MapActivity.this,CreateLocationActivity.class);
-//                        i.putExtra("lat", latitude);
-//                        i.putExtra("long", longitude);
-////                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        startActivity(i);
-//                    }else if(sts.equals("1")){
-//                        Intent i = new Intent(MapActivity.this, EditLocationActivity.class);
-//                        Bundle b = new Bundle();
-//                        b.putDouble("latt", latitude);
-//                        b.putDouble("logg", longitude);
-//                        i.putExtras(b);
-//                        i.putExtra("mp","2");
-//                        i.putExtra("objectId", objectId);
-////                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        startActivity(i);
-//                    }
-
                     Intent i = new Intent();
                     Bundle b = new Bundle();
                     b.putDouble("latitude", latitude);
@@ -126,24 +105,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onBackPressed() {
 
         if (latitude != 0.0 && longitude != 0.0) {
-//            if (sts.equals("0")) {
-//                Intent i = new Intent(MapActivity.this, CreateLocationActivity.class);
-//                i.putExtra("lat", latitude);
-//                i.putExtra("long", longitude);
-////                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(i);
-//            } else if (sts.equals("1")) {
-//                Intent i = new Intent(MapActivity.this, EditLocationActivity.class);
-//                Bundle b = new Bundle();
-//                b.putDouble("latt", latitude);
-//                b.putDouble("logg", longitude);
-//                i.putExtras(b);
-//                i.putExtra("mp", "2");
-//                i.putExtra("objectId", objectId);
-////                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(i);
-//            }
-            //   super.onBackPressed();
             Intent i = new Intent();
             Bundle b = new Bundle();
             b.putDouble("latitude", latitude);
@@ -156,7 +117,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             Toast.makeText(MapActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
         }
-//        overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
     }
 
 
@@ -164,24 +124,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         if (item.getItemId() == android.R.id.home) {
             if (latitude != 0.0 && longitude != 0.0) {
-//                if (sts.equals("0")) {
-//                    Intent i = new Intent(MapActivity.this, CreateLocationActivity.class);
-//                    i.putExtra("lat", latitude);
-//                    i.putExtra("long", longitude);
-////                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(i);
-//                } else {
-//                    Intent i = new Intent(MapActivity.this, EditLocationActivity.class);
-//                    Bundle b = new Bundle();
-//                    b.putDouble("latt", latitude);
-//                    b.putDouble("logg", longitude);
-//                    i.putExtras(b);
-//                    i.putExtra("mp", "2");
-//                    i.putExtra("objectId", objectId);
-////                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(i);
-//                }
-                // super.onBackPressed();
                 Intent i = new Intent();
                 Bundle b = new Bundle();
                 b.putDouble("latitude", latitude);
@@ -245,7 +187,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
 
-//            }
         }
         mMap.setOnMapClickListener(point -> {
             int height = 80;
