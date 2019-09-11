@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/progressbg"
+        android:elevation="2dp"
+        android:indeterminateDrawable="@drawable/custom_progressdialog"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="Location Name"
+                android:textColor="@color/silver"
+                android:textSize="@dimen/textregular14" />
+
+            <EditText
+                android:id="@+id/et_location_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="0dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:inputType="textCapSentences"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/textregular14" />
+
+            <TextView
+                android:id="@+id/phtxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="Phone Number"
+                android:textColor="@color/silver"
+                android:textSize="@dimen/textregular14" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/country_code_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ccp_autoDetectCountry="false"
+                    app:ccp_countryPreference="ae,in,us"
+                    app:ccp_defaultNameCode="AE"
+                    app:ccp_hintExampleNumber="true"
+                    app:ccp_hintExampleNumberType="FIXED_LINE"
+                    app:ccp_textSize="@dimen/textregular14" />
+
+                <EditText
+                    android:id="@+id/et_contact_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:hint="phone"
+                    android:inputType="phone"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/textregular14" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/spintxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="Set Pin"
+                android:textColor="@color/silver"
+                android:textSize="@dimen/textregular14" />
+
+            <EditText
+                android:id="@+id/et_set_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="0dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:inputType="number"
+
+                android:maxLength="4"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/textregular14" />
+
+            <TextView
+                android:id="@+id/reptxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="Re - Pin"
+                android:textColor="@color/silver"
+                android:textSize="@dimen/textregular14" />
+
+            <EditText
+                android:id="@+id/et_re_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="0dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:inputType="number"
+                android:maxLength="4"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/textregular14" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/txt_location"
+                android:text="Select your shop location"
+                android:textColor="@color/silver"
+                android:textSize="@dimen/textregular14" />
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_save_location"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        android:text="Save"
+        android:textColor="@android:color/white" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -19,16 +19,16 @@ public class EstimatedData extends ParseObject {
     private String locationName;
     @SerializedName("pin")
     @Expose
-    private Integer pin;
+    private int pin;
     @SerializedName("phoneNo")
     @Expose
-    private Integer phoneNo;
+    private int phoneNo;
     @SerializedName("location")
     @Expose
     private Location location;
     @SerializedName("tax")
     @Expose
-    private Integer tax;
+    private int tax;
     @SerializedName("business")
     @Expose
     private Business business;
@@ -37,15 +37,15 @@ public class EstimatedData extends ParseObject {
     private String approveStatus;
 
 
-    public Integer getShopStatus() {
+    public int getShopStatus() {
         return shopStatus;
     }
 
-    public void setShopStatus(Integer shopStatus) {
+    public void setShopStatus(int shopStatus) {
         this.shopStatus = shopStatus;
     }
 
-    public EstimatedData withShopStatus(Integer shopStatus) {
+    public EstimatedData withShopStatus(int shopStatus) {
         this.shopStatus = shopStatus;
         return this;
     }
@@ -76,28 +76,28 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public Integer getPin() {
+    public int getPin() {
         return pin;
     }
 
-    public void setPin(Integer pin) {
+    public void setPin(int pin) {
         this.pin = pin;
     }
 
-    public EstimatedData withPin(Integer pin) {
+    public EstimatedData withPin(int pin) {
         this.pin = pin;
         return this;
     }
 
-    public Integer getPhoneNo() {
+    public int getPhoneNo() {
         return phoneNo;
     }
 
-    public void setPhoneNo(Integer phoneNo) {
+    public void setPhoneNo(int phoneNo) {
         this.phoneNo = phoneNo;
     }
 
-    public EstimatedData withPhoneNo(Integer phoneNo) {
+    public EstimatedData withPhoneNo(int phoneNo) {
         this.phoneNo = phoneNo;
         return this;
     }
@@ -116,15 +116,15 @@ public class EstimatedData extends ParseObject {
     }
 
 
-    public Integer getTax() {
+    public int getTax() {
         return tax;
     }
 
-    public void setTax(Integer tax) {
+    public void setTax(int tax) {
         this.tax = tax;
     }
 
-    public EstimatedData withTax(Integer tax) {
+    public EstimatedData withTax(int tax) {
         this.tax = tax;
         return this;
     }

@@ -1,4 +1,4 @@
-package com.pikbusiness;
+package com.pikbusiness.Activity;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -13,6 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.elmargomez.typer.Font;
@@ -29,20 +34,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.pikbusiness.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LatLng latLng;
@@ -51,10 +52,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final long LOCATION_UPDATE_FASTEST_INTERVAL = 3000;
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     private boolean isPermission;
-    private Double l1 = 0.0,l2 = 0.0;
-    String sts = "",id;
-    @BindView(R.id.save)
+    private Double latitude = 0.0, longitude = 0.0;
+
+    @BindView(R.id.btn_save_location)
     Button save;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +65,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
         Fabric.with(this, new Crashlytics());
-        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        Intent i = getIntent();
-        l1 = i.getDoubleExtra("lat", 0.0);
-        l2 =  i.getDoubleExtra("long",0.0);
-        sts = getIntent().getStringExtra("sts");
-        id = getIntent().getStringExtra("id");
         save.setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
+
+        Bundle b = getIntent().getExtras();
+        latitude = b.getDouble("latitude");
+        longitude = b.getDouble("longitude");
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         enableLocationSettings();
-        if(checkAndRequestPermissions()){
+        if (checkAndRequestPermissions()) {
 
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
@@ -82,84 +84,114 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sts = getIntent().getStringExtra("sts");
 
-                if(l1 != 0.0 && l2 != 0.0){
-                    if(sts.equals("0")){
-                        Intent i = new Intent(MapsActivity.this,Createloctaion.class);
-                        i.putExtra("lat",l1);
-                        i.putExtra("long",l2);
-//                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                    }else if(sts.equals("1")){
-                        Intent i = new Intent(MapsActivity.this, EditLocationActivity.class);
-                        Bundle b = new Bundle();
-                        b.putDouble("latt", l1);
-                        b.putDouble("logg", l2);
-                        i.putExtras(b);
-                        i.putExtra("mp","2");
-                        i.putExtra("id",id);
-//                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                    }
 
-                }else{
-                    Toast.makeText(MapsActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
+                //    sts = getIntent().getStringExtra("sts");
+
+                if (latitude != 0.0 && longitude != 0.0) {
+//                    if(sts.equals("0")){
+//                        Intent i = new Intent(MapActivity.this,CreateLocationActivity.class);
+//                        i.putExtra("lat", latitude);
+//                        i.putExtra("long", longitude);
+////                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(i);
+//                    }else if(sts.equals("1")){
+//                        Intent i = new Intent(MapActivity.this, EditLocationActivity.class);
+//                        Bundle b = new Bundle();
+//                        b.putDouble("latt", latitude);
+//                        b.putDouble("logg", longitude);
+//                        i.putExtras(b);
+//                        i.putExtra("mp","2");
+//                        i.putExtra("objectId", objectId);
+////                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(i);
+//                    }
+
+                    Intent i = new Intent();
+                    Bundle b = new Bundle();
+                    b.putDouble("latitude", latitude);
+                    b.putDouble("longitude", longitude);
+                    i.putExtras(b);
+                    setResult(2, i);
+                    finish();
+
+                } else {
+                    Toast.makeText(MapActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
     @Override
     public void onBackPressed() {
 
-        if(l1 != 0.0 && l2 != 0.0){
-            if(sts.equals("0")){
-                Intent i = new Intent(MapsActivity.this,Createloctaion.class);
-                i.putExtra("lat",l1);
-                i.putExtra("long",l2);
-//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-            }else if(sts.equals("1")){
-                Intent i = new Intent(MapsActivity.this, EditLocationActivity.class);
-                Bundle b = new Bundle();
-                b.putDouble("latt", l1);
-                b.putDouble("logg", l2);
-                i.putExtras(b);
-                i.putExtra("mp","2");
-                i.putExtra("id",id);
-//                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-            }
-            super.onBackPressed();
-        }else{
-            Toast.makeText(MapsActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
+        if (latitude != 0.0 && longitude != 0.0) {
+//            if (sts.equals("0")) {
+//                Intent i = new Intent(MapActivity.this, CreateLocationActivity.class);
+//                i.putExtra("lat", latitude);
+//                i.putExtra("long", longitude);
+////                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(i);
+//            } else if (sts.equals("1")) {
+//                Intent i = new Intent(MapActivity.this, EditLocationActivity.class);
+//                Bundle b = new Bundle();
+//                b.putDouble("latt", latitude);
+//                b.putDouble("logg", longitude);
+//                i.putExtras(b);
+//                i.putExtra("mp", "2");
+//                i.putExtra("objectId", objectId);
+////                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(i);
+//            }
+            //   super.onBackPressed();
+            Intent i = new Intent();
+            Bundle b = new Bundle();
+            b.putDouble("latitude", latitude);
+            b.putDouble("longitude", longitude);
+            i.putExtras(b);
+            setResult(2, i);
+            finish();
+
+
+        } else {
+            Toast.makeText(MapActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
         }
 //        overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
     }
+
+
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            if(l1 != 0.0 && l2 != 0.0){
-                if(sts.equals("0")){
-                    Intent i = new Intent(MapsActivity.this,Createloctaion.class);
-                    i.putExtra("lat",l1);
-                    i.putExtra("long",l2);
-//                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                }else{
-                    Intent i = new Intent(MapsActivity.this, EditLocationActivity.class);
-                    Bundle b = new Bundle();
-                    b.putDouble("latt", l1);
-                    b.putDouble("logg", l2);
-                    i.putExtras(b);
-                    i.putExtra("mp","2");
-                    i.putExtra("id",id);
-//                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                }
-                super.onBackPressed();
-            }else{
-                Toast.makeText(MapsActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
+            if (latitude != 0.0 && longitude != 0.0) {
+//                if (sts.equals("0")) {
+//                    Intent i = new Intent(MapActivity.this, CreateLocationActivity.class);
+//                    i.putExtra("lat", latitude);
+//                    i.putExtra("long", longitude);
+////                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(i);
+//                } else {
+//                    Intent i = new Intent(MapActivity.this, EditLocationActivity.class);
+//                    Bundle b = new Bundle();
+//                    b.putDouble("latt", latitude);
+//                    b.putDouble("logg", longitude);
+//                    i.putExtras(b);
+//                    i.putExtra("mp", "2");
+//                    i.putExtra("objectId", objectId);
+////                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(i);
+//                }
+                // super.onBackPressed();
+                Intent i = new Intent();
+                Bundle b = new Bundle();
+                b.putDouble("latitude", latitude);
+                b.putDouble("longitude", longitude);
+                i.putExtras(b);
+                setResult(2, i);
+                finish();
+
+            } else {
+                Toast.makeText(MapActivity.this, "select your shop location", Toast.LENGTH_SHORT).show();
             }
 
             return true;
@@ -187,49 +219,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
 
         }
-        if(l1 != 0.0 && l2 != 0.0){
+        if (latitude != 0.0 && longitude != 0.0) {
             int height = 80;
             int width = 60;
-            BitmapDrawable bitmapdraw=(BitmapDrawable)ContextCompat.getDrawable(this,R.drawable.pointer);
-            Bitmap b=bitmapdraw.getBitmap();
+            BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pointer);
+            Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
             mMap.clear();
-            latLng = new LatLng(l1, l2);
+            latLng = new LatLng(latitude, longitude);
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15.0f));
-        }
-        else{
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        } else {
             int height = 80;
             int width = 60;
-                        BitmapDrawable bitmapdraw=(BitmapDrawable)ContextCompat.getDrawable
-                                (this,R.drawable.pointer);
-                        Bitmap b=bitmapdraw.getBitmap();
-                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                        mMap.clear();
-                        latLng = new LatLng(24.466667, 54.366669);
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15.0f));
+            BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable
+                    (this, R.drawable.pointer);
+            Bitmap b = bitmapdraw.getBitmap();
+            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+            mMap.clear();
+            latLng = new LatLng(24.466667, 54.366669);
+            mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
 
 //            }
         }
         mMap.setOnMapClickListener(point -> {
             int height = 80;
             int width = 60;
-            BitmapDrawable bitmapdraw=(BitmapDrawable)ContextCompat.getDrawable(MapsActivity.this,R.drawable.pointer);
-            Bitmap b=bitmapdraw.getBitmap();
+            BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable(MapActivity.this, R.drawable.pointer);
+            Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
             mMap.clear();
             latLng = new LatLng(point.latitude, point.longitude);
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(point.latitude, point.longitude))
                     .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15.0f));
-          l1 = point.latitude;
-          l2 = point.longitude;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+            latitude = point.latitude;
+            longitude = point.longitude;
         });
 
     }
@@ -247,12 +278,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // sees the explanation, try again to request the permission.
                 new AlertDialog.Builder(this)
                         .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+                        .setMessage("This app needs the Location permission, please accept to use txt_location functionality")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(MapsActivity.this,
+                                ActivityCompat.requestPermissions(MapActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         MY_PERMISSIONS_REQUEST_LOCATION);
                             }
@@ -270,7 +301,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -282,7 +312,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the
-                    // location-related task you need to do.
+                    // txt_location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mMap.setMyLocationEnabled(true);
@@ -300,6 +330,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
     }
+
     protected boolean enableLocationSettings() {
         LocationRequest locationRequest = LocationRequest.create()
                 .setInterval(LOCATION_UPDATE_INTERVAL)
@@ -333,7 +364,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         try {
                             // Show the dialog by calling startResolutionForResult(),  and check the result in onActivityResult().
                             ResolvableApiException resolvable = (ResolvableApiException) ex;
-                            resolvable.startResolutionForResult(MapsActivity.this, REQUEST_CODE_CHECK_SETTINGS);
+                            resolvable.startResolutionForResult(MapActivity.this, REQUEST_CODE_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException sendEx) {
                             Crashlytics.logException(sendEx);
                             // Ignore the error.
@@ -342,7 +373,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
         return isPermission;
     }
-    private  boolean checkAndRequestPermissions() {
+
+    private boolean checkAndRequestPermissions() {
         int loc = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         int loc2 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -354,10 +386,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (loc != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-        if (!listPermissionsNeeded.isEmpty())
-        {
-            ActivityCompat.requestPermissions(this,listPermissionsNeeded.toArray
-                    (new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray
+                    (new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             return false;
         }
         return true;

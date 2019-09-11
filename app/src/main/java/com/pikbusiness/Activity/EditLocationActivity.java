@@ -1,4 +1,4 @@
-package com.pikbusiness;
+package com.pikbusiness.Activity;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -46,7 +47,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pikbusiness.Loginmodule.Loginscreen;
-import com.pikbusiness.Loginmodule.SessionManager;
+import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 
 import butterknife.BindView;
@@ -59,13 +60,13 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     private static final long LOCATION_UPDATE_FASTEST_INTERVAL = 3000;
     private GoogleMap mMap;
     String apikey = "", mp = "0", loc_string, phoneno_string, setpin_string, repin_string;
-    @BindView(R.id.loc)
+    @BindView(R.id.et_location_name)
     EditText tvLocationName;
-    @BindView(R.id.setpin)
+    @BindView(R.id.et_set_pin)
     EditText tvSetPin;
     @BindView(R.id.phno)
     EditText tvPhoneNo;
-    @BindView(R.id.repin)
+    @BindView(R.id.et_re_pin)
     EditText tvRepin;
     @BindView(R.id.ltxt)
     TextView ltxt;
@@ -77,18 +78,19 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     TextView reptxt;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.save)
+    @BindView(R.id.btn_save_location)
     Button save;
     Double latitude, longitude;
     String locationName, objectId, pin, shopStatus, phoneNo, tax;
-    SessionManager session;
+    //SessionManager session;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_location);
         ButterKnife.bind(this);
-        session = new SessionManager(this);
+        //  session = new SessionManager(this);
         apikey = getApplicationContext().getResources().getString(R.string.apikey);
         save.setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
         ltxt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
@@ -130,11 +132,12 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
         } else {
 
-            latitude = Double.valueOf(getIntent().getStringExtra("latitude"));
-            longitude = Double.valueOf(getIntent().getStringExtra("longitude"));
+            Bundle b = getIntent().getExtras();
+            latitude = b.getDouble("latitude");
+            longitude = b.getDouble("longitude");
             locationName = getIntent().getStringExtra("location_name");
             pin = getIntent().getStringExtra("pin");
-            objectId = getIntent().getStringExtra("id");
+            objectId = getIntent().getStringExtra("objectId");
             tax = getIntent().getStringExtra("tax");
             shopStatus = getIntent().getStringExtra("shopStatus");
             phoneNo = getIntent().getStringExtra("phoneNo");
@@ -155,7 +158,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                 String pin = tvSetPin.getText().toString().trim();
                 String rePin = tvRepin.getText().toString().trim();
                 if (locationName.length() == 0) {
-                    customToast("Please enter location name");
+                    customToast("Please enter txt_location name");
                 } else if (phoneNumber.length() == 0) {
                     customToast("Please enter mobile number");
                 } else if (!isValidPhoneNumber(phoneNumber)) {
@@ -172,9 +175,9 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
                         if (latitude != null && longitude != null) {
 
-                            editLocation();
+                            updateLocation();
                         } else {
-                            customToast("Please select the shop location in maps");
+                            customToast("Please select the shop txt_location in maps");
                         }
                     } else {
                         customToast("You entered pin not matching");
@@ -270,27 +273,22 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         }
         mMap.setOnMapClickListener(point -> {
 
-//            session.savesession(tvLocationName.getText().toString().trim(), tvPhoneNo.getText().toString().trim(),
-//                    tvSetPin.getText().toString().trim(), tvRepin.getText().toString().trim());
-            Intent i = new Intent(EditLocationActivity.this, MapsActivity.class);
-            i.putExtra("lat", latitude);
-            i.putExtra("long", longitude);
-            i.putExtra("id", objectId);
-            i.putExtra("sts", "1");
-            startActivity(i);
+            Intent i = new Intent(EditLocationActivity.this, MapActivity.class);
+            Bundle b = new Bundle();
+            b.putDouble("latitude", latitude);
+            b.putDouble("longitude", longitude);
+            i.putExtras(b);
+            startActivityForResult(i, 2);
         });
-//            if(latitude != null && longitude != null){
-//                getAddress(this,latitude,longitude);
+
 
     }
 
-    private void editLocation() {
+    private void updateLocation() {
 
-        session.savesession("", "", "", "");
-
-        ParseUser userr = ParseUser.getCurrentUser();
-        String taxid = userr.getString("taxId");
-        String tax = String.valueOf(userr.getNumber("tax"));
+        ParseUser user = ParseUser.getCurrentUser();
+        String taxId = user.getString("taxId");
+        String tax = String.valueOf(user.getNumber("tax"));
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
         query.whereEqualTo("business", ParseUser.getCurrentUser().getObjectId());
@@ -307,8 +305,8 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                     shop.put("pin", Integer.parseInt(tvSetPin.getText().toString().trim()));
                     shop.put("phoneNo", Long.valueOf(tvPhoneNo.getText().toString().trim()));
                     shop.put("location", point);
-                    if (taxid != null) {
-                        shop.put("taxId", taxid);
+                    if (taxId != null) {
+                        shop.put("taxId", taxId);
                     }
                     try {
                         if (!tax.equals("null")) {
@@ -329,7 +327,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                 startActivity(i);
-//                                        overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 Toast.makeText(EditLocationActivity.this,
                                         "Success your shop location is updated", Toast.LENGTH_SHORT).show();
                             } else {
@@ -362,7 +360,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
                 new AlertDialog.Builder(this)
                         .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+                        .setMessage("This app needs the Location permission, please accept to use txt_location functionality")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -385,7 +383,6 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -397,7 +394,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the
-                    // location-related task you need to do.
+                    // txt_location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
@@ -418,17 +415,15 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        session.savesession("", "", "", "");
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            session.savesession("", "", "", "");
             Intent i = new Intent(EditLocationActivity.this, DashboardActivity.class);
             startActivity(i);
             finish();
-//                    overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;
         }
         return (super.onOptionsItemSelected(item));
@@ -437,11 +432,10 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        session.savesession("", "", "", "");
         Intent i = new Intent(EditLocationActivity.this, DashboardActivity.class);
         startActivity(i);
         finish();
-//                overridePendingTransition(R.anim.pull_in_right, R.anim.pull_out_left);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
 
@@ -452,9 +446,8 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-
         if (ParseUser.getCurrentUser() != null) {
 
         } else {
@@ -465,5 +458,18 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2)
+        {
+            Bundle b = data.getExtras();
+            latitude = b.getDouble("latitude");
+            longitude = b.getDouble("longitude");
+
+
+        }
+    }
 }
 

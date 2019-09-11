@@ -1,4 +1,4 @@
-package com.pikbusiness;
+package com.pikbusiness.Activity;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -51,24 +51,26 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pikbusiness.Adapters.ShopLocationAdapter;
+import com.pikbusiness.Bankdetails;
+import com.pikbusiness.BuildConfig;
 import com.pikbusiness.Editmenu.EditMenutabs;
 import com.pikbusiness.Loginmodule.SessionManager;
+import com.pikbusiness.Orderslist;
+import com.pikbusiness.Profile;
+import com.pikbusiness.R;
 import com.pikbusiness.model.Response.Business;
 import com.pikbusiness.model.Response.BusinessEstimatedData;
 import com.pikbusiness.model.Response.EstimatedData;
 import com.pikbusiness.model.Response.Location;
 import com.pikbusiness.services.Alertservice;
 import com.pikbusiness.services.Toasty;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-
 import static android.text.Html.fromHtml;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -111,7 +113,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         mShopRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mShopRecyclerView.setAdapter(mAdapter);
 
-        if (checkInternetConenction()) {
+        if (checkInternetConnection()) {
             checkData();
             addListItems();
             //  checkData();
@@ -121,13 +123,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (checkInternetConenction()) {
+                if (checkInternetConnection()) {
                     addListItems();
                 }
             }
         });
         stopService(new Intent(DashboardActivity.this, Alertservice.class));
-        updateApp(this);
+      //  updateApp(this);
         checkUpdate();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -346,7 +348,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                     businessEstimateData.setBusinessName(pr.getString("Business_name"));
                                     business.setBusinessEstimatedData(businessEstimateData);
                                     estimatedData.setBusiness(business);
-                                    ParseGeoPoint loc = user.getParseGeoPoint(" ");
+                                    ParseGeoPoint loc = user.getParseGeoPoint("location");
                                     if (loc != null) {
                                         Location location = new Location();
                                         location.setLatitude(loc.getLatitude());
@@ -415,7 +417,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
                             } else {
                                 if (priority.intValue() > 2) {
-                                    updatepopup();
+                                    updatePopUp();
                                 }
                             }
 
@@ -439,14 +441,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         });
     }
 
-    public void updatepopup() {
+    public void updatePopUp() {
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.popupupdate, null);
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
         alertbox.setView(layout);
 
-//        TextView txt = layout.findViewById(R.id.msg);
+//        TextView txt = layout.findViewById(R.objectId.msg);
         Button update = layout.findViewById(R.id.update);
 
         alertbox.setCancelable(false);
@@ -456,9 +458,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 //                alertDialog.dismiss();
                 final String appPackageName = getPackageName();
                 try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?objectId=" + appPackageName)));
+                } catch (ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?objectId=" + appPackageName)));
                 }
             }
         });
@@ -469,7 +471,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     }
 
-    private boolean checkInternetConenction() {
+    private boolean checkInternetConnection() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // test for connection
         if (cm.getActiveNetworkInfo() != null
@@ -499,9 +501,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
-                            act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                            act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?objectId=" + appPackageName)));
                         } catch (ActivityNotFoundException anfe) {
-                            act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                            act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?objectId=" + appPackageName)));
                         }
                     }
                 });
@@ -598,7 +600,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         //noinspection SimplifiableIfStatement
         if (id == R.id.createloc) {
 
-            Intent i = new Intent(DashboardActivity.this, Createloctaion.class);
+            Intent i = new Intent(DashboardActivity.this, CreateLocationActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             return true;

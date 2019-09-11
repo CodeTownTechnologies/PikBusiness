@@ -16,7 +16,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-import com.pikbusiness.DashboardActivity;
+
+import com.pikbusiness.Activity.DashboardActivity;
 import com.pikbusiness.Orderslist;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;

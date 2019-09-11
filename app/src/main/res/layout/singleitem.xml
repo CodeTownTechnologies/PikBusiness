@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:id="@+id/save"
+            android:id="@+id/btn_save_location"
             android:textSize="@dimen/textheader16"
             android:layout_marginRight="20dp"
             android:textColor="@color/colorPrimary"

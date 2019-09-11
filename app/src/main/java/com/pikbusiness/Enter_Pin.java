@@ -51,7 +51,7 @@ public class Enter_Pin extends AppCompatActivity {
        login.setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
 
         pin = getIntent().getStringExtra("pin");
-        String id = getIntent().getStringExtra("id");
+        String id = getIntent().getStringExtra("objectId");
 //      new Getorderslist().execute();
          pusharray = new JSONArray();
         pusharray.put("business_"+ParseUser.getCurrentUser().getObjectId());
@@ -64,7 +64,7 @@ public class Enter_Pin extends AppCompatActivity {
             else if(pin.equals(totpin)){
                 String lname = getIntent().getStringExtra("locationName");
                 String bname = getIntent().getStringExtra("bname");
-                String id1 = getIntent().getStringExtra("id");
+                String id1 = getIntent().getStringExtra("objectId");
                 String shopstatus = getIntent().getStringExtra("shopStatus");
                 if(ParseUser.getCurrentUser()!=null) {
 
@@ -93,7 +93,7 @@ public class Enter_Pin extends AppCompatActivity {
                 Intent i = new Intent(Enter_Pin.this,Orderslist.class);
                 i.putExtra("locationName",lname);
                 i.putExtra("bname",bname);
-                i.putExtra("id", id1);
+                i.putExtra("objectId", id1);
                 i.putExtra("lat",getIntent().getStringExtra("lat"));
                 i.putExtra("log",getIntent().getStringExtra("log"));
                 i.putExtra("shopStatus",shopstatus);

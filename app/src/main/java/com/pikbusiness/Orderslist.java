@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pikbusiness.Activity.DashboardActivity;
 import com.pikbusiness.Adapters.InprogressAdapter;
 import com.pikbusiness.Adapters.NeworderAdapter;
 import com.pikbusiness.Adapters.Readyadapter;
@@ -171,13 +173,13 @@ public class Orderslist extends AppCompatActivity {
         if (chk != null) {
             lname = pref.getString("locationName", null);
             bname = pref.getString("bname", null);
-            idd = pref.getString("id", null);
+            idd = pref.getString("objectId", null);
             lat = pref.getString("lat", null);
             logg = pref.getString("log", null);
         } else {
             lname = getIntent().getStringExtra("locationName");
             bname = getIntent().getStringExtra("bname");
-            idd = getIntent().getStringExtra("id");
+            idd = getIntent().getStringExtra("objectId");
         }
 
         String sts = getIntent().getStringExtra("sts");
@@ -309,7 +311,7 @@ public class Orderslist extends AppCompatActivity {
                         dialog.dismiss();
                         Intent e = new Intent(Orderslist.this,EditMenutabs.class);
                         e.putExtra("locationName",lname);
-                        e.putExtra("id", idd);
+                        e.putExtra("objectId", idd);
                         e.putExtra("lat", lat);
                         e.putExtra("log",logg);
                         e.putExtra("pin", getIntent().getStringExtra("pin"));
@@ -704,7 +706,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("offerEnabled",String.valueOf(user.getBoolean("offerEnabled")));
 //                            Log.d("chk", "onPostExecute: ");
                             map.put("date", user.getCreatedAt().toString());
-                            map.put("id", idd);
+                            map.put("objectId", idd);
                             ParseObject customer = user.getParseObject("user");
                             ParseObject shop = user.getParseObject("shop");
                             String name = "", car = "",shop_name= "",shop_phno = "";
@@ -766,7 +768,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("tranRef", user.getString("tranRef"));
                             map.put("objid", user.getObjectId());
                             map.put("date", user.getCreatedAt().toString());
-                            map.put("id", idd);
+                            map.put("objectId", idd);
                             map.put("discountAmount", String.valueOf(user.getNumber("discountAmount")));
                             ParseObject offer = user.getParseObject("offerDetails");
                             map.put("offerEnabled",String.valueOf(user.getBoolean("offerEnabled")));
@@ -828,7 +830,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("taxid", user.getString("taxId"));
                             map.put("objid", user.getObjectId());
                             map.put("date", user.getCreatedAt().toString());
-                            map.put("id", idd);
+                            map.put("objectId", idd);
                             map.put("discountAmount", String.valueOf(user.getNumber("discountAmount")));
                             ParseObject offer = user.getParseObject("offerDetails");
                             map.put("offerEnabled",String.valueOf(user.getBoolean("offerEnabled")));
@@ -1008,7 +1010,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("objid", user.getObjectId());
                             map.put("tranRef", user.getString("tranRef"));
                             map.put("date", user.getCreatedAt().toString());
-                            map.put("id", idd);
+                            map.put("objectId", idd);
                         map.put("discountAmount", String.valueOf(user.getNumber("discountAmount")));
                         ParseObject offer = user.getParseObject("offerDetails");
                         map.put("offerEnabled",String.valueOf(user.getBoolean("offerEnabled")));
@@ -1151,7 +1153,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("objid", user.getObjectId());
                         map.put("tranRef", user.getString("tranRef"));
                             map.put("date", user.getCreatedAt().toString());
-                            map.put("id", idd);
+                            map.put("objectId", idd);
                         map.put("discountAmount", String.valueOf(user.getNumber("discountAmount")));
                         ParseObject offer = user.getParseObject("offerDetails");
                         map.put("offerEnabled",String.valueOf(user.getBoolean("offerEnabled")));
@@ -1280,7 +1282,7 @@ public class Orderslist extends AppCompatActivity {
                             map.put("objid", user.getObjectId());
                         map.put("tranRef", user.getString("tranRef"));
                             map.put("date", user.getCreatedAt().toString());
-                            map.put("id", idd);
+                            map.put("objectId", idd);
                         map.put("discountAmount", String.valueOf(user.getNumber("discountAmount")));
                         ParseObject offer = user.getParseObject("offerDetails");
                         map.put("offerEnabled",String.valueOf(user.getBoolean("offerEnabled")));

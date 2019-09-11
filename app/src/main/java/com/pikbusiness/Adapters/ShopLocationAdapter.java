@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.pikbusiness.EditLocationActivity;
+import com.pikbusiness.Activity.EditLocationActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.model.Response.EstimatedData;
 
@@ -155,14 +156,16 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
             public void onClick(View v) {
                 popup.dismiss();
                 Intent e = new Intent(context, EditLocationActivity.class);
-                e.putExtra("location_name", estimateDataList.get(position).getLocationName());
-                e.putExtra("id", estimateDataList.get(position).getObjectId());
-                e.putExtra("latitude", estimateDataList.get(position).getLocation().getLatitude());
-                e.putExtra("longitude", estimateDataList.get(position).getLocation().getLongitude());
-                e.putExtra("pin", estimateDataList.get(position).getPin());
-                e.putExtra("tax", estimateDataList.get(position).getTax());
-                e.putExtra("shopStatus", estimateDataList.get(position).getShopStatus());
-                e.putExtra("phoneNo", estimateDataList.get(position).getPhoneNo());
+                e.putExtra("location_name", "" + estimateDataList.get(position).getLocationName());
+                e.putExtra("objectId", estimateDataList.get(position).getObjectId());
+                Bundle b = new Bundle();
+                b.putDouble("latitude", estimateDataList.get(position).getLocation().getLatitude());
+                b.putDouble("longitude", estimateDataList.get(position).getLocation().getLongitude());
+                e.putExtras(b);
+                e.putExtra("pin", "" + estimateDataList.get(position).getPin());
+                e.putExtra("tax", "" + estimateDataList.get(position).getTax());
+                e.putExtra("shopStatus", "" + estimateDataList.get(position).getShopStatus());
+                e.putExtra("phoneNo", "" + estimateDataList.get(position).getPhoneNo());
                 context.startActivity(e);
 
             }

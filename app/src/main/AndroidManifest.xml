@@ -90,6 +90,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.DashboardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
         <activity
             android:name=".Loginmodule.Loginscreen"
             android:screenOrientation="portrait"
@@ -125,19 +130,14 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".Createloctaion"
+            android:name=".Activity.CreateLocationActivity"
             android:label="Create Location"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
+                android:value=".Activity.DashboardActivity" />
         </activity>
-        <activity
-            android:name=".DashboardActivity"
-            android:label="@string/title_activity_dashboard"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Editmenu.Singleitem"
             android:screenOrientation="portrait"
@@ -153,7 +153,7 @@
 
         </activity>
         <activity
-            android:name=".EditLocationActivity"
+            android:name=".Activity.EditLocationActivity"
             android:label="Edit Location"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -162,12 +162,12 @@
                 android:value=".Orderslist" />
         </activity>
         <activity
-            android:name=".MapsActivity"
+            android:name=".Activity.MapActivity"
             android:label="Select Location"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Createloctaion" />
+                android:value=".Activity.CreateLocationActivity" />
         </activity>
         <activity
             android:name=".Enter_Pin"
@@ -176,7 +176,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
+                android:value=".Activity.DashboardActivity" />
         </activity>
         <activity
             android:name=".Editmenu.EditMenutabs"
@@ -185,7 +185,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
+                android:value=".Activity.DashboardActivity" />
         </activity>
         <activity
             android:name=".Profile"
@@ -193,7 +193,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
+                android:value=".Activity.DashboardActivity" />
         </activity>
         <activity
             android:name=".Bankdetails"
@@ -201,7 +201,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
+                android:value=".Activity.DashboardActivity" />
         </activity>
         <activity
             android:name=".Loginmodule.Terms"

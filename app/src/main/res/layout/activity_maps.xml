@@ -13,11 +13,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="40dp"
-    tools:context=".MapsActivity" />
+    tools:context=".Activity.MapActivity" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:id="@+id/save"
+        android:id="@+id/btn_save_location"
         android:layout_gravity="bottom"
         android:textColor="@android:color/white"
         android:background="@color/colorPrimary"

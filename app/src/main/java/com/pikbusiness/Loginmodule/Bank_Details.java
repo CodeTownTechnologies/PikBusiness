@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.pikbusiness.DashboardActivity;
+import com.pikbusiness.Activity.DashboardActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;

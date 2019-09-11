@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -15,10 +14,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Base64;
+
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,12 +44,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -71,8 +65,8 @@ public class Business_setup extends AppCompatActivity {
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     @BindView(R.id.logo)EditText logo;
     @BindView(R.id.businessname)EditText businesname;
-    @BindView(R.id.editText_carrierNumber) EditText phone_edittext;
-    @BindView(R.id.ccp)
+    @BindView(R.id.et_contact_number) EditText phone_edittext;
+    @BindView(R.id.country_code_picker)
     CountryCodePicker ccp;
     @BindView(R.id.shopelicense)EditText shoplicense;
     @BindView(R.id.uploadid)EditText uploadid;

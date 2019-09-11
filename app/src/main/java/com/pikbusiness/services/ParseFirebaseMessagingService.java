@@ -18,7 +18,7 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
-import com.pikbusiness.DashboardActivity;
+import com.pikbusiness.Activity.DashboardActivity;
 import com.pikbusiness.Orderslist;
 import com.pikbusiness.R;
 import com.google.firebase.messaging.FirebaseMessagingService;

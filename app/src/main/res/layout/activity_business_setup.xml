@@ -99,7 +99,7 @@
             android:gravity="center_vertical">
 
             <com.hbb20.CountryCodePicker
-                android:id="@+id/ccp"
+                android:id="@+id/country_code_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:ccp_hintExampleNumber="true"
@@ -112,7 +112,7 @@
                 app:ccp_autoDetectCountry="false"/>
 
             <EditText
-                android:id="@+id/editText_carrierNumber"
+                android:id="@+id/et_contact_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textregular14"

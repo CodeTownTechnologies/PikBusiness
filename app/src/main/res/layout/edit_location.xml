@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:textSize="@dimen/textregular14"
-            android:id="@+id/loc"
+            android:id="@+id/et_location_name"
             android:inputType="textCapSentences"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@android:color/black"
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:textSize="@dimen/textregular14"
-            android:id="@+id/setpin"
+            android:id="@+id/et_set_pin"
             android:maxLength="4"
             android:inputType="number"
             android:backgroundTint="@color/colorPrimary"
@@ -102,7 +102,7 @@
             android:layout_marginLeft="15dp"
             android:textSize="@dimen/textregular14"
             android:inputType="number"
-            android:id="@+id/repin"
+            android:id="@+id/et_re_pin"
             android:maxLength="4"
             android:backgroundTint="@color/colorPrimary"
             android:textColor="@android:color/black"
@@ -116,7 +116,7 @@
             android:textColor="@color/silver"
             android:textSize="@dimen/textregular14"
             android:layout_marginBottom="10dp"
-            android:id="@+id/location"
+            android:id="@+id/txt_location"
             android:text="Change your shop location"/>
 
         <fragment
@@ -130,7 +130,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:id="@+id/save"
+            android:id="@+id/btn_save_location"
             android:visibility="visible"
             android:textColor="@android:color/white"
             android:background="@color/colorPrimary"

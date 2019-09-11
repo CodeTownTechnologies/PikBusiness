@@ -67,7 +67,7 @@ public class Bankdetails extends AppCompatActivity {
         if(ParseUser.getCurrentUser()!=null) {
             progressBar.setVisibility(View.VISIBLE);
             ParseQuery<ParseObject> query = ParseQuery.getQuery("BankDetails");
-            // filtering with current user object id
+            // filtering with current user object objectId
             query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
             query.whereEqualTo("businessObjectId", ParseUser.getCurrentUser().getObjectId());
             query.findInBackground(new FindCallback<ParseObject>() {
