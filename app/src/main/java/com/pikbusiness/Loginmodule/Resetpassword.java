@@ -59,7 +59,7 @@ public class Resetpassword extends AppCompatActivity {
                    checkInternetConenction();
                     ResetPass();
                 }else{
-                    customToast("Invalid email address");
+                    customToast("Invalid etEmail address");
 
                 }
             }
@@ -74,10 +74,10 @@ public class Resetpassword extends AppCompatActivity {
                 if (e == null) {
                     hide_layout.setVisibility(View.GONE);
                     msg.setVisibility(View.VISIBLE);
-                    Toast toast = Toasty.success(Resetpassword.this,"Success reset password link sent to your email address", Toast.LENGTH_SHORT);
+                    Toast toast = Toasty.success(Resetpassword.this,"Success reset etPassword link sent to your etEmail address", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 230);
                     toast.show();
-                    // An email was successfully sent with reset instructions.
+                    // An etEmail was successfully sent with reset instructions.
                 } else {
 //                    Crashlytics.log(Log.ERROR, "resetpass ", "error caught!");
                     Crashlytics.logException(e);

@@ -1,32 +1,18 @@
 package com.pikbusiness.services;
 
 import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.pikbusiness.Orderslist;
-import com.pikbusiness.R;
-import com.parse.ParseClassName;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.core.app.NotificationCompat;
 import androidx.legacy.content.WakefulBroadcastReceiver;
-
-import static com.parse.Parse.getApplicationContext;
 
 public class Alertservice extends IntentService {
 

@@ -18,7 +18,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.pikbusiness.Activity.DashboardActivity;
-import com.pikbusiness.Orderslist;
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
@@ -141,7 +141,7 @@ public class Splashscreen extends AppCompatActivity {
                              if (aprv.equals("1")) {
                              if (pin != null) {
                                  if (pin.length() > 0) {
-                                     Intent intent = new Intent(Splashscreen.this, Orderslist.class);
+                                     Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
                                      startActivity(intent);
                                      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                  } else {
@@ -156,20 +156,20 @@ public class Splashscreen extends AppCompatActivity {
                              }
                          } else if (aprv.equals("0")) {
                              if (chk_busiess == null || chk_busiess.isEmpty() || chk_busiess.equals("")) {
-                                 Intent intent = new Intent(Splashscreen.this, Loginscreen.class);
+                                 Intent intent = new Intent(Splashscreen.this, LoginScreenActivity.class);
                                  startActivity(intent);
                                  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 //                                 Log.d("chk", "onFinish: 1");
                              } else {
                                  if (chk_bank == null || chk_bank.isEmpty() || chk_bank.equals("")) {
 //                                     Log.d("chk", "onFinish: 2");
-                                     Intent intent = new Intent(Splashscreen.this, Loginscreen.class);
+                                     Intent intent = new Intent(Splashscreen.this, LoginScreenActivity.class);
                                      startActivity(intent);
                                      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                  } else if (pin != null) {
                                      if (pin.length() > 0) {
 //                                         Log.d("chk", "onFinish:else111 "+pin);
-                                         Intent intent = new Intent(Splashscreen.this, Orderslist.class);
+                                         Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
                                          startActivity(intent);
                                          overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                      } else {
@@ -185,7 +185,7 @@ public class Splashscreen extends AppCompatActivity {
                              }
                          }
                      }else{
-                             Intent i = new Intent(Splashscreen.this,Loginscreen.class);
+                             Intent i = new Intent(Splashscreen.this, LoginScreenActivity.class);
                              startActivity(i);
                              overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                          }
@@ -195,7 +195,7 @@ public class Splashscreen extends AppCompatActivity {
                             if (pin != null){
                                 if(pin.length() > 0 ){
 //                                    Log.d("chk", "onFinish:else "+pin);
-                                    Intent intent = new Intent(Splashscreen.this, Orderslist.class);
+                                    Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 }else{
@@ -209,7 +209,7 @@ public class Splashscreen extends AppCompatActivity {
                                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                             }
                         }else{
-                            Intent i = new Intent(Splashscreen.this,Loginscreen.class);
+                            Intent i = new Intent(Splashscreen.this, LoginScreenActivity.class);
                             startActivity(i);
                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         }
@@ -220,7 +220,7 @@ public class Splashscreen extends AppCompatActivity {
                          if (pin != null){
                              if(pin.length() >0 ){
                                  Log.d("chk", "onFinish:else111222 "+pin);
-                                 Intent intent = new Intent(Splashscreen.this, Orderslist.class);
+                                 Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
                                  startActivity(intent);
                                  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                              }
@@ -238,7 +238,7 @@ public class Splashscreen extends AppCompatActivity {
                      }else{
 
 //                         Log.d("chk", "no internet: ");
-                         Intent i = new Intent(Splashscreen.this,Loginscreen.class);
+                         Intent i = new Intent(Splashscreen.this, LoginScreenActivity.class);
                          startActivity(i);
                          overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                      }

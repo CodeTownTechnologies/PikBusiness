@@ -38,31 +38,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import static android.text.Html.fromHtml;
 
-public class EditMenutabs extends AppCompatActivity {
+public class EditMenuTabsActivity extends AppCompatActivity {
 
 
     @BindView(R.id.progressBar)ProgressBar pDialog;
     @BindView(R.id.toolbar)Toolbar toolbar;
     @BindView(R.id.viewpager)ViewPager viewPager;
     @BindView(R.id.tabs)TabLayout tabLayout;
-    @BindView(R.id.savebtn)Button savebtn;
+    @BindView(R.id.savebtn)
+    Button savebtn;
     ArrayList<String> catnameslist,catnolist,catidslist,pricelist,itemnames,
             sorted_cat_names,sorted_cat_objids;
     String pin = "";
@@ -75,7 +70,7 @@ public class EditMenutabs extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_menu);
+        setContentView(R.layout.activity_edit_menu);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Fabric.with(this, new Crashlytics());
@@ -101,7 +96,7 @@ public class EditMenutabs extends AppCompatActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
-        TextView txt = new TextView(EditMenutabs.this);
+        TextView txt = new TextView(EditMenuTabsActivity.this);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -125,7 +120,7 @@ public class EditMenutabs extends AppCompatActivity {
                     public void onClick(View v) {
 
                         finish();
-//                    Intent i = new Intent(EditMenutabs.this,Orderslist.class);
+//                    Intent i = new Intent(EditMenuTabsActivity.this,OrderListActivity.class);
 //                    startActivity(i);
                     }
                 });
@@ -204,7 +199,7 @@ public class EditMenutabs extends AppCompatActivity {
 
             b.putString("catno",catnolist.get(position));
             b.putString("id",getIntent().getStringExtra("id"));
-            Fragment frag = Dynamic_tabs_fragment.newInstance(position);
+            Fragment frag = DynamicTabsFragment.newInstance(position);
             frag.setArguments(b);
             return frag;
         }

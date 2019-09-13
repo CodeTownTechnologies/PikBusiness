@@ -143,7 +143,7 @@ public class Singleitem extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                Intent i = new Intent(Singleitem.this,EditMenutabs.class);
+//                Intent i = new Intent(Singleitem.this,EditMenuTabsActivity.class);
 //                startActivity(i);
                 finish();
             }

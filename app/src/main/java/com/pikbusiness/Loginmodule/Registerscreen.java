@@ -93,7 +93,7 @@ public class Registerscreen extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
-        // Restrict password action
+        // Restrict etPassword action
         password_eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +118,7 @@ public class Registerscreen extends AppCompatActivity {
             }
         });
 
-        // Restrict password action
+        // Restrict etPassword action
         repassword_eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,16 +143,16 @@ public class Registerscreen extends AppCompatActivity {
                 if (isValidEmail(email2)){
 
                     if (password.getText().toString().length() == 0) {
-                        customToast("Please enter password");
+                        customToast("Please enter etPassword");
                     }
                     else if (password.getText().toString().length() < 4) {
                         customToast("Password should be greater than 4 digits");
                     }
                     else if(repassword.getText().toString().length() == 0){
-                        customToast("Please enter re password");
+                        customToast("Please enter re etPassword");
                     }
                     else if (!password.getText().toString().equals(repassword.getText().toString())) {
-                        customToast("Confirm password should be match the password");
+                        customToast("Confirm etPassword should be match the etPassword");
                     }
                     else if(terms_checkbox.isChecked()){
                           if(checkInternetConenction()){
@@ -162,7 +162,7 @@ public class Registerscreen extends AppCompatActivity {
                         customToast("Please accept the terms & conditions");
                     }
                 }else{
-                    customToast("Invalid email address");
+                    customToast("Invalid etEmail address");
                 }
             }
         });
@@ -179,7 +179,7 @@ public class Registerscreen extends AppCompatActivity {
         user.put("firstTimeLogin",tr);
         user.put("defaultPrice",tr);
         user.setPassword(password.getText().toString());
-//            user.put("name", email.getText().toString().trim());
+//            user.put("name", etEmail.getText().toString().trim());
         user.signUpInBackground(e -> {
           progressBar.setVisibility(View.GONE);
             if (e == null) {
@@ -209,7 +209,7 @@ public class Registerscreen extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-//        Intent i = new Intent(getApplicationContext(), Loginscreen.class);
+//        Intent i = new Intent(getApplicationContext(), LoginScreenActivity.class);
 //        startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);    }
 

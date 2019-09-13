@@ -53,9 +53,9 @@ import com.parse.SaveCallback;
 import com.pikbusiness.Adapters.ShopLocationAdapter;
 import com.pikbusiness.Bankdetails;
 import com.pikbusiness.BuildConfig;
-import com.pikbusiness.Editmenu.EditMenutabs;
+import com.pikbusiness.Editmenu.EditMenuTabsActivity;
 import com.pikbusiness.Loginmodule.SessionManager;
-import com.pikbusiness.Orderslist;
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.Profile;
 import com.pikbusiness.R;
 import com.pikbusiness.model.Response.Business;
@@ -116,7 +116,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         if (checkInternetConnection()) {
             checkData();
             addListItems();
-            //  checkData();
         }
 
         mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -139,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
             } else {
                 if (pin.length() > 0) {
-                    Intent intent = new Intent(DashboardActivity.this, Orderslist.class);
+                    Intent intent = new Intent(DashboardActivity.this, OrderListActivity.class);
                     startActivity(intent);
                 }
             }
@@ -256,7 +255,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                         }
                                     }
                                 });
-                                Intent i = new Intent(DashboardActivity.this, EditMenutabs.class);
+                                Intent i = new Intent(DashboardActivity.this, EditMenuTabsActivity.class);
                                 i.putExtra("one", "1");
                                 startActivity(i);
 //                            alertDialog1.dismiss();
@@ -627,7 +626,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             Toastyy();
 
         } else if (id == R.id.editmenu) {
-            Intent i = new Intent(DashboardActivity.this, EditMenutabs.class);
+            Intent i = new Intent(DashboardActivity.this, EditMenuTabsActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         } else if (id == R.id.transactions) {

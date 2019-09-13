@@ -45,7 +45,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.pikbusiness.Loginmodule.Loginscreen;
+import com.pikbusiness.Loginmodule.LoginScreenActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 
@@ -98,7 +98,7 @@ public class CreateLocationActivity extends AppCompatActivity implements GoogleM
 
         } else {
             ParseUser.logOut();
-            Intent l = new Intent(CreateLocationActivity.this, Loginscreen.class);
+            Intent l = new Intent(CreateLocationActivity.this, LoginScreenActivity.class);
             startActivity(l);
             finish();
         }

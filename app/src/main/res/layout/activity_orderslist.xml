@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/ordersbg"
     android:layout_height="match_parent"
-    tools:context=".Orderslist">
+    tools:context=".OrderListActivity">
 
     <LinearLayout
         android:id="@+id/lang_top_layout"

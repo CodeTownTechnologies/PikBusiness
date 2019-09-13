@@ -304,7 +304,7 @@ public class Bank_Details extends AppCompatActivity {
             public void onClick(View v) {
 
                 session.logoutUser();
-           Intent i = new Intent(Bank_Details.this,Loginscreen.class);
+           Intent i = new Intent(Bank_Details.this, LoginScreenActivity.class);
            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
            startActivity(i);
            finish();
@@ -323,7 +323,7 @@ public class Bank_Details extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i= new Intent(Bank_Details.this,Loginscreen.class);
+        Intent i= new Intent(Bank_Details.this, LoginScreenActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

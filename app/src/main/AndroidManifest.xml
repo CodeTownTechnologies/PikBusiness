@@ -96,7 +96,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <activity
-            android:name=".Loginmodule.Loginscreen"
+            android:name=".Loginmodule.LoginScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
@@ -112,7 +112,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Loginmodule.Loginscreen" />
+                android:value=".Loginmodule.LoginScreenActivity" />
         </activity>
         <activity
             android:name=".Loginmodule.Business_setup"
@@ -146,7 +146,7 @@
 
         </activity>
         <activity
-            android:name=".Orderslist"
+            android:name=".OrderListActivity"
             android:label="Orders"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -159,7 +159,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Orderslist" />
+                android:value=".OrderListActivity" />
         </activity>
         <activity
             android:name=".Activity.MapActivity"
@@ -170,7 +170,7 @@
                 android:value=".Activity.CreateLocationActivity" />
         </activity>
         <activity
-            android:name=".Enter_Pin"
+            android:name=".EnterPinActivity"
             android:label="Pin"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -179,7 +179,7 @@
                 android:value=".Activity.DashboardActivity" />
         </activity>
         <activity
-            android:name=".Editmenu.EditMenutabs"
+            android:name=".Editmenu.EditMenuTabsActivity"
             android:label="Edit Menu"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">

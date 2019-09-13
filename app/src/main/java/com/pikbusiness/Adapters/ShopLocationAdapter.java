@@ -32,6 +32,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pikbusiness.Activity.EditLocationActivity;
+import com.pikbusiness.EnterPinActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.model.Response.EstimatedData;
 
@@ -43,10 +44,8 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
 
     Context context;
     AlertDialog alertDialog;
-    AlertDialog alertDialog1;
     Switch toggleSwitch;
     private List<EstimatedData> estimateDataList;
-
 
     public ShopLocationAdapter(Context context, List<EstimatedData> dataList) {
         this.context = context;
@@ -67,33 +66,33 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
         holder.tvLocationName.setText(estimateDataList.get(position).getLocationName());
         holder.tvBusinessName.setText(estimateDataList.get(position).getBusiness().getBusinessEstimatedData().getBusinessName());
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Log.d("chk", "onClick:event "+approv);
-//                if (approv != null) {
-//                    if (approv.equals("0")) {
-//
-//                        approveAlert(view, "Your account verification is under process");
-//                    } else if (approv.equals("1")) {
-//                        Intent i = new Intent(context, Enter_Pin.class);
-//                        i.putExtra("lname", dataa.get(position).get("locationname"));
-//                        i.putExtra("tvBusinessName", dataa.get(position).get("business"));
-//                        i.putExtra("id", dataa.get(position).get("objectid"));
-//                        i.putExtra("lat", dataa.get(position).get("lat"));
-//                        i.putExtra("log", dataa.get(position).get("log"));
-//                        i.putExtra("tax", dataa.get(position).get("tax"));
-//                        i.putExtra("shopStatus", dataa.get(position).get("shopStatus"));
-//                        i.putExtra("pin", dataa.get(position).get("pin"));
-//                        i.putExtra("phoneNo", dataa.get(position).get("phoneNo"));
-//                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        context.startActivity(i);
-//                    } else {
-//                        approveAlert(view, "Please contact support team");
-//                    }
-//                }
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (estimateDataList.get(position).getApproveStatus() != null) {
+                    if (estimateDataList.get(position).getApproveStatus().equals("0")) {
+                        approveAlert(view, "Your account verification is under process");
+                    } else if (estimateDataList.get(position).getApproveStatus().equals("1")) {
+                        Intent i = new Intent(context, EnterPinActivity.class);
+                        i.putExtra("locationName", estimateDataList.get(position).getLocationName());
+                        i.putExtra("businessName", estimateDataList.get(position).getBusiness().getBusinessEstimatedData().getBusinessName());
+                        i.putExtra("objectId", estimateDataList.get(position).getObjectId());
+                        Bundle b = new Bundle();
+                        b.putDouble("latitude", estimateDataList.get(position).getLocation().getLatitude());
+                        b.putDouble("longitude", estimateDataList.get(position).getLocation().getLongitude());
+                        i.putExtras(b);
+                        i.putExtra("tax", estimateDataList.get(position).getTax());
+                        i.putExtra("shopStatus", "" + estimateDataList.get(position).getShopStatus());
+                        i.putExtra("pin", "" + estimateDataList.get(position).getPin());
+                        i.putExtra("phoneNo", "" + estimateDataList.get(position).getPhoneNo());
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+                    } else {
+                        approveAlert(view, "Please contact support team");
+                    }
+                }
+            }
+        });
 
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +118,6 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
         // Set content width and height
         popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        // Closes the popup window when touch outside of it - when looses focus
         popup.setOutsideTouchable(true);
         popup.setFocusable(true);
         TextView txt_switch = layout.findViewById(R.id.txt_switch);
@@ -315,18 +313,18 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
     public void approveAlert(View view, String msg) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.waitverify, null);
-        AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
-        alertbox.setView(layout);
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(view.getRootView().getContext());
+        alertBox.setView(layout);
 
         TextView txt = layout.findViewById(R.id.msg);
         Button login = layout.findViewById(R.id.login);
         txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
         login.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-        alertbox.setCancelable(true);
+        alertBox.setCancelable(true);
         login.setText("OKAY");
         txt.setText(msg);
         txt.setTypeface(Typer.set(context).getFont(Font.ROBOTO_REGULAR));
-        AlertDialog alertDialog = alertbox.create();
+        AlertDialog alertDialog = alertBox.create();
         alertDialog.setCancelable(true);
 
         login.setOnClickListener(new View.OnClickListener() {

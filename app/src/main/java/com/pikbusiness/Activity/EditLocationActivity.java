@@ -46,7 +46,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.pikbusiness.Loginmodule.Loginscreen;
+import com.pikbusiness.Loginmodule.LoginScreenActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 
@@ -452,7 +452,7 @@ public class EditLocationActivity extends AppCompatActivity implements OnMapRead
 
         } else {
             ParseUser.logOut();
-            Intent i = new Intent(EditLocationActivity.this, Loginscreen.class);
+            Intent i = new Intent(EditLocationActivity.this, LoginScreenActivity.class);
             startActivity(i);
             finish();
         }

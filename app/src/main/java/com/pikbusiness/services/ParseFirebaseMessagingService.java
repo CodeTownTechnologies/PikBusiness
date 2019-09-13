@@ -19,7 +19,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 import com.pikbusiness.Activity.DashboardActivity;
-import com.pikbusiness.Orderslist;
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -67,7 +67,7 @@ public class ParseFirebaseMessagingService extends FirebaseMessagingService {
                 String body = alertt.getString("body");
 
                 if(pin != null){
-                    Intent intent = new Intent(this, Orderslist.class);
+                    Intent intent = new Intent(this, OrderListActivity.class);
                     PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
                             0,intent,
                             PendingIntent.FLAG_UPDATE_CURRENT);

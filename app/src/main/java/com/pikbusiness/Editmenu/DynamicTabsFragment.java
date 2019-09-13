@@ -30,7 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class Dynamic_tabs_fragment extends Fragment {
+public class DynamicTabsFragment extends Fragment {
 
     ArrayList<HashMap<String, String>> maplist;
     View view;
@@ -42,8 +42,8 @@ public class Dynamic_tabs_fragment extends Fragment {
     private boolean isViewShown = false;
     String cat_objectid,shopid;
 
-    public static Dynamic_tabs_fragment newInstance(int val) {
-        Dynamic_tabs_fragment fragment = new Dynamic_tabs_fragment();
+    public static DynamicTabsFragment newInstance(int val) {
+        DynamicTabsFragment fragment = new DynamicTabsFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", val);
         fragment.setArguments(args);

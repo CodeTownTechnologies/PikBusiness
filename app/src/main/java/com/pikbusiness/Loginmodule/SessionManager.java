@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import com.pikbusiness.Orderslist;
+
 import com.pikbusiness.services.Alertservice;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
@@ -73,7 +73,7 @@ public class SessionManager {
     }
     public void checkLogin() {
         if (!this.isUserLoggedIn()) {
-            Intent i = new Intent(_context, Loginscreen.class);
+            Intent i = new Intent(_context, LoginScreenActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             _context.startActivity(i);
@@ -89,7 +89,7 @@ public class SessionManager {
         JSONArray pusharray = new JSONArray();
         installation.put("channels",pusharray);
         installation.saveInBackground();
-        Intent i = new Intent(_context, Loginscreen.class);
+        Intent i = new Intent(_context, LoginScreenActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         _context.startActivity(i);

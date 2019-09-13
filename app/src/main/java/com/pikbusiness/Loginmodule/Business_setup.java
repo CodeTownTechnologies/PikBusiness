@@ -220,7 +220,7 @@ public class Business_setup extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i= new Intent(Business_setup.this,Loginscreen.class);
+        Intent i= new Intent(Business_setup.this, LoginScreenActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
