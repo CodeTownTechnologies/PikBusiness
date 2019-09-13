@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.location.Location;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -17,19 +16,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pikbusiness.Orderslist;
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.services.Alertservice;
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
@@ -38,12 +34,10 @@ import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.pikbusiness.R;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -57,7 +51,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -761,10 +754,10 @@ public class NeworderAdapter extends RecyclerView.Adapter<NeworderAdapter.MyView
 
                             dataa.remove(position);
                             notifyDataSetChanged();
-                            ((Orderslist)context).updateNewOrderCount(dataa);
+                            //((OrderListActivity)context).updateNewOrderCount(dataa);
 
 
-//                            Intent i = new Intent(v.getContext(), Orderslist.class);
+//                            Intent i = new Intent(v.getContext(), OrderListActivity.class);
 //                            i.putExtra("lname",lname);
 //                            i.putExtra("tvBusinessName",sname);
 //                            i.putExtra("id",id);
@@ -814,7 +807,7 @@ public class NeworderAdapter extends RecyclerView.Adapter<NeworderAdapter.MyView
 
 //                            update(dataa);
 //                            notifyDataSetChanged();
-//                  v.getContext().startActivity(new Intent(v.getContext(),Orderslist.class));
+//                  v.getContext().startActivity(new Intent(v.getContext(),OrderListActivity.class));
                             Toast.makeText(context,"Order cancelled ", Toast.LENGTH_SHORT).show();
                         } else {
                             // something went wrong
@@ -867,7 +860,7 @@ public class NeworderAdapter extends RecyclerView.Adapter<NeworderAdapter.MyView
                         });
 //                                dialog.dismiss();
                         dialog.dismiss();
-                        Intent i = new Intent(v.getContext(),Orderslist.class);
+                        Intent i = new Intent(v.getContext(), OrderListActivity.class);
                         i.putExtra("lname",lname);
                         i.putExtra("tvBusinessName",bname);
                         i.putExtra("id",id);

@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pikbusiness.Activity.DashboardActivity;
-import com.pikbusiness.Orderslist;
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
@@ -46,18 +46,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-public class Loginscreen extends AppCompatActivity {
+public class LoginScreenActivity extends AppCompatActivity {
 
-    @BindView(R.id.email_edittext)EditText email;
-    @BindView(R.id.pwd_edittext)EditText password;
-    @BindView(R.id.login)Button login;
-    @BindView(R.id.register)TextView register;
-    @BindView(R.id.visible_icon)ImageView password_eye;
-    @BindView(R.id.forgot)TextView forgot;
-    @BindView(R.id.loginhead)TextView login_htext;
-    @BindView(R.id.email_textv)TextView email_text;
-    @BindView(R.id.pasw_text)TextView pasw_txt;
-    @BindView(R.id.progressBar)ProgressBar progressBar;
+    @BindView(R.id.email_edittext)
+    EditText etEmail;
+    @BindView(R.id.pwd_edittext)
+    EditText etPassword;
+    @BindView(R.id.login)
+    Button login;
+    @BindView(R.id.register)
+    TextView register;
+    @BindView(R.id.visible_icon)
+    ImageView imgVisibleEye;
+    @BindView(R.id.forgot)
+    TextView forgot;
+    @BindView(R.id.loginhead)
+    TextView login_htext;
+    @BindView(R.id.email_textv)
+    TextView email_text;
+    @BindView(R.id.pasw_text)
+    TextView pasw_txt;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private String approve = "",chk_busiess = "",chk_bank = "";
     SessionManager session;
     Boolean isclicked = false;
@@ -74,7 +84,7 @@ public class Loginscreen extends AppCompatActivity {
         String pin = pref.getString("pin", null);
         if(pin != null){
             if(pin.length()> 1){
-                Intent intent = new Intent(Loginscreen.this, Orderslist.class);
+                Intent intent = new Intent(LoginScreenActivity.this, OrderListActivity.class);
                 startActivity(intent);
             }
         }
@@ -84,9 +94,9 @@ public class Loginscreen extends AppCompatActivity {
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         login_htext.setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
         email_text.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-        email.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
+        etEmail.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
         pasw_txt.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
-        password.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
+        etPassword.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
         login.setTypeface(Typer.set(this).getFont(Font.ROBOTO_MEDIUM));
         register.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
         forgot.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
@@ -109,32 +119,40 @@ public class Loginscreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String email2 = email.getText().toString().trim();
-                String pass1 = password.getText().toString().trim();
-                isValidEmail(email2);
-                if (isValidEmail(email2)){
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+               // isValidEmail(email);
+               // if (isValidEmail(email)){
 
-                    if (password.getText().toString().length() == 0) {
+                    if(etEmail.getText().toString().length() == 0)
+                    {
+                        customToast("Please enter email address");
+                    }
+                    else if (etPassword.getText().toString().length() == 0) {
 
                         customToast("Please enter password");
                     }
-                    else if (pass1.length() < 4) {
+                    else if (password.length() < 4) {
                         customToast("Password should be greater than 4 digits");
                     }
-                    else if(checkInternetConenction()){
-                        login(v,email2,pass1);
+                    else if(etEmail.getText().toString().length()>0 && !isValidEmail(email))
+                    {
+                        customToast("Please enter valid email address");
                     }
-                }
-                else{
-                    customToast("Invalid email address");
-                }
+                    else if(checkInternetConnection()){
+                        login(v,email,password);
+                    }
+//                }
+//                else{
+//                    customToast("Invalid etEmail address");
+//                }
             }
         });
-        // Forgot password click action
+        // Forgot etPassword click action
         forgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Loginscreen.this, Resetpassword.class);
+                Intent intent = new Intent(LoginScreenActivity.this, Resetpassword.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);            }
         });
@@ -142,23 +160,23 @@ public class Loginscreen extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Loginscreen.this,Registerscreen.class);
+                Intent i = new Intent(LoginScreenActivity.this,Registerscreen.class);
                 startActivity(i);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 
-        // Restrict password action
-        password_eye.setOnClickListener(new View.OnClickListener() {
+        // Restrict etPassword action
+        imgVisibleEye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isclicked){
-                    password_eye.setImageResource(R.drawable.eyehide);
-                    password.setInputType(129);
+                    imgVisibleEye.setImageResource(R.drawable.eyehide);
+                    etPassword.setInputType(129);
                     isclicked = false;
                 }else{
-                    password_eye.setImageResource(R.drawable.visible);
-                    password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    imgVisibleEye.setImageResource(R.drawable.visible);
+                    etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     isclicked = true;
 
                 }
@@ -170,20 +188,20 @@ public class Loginscreen extends AppCompatActivity {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
-        String pin = pref.getString("pin", null);
-        if(pin != null){
-            Intent intent = new Intent(Loginscreen.this, Orderslist.class);
-            startActivity(intent);
-//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
+//        SharedPreferences.Editor editor = pref.edit();
+//        String pin = pref.getString("pin", null);
+//        if(pin != null){
+//            Intent intent = new Intent(LoginScreenActivity.this, OrderListActivity.class);
+//            startActivity(intent);
+////            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//        }
+//    }
 
-    public void  chksts(){
+    public void checkStatus(){
        if (ParseUser.getCurrentUser() != null) {
            ParseQuery<ParseObject> query = ParseQuery.getQuery("BankDetails");
            query.whereEqualTo("businessObjectId", ParseUser.getCurrentUser().getObjectId());
@@ -199,14 +217,14 @@ public class Loginscreen extends AppCompatActivity {
                                   {
                                        if(chk_bank == null || chk_bank.isEmpty() || chk_bank.equals("")){
                                            saveinstall();
-                                           Intent intent = new Intent(Loginscreen.this, Bank_Details.class);
+                                           Intent intent = new Intent(LoginScreenActivity.this, Bank_Details.class);
                                            startActivity(intent);
                                            finish();
                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                        }else{
                                            saveinstall();
-                                           Intent intent = new Intent(Loginscreen.this, DashboardActivity.class);
+                                           Intent intent = new Intent(LoginScreenActivity.this, DashboardActivity.class);
                                            startActivity(intent);
                                            finish();
                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -216,7 +234,7 @@ public class Loginscreen extends AppCompatActivity {
                                else if(approve.equals("1")){
                                    if(chk_busiess == null || chk_busiess.isEmpty() || chk_busiess.equals("")){
                                        saveinstall();
-                                       Intent intent = new Intent(Loginscreen.this, Business_setup.class);
+                                       Intent intent = new Intent(LoginScreenActivity.this, Business_setup.class);
                                        startActivity(intent);
                                        finish();
                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -224,26 +242,26 @@ public class Loginscreen extends AppCompatActivity {
                                  else if(chk_bank == null || chk_bank.isEmpty() || chk_bank.equals("")){
                                        saveinstall();
                                        Log.d("chk", "done: "+chk_bank);
-                                       Intent intent = new Intent(Loginscreen.this, Bank_Details.class);
+                                       Intent intent = new Intent(LoginScreenActivity.this, Bank_Details.class);
                                        startActivity(intent);
                                        finish();
                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                    }else{
                                        saveinstall();
-                                       Intent intent = new Intent(Loginscreen.this, DashboardActivity.class);
+                                       Intent intent = new Intent(LoginScreenActivity.this, DashboardActivity.class);
                                        startActivity(intent);
                                        finish();
                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                    }
                                }
                                else {
-                                   Toast.makeText(Loginscreen.this, "Please contact support", Toast.LENGTH_SHORT).show();
+                                   Toast.makeText(LoginScreenActivity.this, "Please contact support", Toast.LENGTH_SHORT).show();
                                }
                            }
                        } else {
                            saveinstall();
-                           Intent intent = new Intent(Loginscreen.this, Bank_Details.class);
+                           Intent intent = new Intent(LoginScreenActivity.this, Bank_Details.class);
                            startActivity(intent);
                            finish();
                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -263,7 +281,7 @@ public class Loginscreen extends AppCompatActivity {
 //               .putMethod(ParseUser.getCurrentUser().getObjectId())
 //               .putSuccess(true)
                .putCustomAttribute("User objectid", ParseUser.getCurrentUser().getObjectId())
-               .putCustomAttribute("Email", email.getText().toString()));
+               .putCustomAttribute("Email", etEmail.getText().toString()));
        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
        JSONArray pusharray = new JSONArray();
        pusharray.put("business_"+ParseUser.getCurrentUser().getObjectId());
@@ -292,7 +310,6 @@ public class Loginscreen extends AppCompatActivity {
                         @Override
                         public void done(List<ParseUser> userList, ParseException e) {
                             if (e == null) {
-
                                 //Retrieve user data
                                 if (userList.size() > 0) {
                                     for (ParseUser user : userList) {
@@ -300,13 +317,13 @@ public class Loginscreen extends AppCompatActivity {
                                         approve = String.valueOf(user.getInt("accountStatus"));
                                         if(chk_busiess == null || chk_busiess.isEmpty() || chk_busiess.equals("")){
                                             saveinstall();
-                                            Intent intent = new Intent(Loginscreen.this, Business_setup.class);
+                                            Intent intent = new Intent(LoginScreenActivity.this, Business_setup.class);
                                             startActivity(intent);
                                             finish();
                                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                         }else{
 //                                            Log.d("elsebnk", "done:chk bank ");
-                                            chksts();
+                                            checkStatus();
                                         }
                                     }
                                 } else {
@@ -342,7 +359,7 @@ public class Loginscreen extends AppCompatActivity {
     }
 
     // Checking Internet connection
-    private boolean checkInternetConenction() {
+    private boolean checkInternetConnection() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // test for connection
         if (cm.getActiveNetworkInfo() != null
@@ -356,7 +373,7 @@ public class Loginscreen extends AppCompatActivity {
     }
     // custom toast for showing errors
     private void customToast(String msg){
-        Toast toast = Toasty.error(Loginscreen.this,msg, Toast.LENGTH_SHORT);
+        Toast toast = Toasty.error(LoginScreenActivity.this,msg, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 230);
         toast.show();
     }

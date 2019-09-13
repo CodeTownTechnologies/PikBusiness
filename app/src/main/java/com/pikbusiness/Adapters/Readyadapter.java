@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.location.Location;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -20,17 +19,16 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.pikbusiness.Orderslist;
+
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.R;
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
@@ -40,7 +38,7 @@ import com.parse.ParseCloud;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -753,9 +751,9 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                             dialog.dismiss();
                             dataa.remove(position);
                             notifyDataSetChanged();
-                            ((Orderslist)context).updateReadyCount(dataa);
+                        //    ((OrderListActivity)context).updateReadyCount(dataa);
 
-//                            Intent i = new Intent(v.getContext(),Orderslist.class);
+//                            Intent i = new Intent(v.getContext(),OrderListActivity.class);
 //                            i.putExtra("lname",lname);
 //                            i.putExtra("tvBusinessName",sname);
 //                            i.putExtra("id",id);
@@ -935,7 +933,7 @@ public class Readyadapter extends RecyclerView.Adapter<Readyadapter.MyViewHolder
                             }
 
 //                            Log.d("chk", "done:chkkk =2");
-                            Intent i = new Intent(v.getContext(),Orderslist.class);
+                            Intent i = new Intent(v.getContext(), OrderListActivity.class);
                             i.putExtra("lname",lname);
                             i.putExtra("tvBusinessName",bname);
                             i.putExtra("id",id);
