@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-<TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text=""
-    android:textColor="@color/black"
-    android:textStyle="bold"
-    android:layout_marginTop="5dp"
-    android:id="@+id/catname"
-    android:layout_marginBottom="5dp"
-    android:textSize="@dimen/textlitle10"/>
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/category_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/textlitle10"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2">
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="items"
             android:id="@+id/itemname"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            android:textSize="@dimen/textregular14"/>
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:gravity="right"
             android:layout_weight="1"
-            android:text="23"
-            android:textStyle="bold"
-            android:paddingRight="20dp"
-            android:textAllCaps="true"
+            android:text="items"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textregular14" />
+
+        <TextView
             android:id="@+id/itemprice"
-            android:textSize="@dimen/textsmaller12"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:text="23"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textsmaller12"
+            android:textStyle="bold" />
     </LinearLayout>
+
     <TextView
+        android:id="@+id/extraname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="extas"
-        android:id="@+id/extraname"
         android:textColor="@color/gray"
-        android:textSize="@dimen/textsmaller12"/>
+        android:textSize="@dimen/textsmaller12" />
 </LinearLayout>

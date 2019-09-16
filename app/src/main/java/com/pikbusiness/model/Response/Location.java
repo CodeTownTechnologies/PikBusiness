@@ -15,6 +15,10 @@ public class Location extends ParseObject {
     @Expose
     private Double longitude;
 
+    private Double userlatitude;
+
+    private Double userlongitude;
+
     public Double getLatitude() {
         return latitude;
     }
@@ -41,4 +45,31 @@ public class Location extends ParseObject {
         return this;
     }
 
+    public Double getUserlatitude() {
+        return userlatitude;
+    }
+
+    public void setUserlatitude(Double userlatitude) {
+        this.userlatitude = userlatitude;
+    }
+
+    public Location withUserlatitude(Double userlatitude) {
+        this.userlatitude = userlatitude;
+        return this;
+    }
+
+
+    public Double getUserlongitude() {
+        return userlongitude;
+    }
+
+    public void setUserlongitude(Double userlongitude) {
+        this.userlongitude = userlongitude;
+    }
+
+
+    public Location withUserlongitude(Double userlongitude) {
+        this.userlongitude = userlongitude;
+        return this;
+    }
 }

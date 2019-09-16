@@ -18,7 +18,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/headcolor"
+                android:id="@+id/head_background_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -33,7 +33,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/shopname"
+                        android:id="@+id/customer_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -64,7 +64,7 @@
                     android:weightSum="3">
 
                     <TextView
-                        android:id="@+id/distance"
+                        android:id="@+id/tv_distance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -74,7 +74,7 @@
                         android:textSize="@dimen/textsmaller12" />
 
                     <TextView
-                        android:id="@+id/msg"
+                        android:id="@+id/tv_distance_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -105,6 +105,7 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
+
                 <TextView
                     android:id="@+id/category_name"
                     android:layout_width="match_parent"
@@ -123,7 +124,7 @@
                     android:weightSum="2">
 
                     <TextView
-                        android:id="@+id/itemname"
+                        android:id="@+id/menu_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -132,7 +133,7 @@
                         android:textSize="@dimen/textregular14" />
 
                     <TextView
-                        android:id="@+id/itemprice"
+                        android:id="@+id/tv_item_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -146,16 +147,17 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/extraname"
+                    android:id="@+id/extra_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="extas"
                     android:textColor="@color/gray"
                     android:textSize="@dimen/textsmaller12" />
+
             </LinearLayout>
 
             <TextView
-                android:id="@+id/note"
+                android:id="@+id/tv_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -189,7 +191,7 @@
                     android:textSize="@dimen/textregular14" />
 
                 <TextView
-                    android:id="@+id/subtotal"
+                    android:id="@+id/tv_subtotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -209,7 +211,7 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/vatper"
+                    android:id="@+id/tv_vat_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -248,7 +250,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/total"
+                    android:id="@+id/tv_total"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -277,7 +279,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/amttxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Amount Changed"
@@ -285,7 +286,7 @@
                         android:textSize="@dimen/textsmaller12" />
 
                     <TextView
-                        android:id="@+id/txt_amt"
+                        android:id="@+id/txt_tag_line"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Accept the order and process"
@@ -300,14 +301,15 @@
                     android:gravity="center"
                     android:weightSum="2">
 
-                    <Button
-                        android:id="@+id/cancelbtn"
+                    <TextView
+                        android:id="@+id/tv_cancel_status"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="1"
-                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:background="@android:color/transparent"
                         android:clickable="true"
                         android:text=" Cancel "
                         android:textAllCaps="false"
@@ -315,7 +317,7 @@
                         android:textSize="@dimen/textsmaller12" />
 
                     <Button
-                        android:id="@+id/stsbtn"
+                        android:id="@+id/btn_change_status"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_marginLeft="10dp"

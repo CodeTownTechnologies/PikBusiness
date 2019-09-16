@@ -90,10 +90,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.DashboardActivity"
+        <activity
+            android:name=".Activity.DashboardActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
             android:name=".Loginmodule.LoginScreenActivity"
@@ -232,5 +233,10 @@
             android:name=".services.Alertservice"
             android:exported="false"
             android:stopWithTask="false" />
+
+        <activity
+            android:name=".Activity.OrderListActivityNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 </manifest>

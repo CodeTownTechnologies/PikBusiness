@@ -16,8 +16,7 @@
         android:elevation="4dp"
         android:weightSum="2"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"

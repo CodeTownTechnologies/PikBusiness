@@ -14,6 +14,7 @@ import com.elmargomez.typer.Typer;
 import com.mukesh.OtpView;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.pikbusiness.Activity.OrderListActivityNew;
 import com.pikbusiness.Loginmodule.SessionManager;
 
 import org.json.JSONArray;
@@ -93,7 +94,7 @@ public class EnterPinActivity extends AppCompatActivity {
                 } else {
                     session.logoutUser();
                 }
-                Intent i = new Intent(EnterPinActivity.this, OrderListActivity.class);
+                Intent i = new Intent(EnterPinActivity.this, OrderListActivityNew.class);
                 i.putExtra("locationName", locationName);
                 i.putExtra("businessName", businessName);
                 i.putExtra("objectId", objectId);

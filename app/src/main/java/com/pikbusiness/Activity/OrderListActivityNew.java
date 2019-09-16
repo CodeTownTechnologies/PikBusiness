@@ -1,4 +1,4 @@
-package com.pikbusiness;
+package com.pikbusiness.Activity;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -6,32 +6,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.widget.LinearLayout;
+import android.widget.ExpandableListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.orhanobut.dialogplus.DialogPlus;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.pikbusiness.Adapters.InProgressAdapter;
-import com.pikbusiness.Adapters.NewOrderAdapter;
-import com.pikbusiness.Adapters.ReadyAdapter;
+import com.pikbusiness.Adapters.OrderListAdapter;
 import com.pikbusiness.Loginmodule.SessionManager;
+import com.pikbusiness.R;
 import com.pikbusiness.model.Response.Business;
 import com.pikbusiness.model.Response.BusinessEstimatedData;
 import com.pikbusiness.model.Response.EstimatedData;
@@ -41,20 +33,21 @@ import com.pikbusiness.model.Response.State;
 import com.pikbusiness.services.Toasty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-public class OrderListActivity extends AppCompatActivity {
+public class OrderListActivityNew extends AppCompatActivity {
 
-    @BindView(R.id.neworder)
-    RecyclerView newOrderRecyclerView;
-    @BindView(R.id.inprogress)
-    RecyclerView inProgressRecyclerView;
-    @BindView(R.id.ready)
-    RecyclerView readyRecyclerView;
+    //    @BindView(R.id.neworder)
+//    RecyclerView newOrderRecyclerView;
+//    @BindView(R.id.inprogress)
+//    RecyclerView inProgressRecyclerView;
+//    @BindView(R.id.ready)
+//    RecyclerView readyRecyclerView;
     @BindView(R.id.shopname)
     TextView tvShopName;
     @BindView(R.id.shoploc)
@@ -63,26 +56,26 @@ public class OrderListActivity extends AppCompatActivity {
     TextView tvShopStatus;
     @BindView(R.id.toggle_switch)
     Switch toggleSwitch;
-    @BindView(R.id.scrollview)
-    NestedScrollView scrollview;
-    @BindView(R.id.more)
-    LinearLayout options;
-    @BindView(R.id.txt_neworder)
-    TextView txt_neworder;
-    @BindView(R.id.txt_inprogress)
-    TextView txt_inprogress;
-    @BindView(R.id.txt_ready)
-    TextView txt_ready;
+    //    @BindView(R.id.scrollview)
+//    NestedScrollView scrollview;
+//    @BindView(R.id.more)
+//    LinearLayout options;
+//    @BindView(R.id.txt_neworder)
+//    TextView txt_neworder;
+//    @BindView(R.id.txt_inprogress)
+//    TextView txt_inprogress;
+//    @BindView(R.id.txt_ready)
+//    TextView txt_ready;
     // RecyclerView.LayoutManager l1, l2, l3;
     // List<ParseObject> object11;
-    private NewOrderAdapter mNewOrderAdapter;
-    private InProgressAdapter mInProgressAdapter;
-    private ReadyAdapter mReadyAdapter;
+//    private NewOrderAdapter mNewOrderAdapter;
+//    private InProgressAdapter mInProgressAdapter;
+//    private ReadyAdapter mReadyAdapter;
     //private String lname, bname, idd, shopsts, lat, logg, pass;
     //private Boolean sts1 = false, sts2 = false, sts3 = false;
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    private DialogPlus dialog;
+//    @BindView(R.id.swipe_refresh)
+//    SwipeRefreshLayout mSwipeRefreshLayout;
+//    private DialogPlus dialog;
     private SessionManager session;
     private List<Orders> newOrderList;
     private List<Orders> progressList;
@@ -96,18 +89,23 @@ public class OrderListActivity extends AppCompatActivity {
     private double latitude, longitude;
     private String locationName, pin, objectId, shopStatus, phoneNo, businessName;
     private Context mContext;
+    @BindView(R.id.order_expandable_list)
+    ExpandableListView orderExpandableList;
+    private OrderListAdapter orderAdapter;
+    List<String> listDataHeader;
+    HashMap<String, List<Orders>> listDataChild;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orderslist);
+        setContentView(R.layout.activity_order_layout);
         ButterKnife.bind(this);
         Fabric.with(this, new Crashlytics());
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        mFirebaseAnalytics.setCurrentScreen(OrderListActivity.this, "OrderListActivity", "ss");
+        mFirebaseAnalytics.setCurrentScreen(OrderListActivityNew.this, "OrderListActivity", "ss");
         session = new SessionManager(this);
-        mContext = OrderListActivity.this;
+        mContext = OrderListActivityNew.this;
 
 
 //        SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
@@ -142,6 +140,26 @@ public class OrderListActivity extends AppCompatActivity {
         tvShopLocation.setText(locationName);
 
 
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<Orders>>();
+
+
+
+
+        // Adding child data
+        listDataHeader.add("NEW ORDER");
+        listDataHeader.add("IN PROGRESS" );
+        listDataHeader.add("READY FOR PICK UP");
+
+        if (checkInternetConnection()) {
+            initiateData();
+            new getOrderList().execute();
+        }
+
+        orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild);
+        orderExpandableList.setAdapter(orderAdapter);
+
+
         //this.mHandler = new Handler();
 /*        txt_ready.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
         txt_inprogress.setTypeface(Typer.set(this).getFont(Font.ROBOTO_REGULAR));
@@ -154,23 +172,23 @@ public class OrderListActivity extends AppCompatActivity {
         // l2 = new LinearLayoutManager(getApplicationContext());
         //l3 = new LinearLayoutManager(getApplicationContext());
 
-        mNewOrderAdapter = new NewOrderAdapter(mContext, newOrderList);
-        newOrderRecyclerView.setNestedScrollingEnabled(false);
-        newOrderRecyclerView.setHasFixedSize(true);
-        newOrderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        newOrderRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mInProgressAdapter = new InProgressAdapter(mContext, progressList);
-        inProgressRecyclerView.setNestedScrollingEnabled(false);
-        inProgressRecyclerView.setHasFixedSize(true);
-        inProgressRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        inProgressRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mReadyAdapter = new ReadyAdapter(mContext, readyList);
-        readyRecyclerView.setNestedScrollingEnabled(false);
-        readyRecyclerView.setHasFixedSize(true);
-        readyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        readyRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        mNewOrderAdapter = new NewOrderAdapter(mContext, newOrderList);
+//        newOrderRecyclerView.setNestedScrollingEnabled(false);
+//        newOrderRecyclerView.setHasFixedSize(true);
+//        newOrderRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        newOrderRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//
+//        mInProgressAdapter = new InProgressAdapter(mContext, progressList);
+//        inProgressRecyclerView.setNestedScrollingEnabled(false);
+//        inProgressRecyclerView.setHasFixedSize(true);
+//        inProgressRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        inProgressRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//
+//        mReadyAdapter = new ReadyAdapter(mContext, readyList);
+//        readyRecyclerView.setNestedScrollingEnabled(false);
+//        readyRecyclerView.setHasFixedSize(true);
+//        readyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        readyRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
 //        l1 = new LinearLayoutManager(this) {
@@ -250,8 +268,8 @@ public class OrderListActivity extends AppCompatActivity {
 //        } else {
 //
         //  if (checkInternetConenction()) {
-        initiateData();
-        new getOrderList().execute();
+        //initiateData();
+        //  new getOrderList().execute();
         //   }
 
 
@@ -384,20 +402,40 @@ public class OrderListActivity extends AppCompatActivity {
 
 
 //
-        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor
-                (OrderListActivity.this, R.color.colorPrimary));
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //if (checkInternetConenction()) {
-                Log.d("chk", "done:shopstatus " + shopStatus);
-                new getOrderList().execute();
-                //   }
-
-            }
-        });
+//        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor
+//                (OrderListActivityNew.this, R.color.colorPrimary));
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                //if (checkInternetConenction()) {
+//                Log.d("chk", "done:shopstatus " + shopStatus);
+//                new getOrderList().execute();
+//                //   }
+//
+//            }
+//        });
 
     }
+
+    private boolean checkInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        // test for connection
+        if (cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().isConnected()) {
+            return true;
+        } else {
+            customToast("Please check the internet connection");
+            return false;
+        }
+    }
+
+    private void customToast(String msg) {
+        Toast toast = Toasty.error(OrderListActivityNew.this, msg, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 230);
+        toast.show();
+    }
+
+
 //
 //    public void offlinepopup() {
 //
@@ -486,9 +524,9 @@ public class OrderListActivity extends AppCompatActivity {
                 public void done(ParseObject object, ParseException e) {
                     if (e == null) {
 
-                        if (mSwipeRefreshLayout.isRefreshing()) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+//                        if (mSwipeRefreshLayout.isRefreshing()) {
+//                            mSwipeRefreshLayout.setRefreshing(false);
+//                        }
 
                         shopStatus = String.valueOf(object.getNumber("shopStatus"));
 
@@ -507,7 +545,7 @@ public class OrderListActivity extends AppCompatActivity {
                         }
                     } else {
                         if (e.getMessage().equals("Invalid session token")) {
-                            Toast.makeText(OrderListActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OrderListActivityNew.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             session.logoutUser();
                         }
                         Crashlytics.logException(e);
@@ -689,9 +727,9 @@ public class OrderListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<ParseObject> result) {
-            if (mSwipeRefreshLayout.isRefreshing()) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+//            if (mSwipeRefreshLayout.isRefreshing()) {
+//                mSwipeRefreshLayout.setRefreshing(false);
+//            }
 //            Log.d("chk", "onPostExecute: "+result);
 
             if (result != null) {
@@ -704,6 +742,8 @@ public class OrderListActivity extends AppCompatActivity {
                         String orderStatus = String.valueOf(user.getNumber("orderStatus"));
 
                         if (orderStatus.equals("0")) {
+
+                            //   HashMap<String, String> map = new HashMap<String, String>();
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
                             estimatedData.setNotes(user.getString("notes"));
@@ -734,9 +774,9 @@ public class OrderListActivity extends AppCompatActivity {
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
                                 if (point != null) {
                                     Location location = new Location();
-                                    location.setLatitude(point.getLatitude());
-                                    location.setLongitude(point.getLongitude());
-                                    estimatedData.setLocation(location);
+                                    location.setUserlatitude(point.getLatitude());
+                                    location.setUserlongitude(point.getLongitude());
+                                    estimatedData.setUserLocation(location);
                                 }
 
                             } catch (ParseException e) {
@@ -757,17 +797,24 @@ public class OrderListActivity extends AppCompatActivity {
                             estimatedData.setCurrency(user.getString("currency"));
                             estimatedData.setCancelNote(user.getString("cancelNote"));
                             estimatedData.setTotalTime(user.getInt("totalTime"));
-                            estimatedData.setTime(user.getJSONArray("time").toString());
+                            estimatedData.setCreatedDateAt(user.getCreatedAt().toString());
+                            //  estimatedData.setTime(user.getJSONArray("time").toString());
 
                             Business business = new Business();
                             BusinessEstimatedData businessEstimateData = new BusinessEstimatedData();
                             businessEstimateData.setBusinessName(user.getString("Business_name"));
                             business.setBusinessEstimatedData(businessEstimateData);
                             estimatedData.setBusiness(business);
+                            Location location = new Location();
+                            location.setLatitude(latitude);
+                            location.setLongitude(longitude);
+                            estimatedData.setLocation(location);
                             estimatedData.setButtonStatus("Start Order");
                             order.setEstimatedData(estimatedData);
                             newOrderList.add(order);
-                      //      mNewOrderAdapter.notifyDataSetChanged();
+                            listDataChild.put(listDataHeader.get(0), newOrderList);
+
+                            //   mNewOrderAdapter.notifyDataSetChanged();
 
 
                             //      map.put("date", user.getCreatedAt().toString());
@@ -846,7 +893,7 @@ public class OrderListActivity extends AppCompatActivity {
 //
 //                        neworders_hashmap.add(map);
 //
-                        }  else if (orderStatus.equals("1")) {
+                        } else if (orderStatus.equals("1")) {
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
                             estimatedData.setNotes(user.getString("notes"));
@@ -877,9 +924,9 @@ public class OrderListActivity extends AppCompatActivity {
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
                                 if (point != null) {
                                     Location location = new Location();
-                                    location.setLatitude(point.getLatitude());
-                                    location.setLongitude(point.getLongitude());
-                                    estimatedData.setLocation(location);
+                                    location.setUserlatitude(point.getLatitude());
+                                    location.setUserlongitude(point.getLongitude());
+                                    estimatedData.setUserLocation(location);
                                 }
 
                             } catch (ParseException e) {
@@ -900,17 +947,24 @@ public class OrderListActivity extends AppCompatActivity {
                             estimatedData.setCurrency(user.getString("currency"));
                             estimatedData.setCancelNote(user.getString("cancelNote"));
                             estimatedData.setTotalTime(user.getInt("totalTime"));
-                            estimatedData.setTime(user.getJSONArray("time").toString());
+                            estimatedData.setCreatedDateAt(user.getCreatedAt().toString());
+                            //  estimatedData.setTime(user.getJSONArray("time").toString());
 
                             Business business = new Business();
                             BusinessEstimatedData businessEstimateData = new BusinessEstimatedData();
                             businessEstimateData.setBusinessName(user.getString("Business_name"));
                             business.setBusinessEstimatedData(businessEstimateData);
                             estimatedData.setBusiness(business);
+                            Location location = new Location();
+                            location.setLatitude(latitude);
+                            location.setLongitude(longitude);
+                            estimatedData.setLocation(location);
                             estimatedData.setButtonStatus("Ready");
                             order.setEstimatedData(estimatedData);
                             progressList.add(order);
-                           // mNewOrderAdapter.notifyDataSetChanged();
+
+                            listDataChild.put(listDataHeader.get(1), progressList);
+
                         } else if (orderStatus.equals("2")) {
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
@@ -942,9 +996,9 @@ public class OrderListActivity extends AppCompatActivity {
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
                                 if (point != null) {
                                     Location location = new Location();
-                                    location.setLatitude(point.getLatitude());
-                                    location.setLongitude(point.getLongitude());
-                                    estimatedData.setLocation(location);
+                                    location.setUserlatitude(point.getLatitude());
+                                    location.setUserlongitude(point.getLongitude());
+                                    estimatedData.setUserLocation(location);
                                 }
 
                             } catch (ParseException e) {
@@ -965,19 +1019,25 @@ public class OrderListActivity extends AppCompatActivity {
                             estimatedData.setCurrency(user.getString("currency"));
                             estimatedData.setCancelNote(user.getString("cancelNote"));
                             estimatedData.setTotalTime(user.getInt("totalTime"));
-                            estimatedData.setTime(user.getJSONArray("time").toString());
+                            estimatedData.setCreatedDateAt(user.getCreatedAt().toString());
+                            //  estimatedData.setTime(user.getJSONArray("time").toString());
 
                             Business business = new Business();
                             BusinessEstimatedData businessEstimateData = new BusinessEstimatedData();
                             businessEstimateData.setBusinessName(user.getString("Business_name"));
                             business.setBusinessEstimatedData(businessEstimateData);
                             estimatedData.setBusiness(business);
-
+                            Location location = new Location();
+                            location.setLatitude(latitude);
+                            location.setLongitude(longitude);
+                            estimatedData.setLocation(location);
                             estimatedData.setButtonStatus("Pick up");
                             order.setEstimatedData(estimatedData);
                             readyList.add(order);
-                            // mNewOrderAdapter.notifyDataSetChanged();
+
+                            listDataChild.put(listDataHeader.get(2), readyList);
                         }
+
 
 
 
@@ -1680,24 +1740,11 @@ public class OrderListActivity extends AppCompatActivity {
 //
 //}
 
-        }
-            private boolean checkInternetConenction () {
-                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                // test for connection
-                if (cm.getActiveNetworkInfo() != null
-                        && cm.getActiveNetworkInfo().isConnected()) {
-                    return true;
-                } else {
-                    customToast("Please check the internet connection");
-                    return false;
-                }
-            }
+            //}
 
 
-        private void customToast(String msg) {
-            Toast toast = Toasty.error(OrderListActivity.this, msg, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 230);
-            toast.show();
         }
+
+
     }
 }

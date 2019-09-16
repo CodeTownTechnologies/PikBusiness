@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.location.Location;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +37,7 @@ import com.parse.ParseCloud;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.pikbusiness.model.Response.Orders;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +57,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class InprogressAdapter extends RecyclerView.Adapter<InprogressAdapter.MyViewHolder> {
+public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.MyViewHolder> {
 
 
     ArrayList<HashMap<String, String>> dataa;
@@ -67,10 +66,16 @@ public class InprogressAdapter extends RecyclerView.Adapter<InprogressAdapter.My
     AlertDialog alertDialog;
     ProgressDialog dialog;
     Boolean stat1 = false,stat2 = false;
+    private List<Orders> progressList;
 
-    public InprogressAdapter(Context context, ArrayList<HashMap<String, String>> aryList) {
+    public InProgressAdapter(Context context, ArrayList<HashMap<String, String>> aryList) {
         this.context = context;
         this.dataa = aryList;
+    }
+
+    public InProgressAdapter(Context mContext, List<Orders> OrderList) {
+        context = mContext;
+        progressList = OrderList;
     }
 
     @Override
@@ -306,9 +311,9 @@ public class InprogressAdapter extends RecyclerView.Adapter<InprogressAdapter.My
                 maplist1.add(map);
             }
             ItemslistAdapter itemsadapter = new ItemslistAdapter(context, maplist1);
-            holder.itemslist.setLayoutManager(new LinearLayoutManager(context));
-            holder.itemslist.setItemAnimator(new DefaultItemAnimator());
-            holder.itemslist.setAdapter(itemsadapter);
+//            holder.itemslist.setLayoutManager(new LinearLayoutManager(context));
+//            holder.itemslist.setItemAnimator(new DefaultItemAnimator());
+//            holder.itemslist.setAdapter(itemsadapter);
         } catch (Throwable tx) {
             Log.e("My App", "Could not parse JSON:inoprogress \"00" + "" + tx);
         }
@@ -870,7 +875,7 @@ public class InprogressAdapter extends RecyclerView.Adapter<InprogressAdapter.My
         @BindView(R.id.vatper) TextView vatper;
         @BindView(R.id.vatprice) TextView vatprice;
         @BindView(R.id.subtotal) TextView subtotal;
-        @BindView(R.id.itemslist)RecyclerView itemslist;
+       // @BindView(R.id.itemslist)RecyclerView itemslist;
         @BindView(R.id.itemslay) LinearLayout itemslay;
         @BindView(R.id.headcolor) LinearLayout headcolor;
         @BindView(R.id.total) TextView total;
@@ -960,7 +965,7 @@ public class InprogressAdapter extends RecyclerView.Adapter<InprogressAdapter.My
             public MyViewHolder2(View itemView) {
                 super(itemView);
 
-                catname = itemView.findViewById(R.id.catname);
+                catname = itemView.findViewById(R.id.category_name);
                 itemname = itemView.findViewById(R.id.itemname);
                 itemprice = itemView.findViewById(R.id.itemprice);
                 extraname = itemView.findViewById(R.id.extraname);
