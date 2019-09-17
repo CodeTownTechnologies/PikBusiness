@@ -97,4 +97,22 @@
         android:layout_height="match_parent"
         android:overScrollMode="never"/>
 
+    <LinearLayout
+        android:id="@+id/ll_progressBar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
+    </LinearLayout>
+
+
 </LinearLayout>

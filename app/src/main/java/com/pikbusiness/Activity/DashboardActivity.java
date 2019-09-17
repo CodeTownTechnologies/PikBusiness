@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,13 +65,15 @@ import com.pikbusiness.model.Response.EstimatedData;
 import com.pikbusiness.model.Response.Location;
 import com.pikbusiness.services.Alertservice;
 import com.pikbusiness.services.Toasty;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+
 import static android.text.Html.fromHtml;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -92,6 +95,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     AlertDialog alertDialog1;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.ll_progressBar)
+    LinearLayout ll_progressBar;
+
     private FirebaseAnalytics mFirebaseAnalytics;
     private List<EstimatedData> estimateDataList = new ArrayList<>();
     private ShopLocationAdapter mAdapter;
@@ -114,6 +120,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         mShopRecyclerView.setAdapter(mAdapter);
 
         if (checkInternetConnection()) {
+            ll_progressBar.setVisibility(View.VISIBLE);
+            mShopRecyclerView.setVisibility(View.GONE);
             checkData();
             addListItems();
         }
@@ -128,7 +136,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
         stopService(new Intent(DashboardActivity.this, Alertservice.class));
-      //  updateApp(this);
+        //  updateApp(this);
         checkUpdate();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -275,40 +283,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
-        try {
-            trimCache(this);
-            // Toast.makeText(this,"onDestroy " ,Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
-    public static void trimCache(Context context) {
-        try {
-            File dir = context.getCacheDir();
-            if (dir != null && dir.isDirectory()) {
-                deleteDir(dir);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-    }
-
-    public static boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        // The directory is now empty so delete it
-        return dir.delete();
     }
 
     public void addListItems() {
@@ -321,6 +297,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
             query.findInBackground(new FindCallback<ParseObject>() {
                 public void done(List<ParseObject> object, ParseException e) {
+                    ll_progressBar.setVisibility(View.GONE);
                     if (e == null) {
                         if (mSwipeRefreshLayout.isRefreshing()) {
                             mSwipeRefreshLayout.setRefreshing(false);
@@ -363,6 +340,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                     estimateDataList.add(estimatedData);
                                 }
                             }
+                            mShopRecyclerView.setVisibility(View.VISIBLE);
                             mAdapter.notifyDataSetChanged();
 
 
@@ -538,6 +516,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onResume() {
         super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
@@ -672,4 +651,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         alertDialog1.setCancelable(false);
         alertDialog1.show();
     }
+
+
 }

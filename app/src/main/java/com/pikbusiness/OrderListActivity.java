@@ -270,19 +270,19 @@ public class OrderListActivity extends AppCompatActivity {
 //                        if (toggleSwitch.isChecked()) {
 //
 //                            tvShopStatus.setText("Online");
-//                            onoff(idd, 1, "You will receive orders now");
+//                            onOff(idd, 1, "You will receive orders now");
 //                            restart();
 //                        } else {
 //                            stop();
 //                            if (object.size() > 0) {
 //                                restart();
-//                                offlinepopup();
+//                                offlinePopup();
 //                                toggleSwitch.setChecked(true);
 //                                tvShopStatus.setText("Online");
 //                            } else {
 //
 //                                tvShopStatus.setText("Offline");
-//                                onoff(idd, 0, "You will not receive orders");
+//                                onOff(idd, 0, "You will not receive orders");
 //                                stop();
 //
 //                            }
@@ -293,15 +293,15 @@ public class OrderListActivity extends AppCompatActivity {
 ////                if (toggleSwitch.isChecked()) {
 //
 ////                        tvShopStatus.setText("Online");
-////                        onoff(objectId, 1, "You will receive orders now");
+////                        onOff(objectId, 1, "You will receive orders now");
 ////                } else {
 ////                    if(sts1){
-////                        offlinepopup();
+////                        offlinePopup();
 ////                        toggleSwitch.setChecked(true);
 ////                        tvShopStatus.setText("Online");
 ////                    }else{
 ////                        tvShopStatus.setText("Offline");
-////                        onoff(objectId, 0, "You will not receive orders");
+////                        onOff(objectId, 0, "You will not receive orders");
 ////                    }
 ////                }
 //            }
@@ -372,7 +372,7 @@ public class OrderListActivity extends AppCompatActivity {
 ////                            dialog.dismiss();
 ////                            Toast.makeText(OrderListActivity.this, "Please make it Shop is offline", Toast.LENGTH_SHORT).show();
 ////                        }else{
-//                        apr_msg(v);
+//                        alertMessage(v);
 //                        dialog.dismiss();
 ////                        }
 //
@@ -399,7 +399,7 @@ public class OrderListActivity extends AppCompatActivity {
 
     }
 //
-//    public void offlinepopup() {
+//    public void offlinePopup() {
 //
 //        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 //        LayoutInflater inflater = this.getLayoutInflater();
@@ -523,7 +523,7 @@ public class OrderListActivity extends AppCompatActivity {
     }
 
     //
-//    public void apr_msg(View view) {
+//    public void alertMessage(View view) {
 //        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        View layout = inflater.inflate(R.layout.passwordpopup, null);
 //        AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
@@ -621,7 +621,7 @@ public class OrderListActivity extends AppCompatActivity {
 //
 //    }
 //
-//    public void onoff(String id, int sts, String msg) {
+//    public void onOff(String id, int sts, String msg) {
 //        ParseQuery<ParseObject> query = ParseQuery.getQuery("ShopLocations");
 //        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 //        query.whereEqualTo("business", ParseUser.getCurrentUser().getObjectId());
@@ -1161,12 +1161,12 @@ public class OrderListActivity extends AppCompatActivity {
 //                    txt_inprogress.setText("IN PROGRESS" + " - " + inprogress_hashmap.size());
 //                    txt_ready.setText("READY FOR PICK UP" + " - " + reay_hashmap.size());
 //                    if (neworders_hashmap.size() > 0 || inprogress_hashmap.size() > 0 || reay_hashmap.size() > 0) {
-////                        offlinepopup();
+////                        offlinePopup();
 //                        sts1 = true;
 //                    } else {
 //                        sts1 = false;
 ////                        tvShopStatus.setText("Offline");
-////                        onoff(objectId, 0, "You will not receive orders");
+////                        onOff(objectId, 0, "You will not receive orders");
 //                    }
 
 //                } else {
