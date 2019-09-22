@@ -105,53 +105,11 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/category_name"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/itemslist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/textlitle10"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:id="@+id/itemname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="items"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/textregular14" />
-
-                    <TextView
-                        android:id="@+id/itemprice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:paddingRight="20dp"
-                        android:text="23"
-                        android:textAllCaps="true"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/textsmaller12"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/extraname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="extas"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/textsmaller12" />
+                    android:layout_height="match_parent"
+                    android:background="@color/white" />
             </LinearLayout>
 
             <TextView
@@ -200,6 +158,36 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/promo_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/promo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Discount"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/textsmaller12" />
+
+                <TextView
+                    android:id="@+id/promoamt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/textsmaller12" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -215,7 +203,7 @@
                     android:layout_weight="1"
                     android:text="Vat"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/textregular14" />
+                    android:textSize="@dimen/textsmaller12" />
 
                 <TextView
                     android:id="@+id/vatprice"
@@ -225,7 +213,7 @@
                     android:gravity="right"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/textregular14" />
+                    android:textSize="@dimen/textsmaller12" />
             </LinearLayout>
 
             <LinearLayout

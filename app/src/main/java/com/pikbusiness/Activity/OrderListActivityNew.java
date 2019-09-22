@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -47,6 +48,7 @@ import com.pikbusiness.model.Response.Business;
 import com.pikbusiness.model.Response.BusinessEstimatedData;
 import com.pikbusiness.model.Response.EstimatedData;
 import com.pikbusiness.model.Response.Location;
+import com.pikbusiness.model.Response.OrderItem;
 import com.pikbusiness.model.Response.Orders;
 import com.pikbusiness.model.Response.State;
 import com.pikbusiness.services.Alertservice;
@@ -58,6 +60,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,12 +69,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class OrderListActivityNew extends AppCompatActivity {
 
-    //    @BindView(R.id.neworder)
-//    RecyclerView newOrderRecyclerView;
-//    @BindView(R.id.inprogress)
-//    RecyclerView inProgressRecyclerView;
-//    @BindView(R.id.ready)
-//    RecyclerView readyRecyclerView;
+
     @BindView(R.id.shopname)
     TextView tvShopName;
     @BindView(R.id.shoploc)
@@ -79,37 +78,16 @@ public class OrderListActivityNew extends AppCompatActivity {
     TextView tvShopStatus;
     @BindView(R.id.toggle_switch)
     Switch toggleSwitch;
-
-    //    @BindView(R.id.scrollview)
-//    NestedScrollView scrollview;
     @BindView(R.id.more)
     LinearLayout moreLayout;
-//    @BindView(R.id.txt_neworder)
-//    TextView txt_neworder;
-//    @BindView(R.id.txt_inprogress)
-//    TextView txt_inprogress;
-//    @BindView(R.id.txt_ready)
-//    TextView txt_ready;
-    // RecyclerView.LayoutManager l1, l2, l3;
-    // List<ParseObject> object11;
-//    private NewOrderAdapter mNewOrderAdapter;
-//    private InProgressAdapter mInProgressAdapter;
-//    private ReadyAdapter mReadyAdapter;
-    //private String lname, bname, idd, shopsts, lat, logg, loginPassword;
-    //private Boolean sts1 = false, sts2 = false, sts3 = false;
-
 
     private String loginPassword;
-    //    @BindView(R.id.swipe_refresh)
-//    SwipeRefreshLayout mSwipeRefreshLayout;
     private DialogPlus dialog;
     private SessionManager session;
     private List<Orders> newOrderList;
     private List<Orders> progressList;
     private List<Orders> readyList;
     private Handler mHandler;
-    //   private int size1, size2;
-    //    ArrayList<HashMap<String, String>> maplist1,maplist2,maplist3;
 
     private AlertDialog alertDialog;
 
@@ -119,15 +97,22 @@ public class OrderListActivityNew extends AppCompatActivity {
     @BindView(R.id.ll_progressBar)
     LinearLayout ll_progressBar;
 
-    private double latitude, longitude;
-    private String locationName, pin, objectId, shopStatus, phoneNo, businessName;
+    private String latitude, longitude;
+    private String locationName;
+    private String pin;
+    private String objectId;
+    private String shopStatus;
+    private Number phoneNo;
+    private String businessName;
     private Context mContext;
-    @BindView(R.id.order_expandable_list)
+    @BindView(R.id.ordExpandableList)
     ExpandableListView orderExpandableList;
     private OrderListAdapter orderAdapter;
     List<String> listDataHeader;
     HashMap<String, List<Orders>> listDataChild;
-
+    private List<OrderItem> orderItemList;
+    TimerTask timerTask;
+    Timer updateTimer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,33 +125,45 @@ public class OrderListActivityNew extends AppCompatActivity {
         session = new SessionManager(this);
         mContext = OrderListActivityNew.this;
 
+        orderItemList = new ArrayList<>();
+
         this.mHandler = new Handler();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         loginPassword = pref.getString("Pass", null);
-//        String pinn = pref.getString("pin", null);
-//        if (pinn != null) {
-//            if (pinn.equals("")) {
-//                editor.clear();
-//                editor.apply();
-//                session.logoutUser();
-//            }
-//        } else {
-//            editor.clear();
-//            editor.apply();
-//            session.logoutUser();
-//        }
-
-
-        Bundle b = getIntent().getExtras();
-        latitude = b.getDouble("latitude");
-        longitude = b.getDouble("longitude");
-        locationName = getIntent().getStringExtra("locationName");
-        businessName = getIntent().getStringExtra("businessName");
-        pin = getIntent().getStringExtra("pin");
-        objectId = getIntent().getStringExtra("objectId");
-        shopStatus = getIntent().getStringExtra("shopStatus");
-        phoneNo = getIntent().getStringExtra("phoneNo");
+        locationName = pref.getString("locationName", null);
+        String pinn = pref.getString("pin", null);
+        if (pinn != null) {
+            if (pinn.equals("")) {
+                editor.clear();
+                editor.apply();
+                session.logoutUser();
+            }
+        } else {
+            editor.clear();
+            editor.apply();
+            session.logoutUser();
+        }
+        if (locationName != null) {
+            locationName = pref.getString("locationName", null);
+            businessName = pref.getString("businessName", null);
+            objectId = pref.getString("objectId", null);
+            latitude = pref.getString("lat", null);
+            longitude = pref.getString("log", null);
+            pin = pref.getString("pin", null);
+            shopStatus = pref.getString("shopstatus", null);
+//            phoneNo = getIntent().getStringExtra("phoneNo");
+        }
+//
+//        Bundle b = getIntent().getExtras();
+//        latitude = b.getDouble("latitude");
+//        longitude = b.getDouble("longitude");
+//        locationName = getIntent().getStringExtra("locationName");
+//        businessName = getIntent().getStringExtra("businessName");
+//        pin = getIntent().getStringExtra("pin");
+//        objectId = getIntent().getStringExtra("objectId");
+//        shopStatus = getIntent().getStringExtra("shopStatus");
+//        phoneNo = getIntent().getStringExtra("phoneNo");
 
 
         tvShopName.setText(businessName);
@@ -184,7 +181,7 @@ public class OrderListActivityNew extends AppCompatActivity {
             }
         }
 
-        start();
+//        m_Runnable.run();
 
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<Orders>>();
@@ -202,7 +199,8 @@ public class OrderListActivityNew extends AppCompatActivity {
             new getOrderList().execute();
         }
 
-        orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild);
+
+        orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild, orderExpandableList);
         orderExpandableList.setAdapter(orderAdapter);
 
         toggleSwitch.setOnClickListener(new View.OnClickListener() {
@@ -456,6 +454,25 @@ public class OrderListActivityNew extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+
+            finish();
+            return true;
+        }
+        return (super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finishAffinity();
+        finish();
+//        System.exit(0);
+    }
 
     private boolean checkInternetConnection() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -475,31 +492,29 @@ public class OrderListActivityNew extends AppCompatActivity {
         toast.show();
     }
 
-
     private final Runnable m_Runnable = new Runnable() {
         public void run() {
 //            Log.d("chk", "running : ");
-            if (checkInternetConnection()) {
+//            if (checkInternetConnection()) {
+////
+//                ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
+//                ParseObject obj = ParseObject.createWithoutData("ShopLocations", objectId);
+//                query.whereEqualTo("shop", obj);
+//                query.whereEqualTo("orderStatus", 0);
+//                query.whereEqualTo("isPaid", true);
+//                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+//                query.orderByDescending("updatedAt");
+//                query.findInBackground((object, e) -> {
+//                    if (e == null) {
 //
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
-                ParseObject obj = ParseObject.createWithoutData("ShopLocations", objectId);
-                query.whereEqualTo("shop", obj);
-                query.whereEqualTo("orderStatus", 0);
-                query.whereEqualTo("isPaid", true);
-                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-                query.orderByDescending("updatedAt");
-                query.findInBackground((object, e) -> {
-                    if (e == null) {
-
-                        if (object.size() > 0) {
-
-                            new getOrderList().execute();
-                        }
-                    }
-                });
-//                  new Getorderslist().execute();
-            }
-            OrderListActivityNew.this.mHandler.postDelayed(m_Runnable, 5000);
+//                        if (object.size() > 0) {
+//
+//                            new getOrderList().execute();
+//                        }
+//                    }
+//                });
+//            }
+//            OrderListActivityNew.this.mHandler.postDelayed(m_Runnable, 5000);
         }
 
     };
@@ -507,7 +522,7 @@ public class OrderListActivityNew extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-//        mHandler.removeCallbacks(m_Runnable);
+        mHandler.removeCallbacks(m_Runnable);
     }
 
 
@@ -579,6 +594,24 @@ public class OrderListActivityNew extends AppCompatActivity {
         alertDialog.show();
     }
 
+    public void removeItem(int childPosition, int groupPosition, Orders childData) {
+
+
+        if (groupPosition == 0) {
+            newOrderList.remove(childData);
+        } else if (groupPosition == 1) {
+            progressList.remove(childData);
+        } else if (groupPosition == 2) {
+            readyList.remove(childData);
+        }
+
+        listDataChild.put(listDataHeader.get(0), newOrderList);
+        listDataChild.put(listDataHeader.get(1), progressList);
+        listDataChild.put(listDataHeader.get(2), readyList);
+
+        orderAdapter.notifyDataSetChanged();
+    }
+
 
     private class getOrderList extends AsyncTask<Void, Void, List<ParseObject>> {
 
@@ -621,26 +654,31 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                 if (result.size() > 0) {
 //                m_Runnable.run(result.size());
-
+//                    Intent serviceIntent = new Intent(OrderListActivityNew.this, Alertservice.class);
+//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//                        OrderListActivityNew.this.startForegroundService(serviceIntent);
+//                    } else {
+//                        startService(serviceIntent);
+//                    }
                     for (ParseObject user : result) {
 
                         String orderStatus = String.valueOf(user.getNumber("orderStatus"));
 
                         if (orderStatus.equals("0")) {
-
+                            m_Runnable.run();
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
                             estimatedData.setNotes(user.getString("notes"));
-                            estimatedData.setTotalCost(user.getInt("totalCost"));
+                            estimatedData.setTotalCost(user.getNumber("totalCost").doubleValue());
                             estimatedData.setTranRef(user.getString("tranRef"));
-                            estimatedData.setSubTotal(user.getInt("subTotal"));
-                            estimatedData.setOrderStatus(user.getInt("orderStatus"));
+                            estimatedData.setSubTotal(user.getNumber("subTotal").doubleValue());
+                            estimatedData.setOrderStatus(user.getNumber("orderStatus").intValue());
                             estimatedData.setTaxId(user.getString("taxId"));
-                            estimatedData.setObjectId(objectId);
+                            estimatedData.setObjectId(user.getObjectId());
                             estimatedData.setDiscountAmount(user.getString("discountAmount"));
                             estimatedData.setOfferEnanbled(user.getBoolean("offerEnabled"));
                             State state = new State();
-                            state.setCreatedAt(user.getInt("createdAt"));
+                            state.setCreatedAt(user.getCreatedAt().toString());
                             order.setState(state);
                             ParseObject customer = user.getParseObject("user");
                             ParseObject shop = user.getParseObject("shop");
@@ -653,8 +691,10 @@ public class OrderListActivityNew extends AppCompatActivity {
                                 estimatedData.setCustomerName(customer.fetchIfNeeded().getString("name"));
                                 estimatedData.setCarDetails(customer.fetchIfNeeded().getString("carDetails"));
                                 estimatedData.setShopLocationName(shop.fetchIfNeeded().getString("locationName"));
-                                estimatedData.setShopPhoneNo(shop.fetchIfNeeded().getInt("phoneNo"));
-                                estimatedData.setCustomerPhoneNumber(customer.fetchIfNeeded().getInt("phoneNumber"));
+                                estimatedData.setLocationId(shop.fetchIfNeeded().getObjectId());
+                                estimatedData.setShopPhoneNo(shop.fetchIfNeeded().getNumber("phoneNo"));
+                                phoneNo = customer.fetchIfNeeded().getNumber("phoneNumber");
+                                estimatedData.setCustomerPhoneNumber(customer.fetchIfNeeded().getNumber("phoneNumber"));
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
                                 if (point != null) {
                                     Location location = new Location();
@@ -669,18 +709,24 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                             estimatedData.setUserId(user.getString("userString"));
                             estimatedData.setIsPaid(user.getBoolean("isPaid"));
-                            estimatedData.setRefundCost(user.getInt("refundCost"));
+                            if (user.getNumber("refundCost") != null) {
+                                estimatedData.setRefundCost(user.getNumber("refundCost"));
+
+                            }
+//                            estimatedData.setRefundCost(user.getNumber("refundCost").doubleValue());
                             estimatedData.setCancelledBy(user.getString("cancelledBy"));
                             estimatedData.setRefund(user.getString("refund"));
                             estimatedData.setRefund(user.getString("cancelNote"));
                             estimatedData.setPin(Integer.parseInt(pin));
                             estimatedData.setShopStatus(Integer.parseInt(shopStatus));
-                            estimatedData.setPhoneNo(Integer.parseInt(phoneNo));
-                            estimatedData.setTax(user.getInt("tax"));
+                            estimatedData.setPhoneNo(phoneNo);
+                            estimatedData.setTax(user.getNumber("tax").intValue());
                             estimatedData.setOrder(user.getString("order"));
                             estimatedData.setCurrency(user.getString("currency"));
                             estimatedData.setCancelNote(user.getString("cancelNote"));
-                            estimatedData.setTotalTime(user.getInt("totalTime"));
+                            if (user.getNumber("totalTime") != null) {
+                                estimatedData.setTotalTime(user.getNumber("totalTime"));
+                            }
                             estimatedData.setCreatedDateAt(user.getCreatedAt().toString());
                             //       estimatedData.setTime(user.getJSONArray("time").toString());
                             estimatedData.setTime(String.valueOf(user.getJSONArray("time")));
@@ -691,28 +737,32 @@ public class OrderListActivityNew extends AppCompatActivity {
                             business.setBusinessEstimatedData(businessEstimateData);
                             estimatedData.setBusiness(business);
                             Location location = new Location();
-                            location.setLatitude(latitude);
-                            location.setLongitude(longitude);
-                            estimatedData.setLocation(location);
+                            if (latitude != null) {
+                                if (latitude.length() > 0) {
+                                    location.setLatitude(Double.valueOf(latitude));
+                                    location.setLongitude(Double.valueOf(longitude));
+                                    estimatedData.setLocation(location);
+                                }
+                            }
+
                             estimatedData.setButtonStatus("Start Order");
                             order.setEstimatedData(estimatedData);
                             newOrderList.add(order);
-
-
                         } else if (orderStatus.equals("1")) {
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
                             estimatedData.setNotes(user.getString("notes"));
-                            estimatedData.setTotalCost(user.getInt("totalCost"));
+                            estimatedData.setTotalCost(user.getNumber("totalCost"));
                             estimatedData.setTranRef(user.getString("tranRef"));
-                            estimatedData.setSubTotal(user.getInt("subTotal"));
-                            estimatedData.setOrderStatus(user.getInt("orderStatus"));
+                            estimatedData.setSubTotal(user.getNumber("subTotal"));
+                            estimatedData.setOrderStatus(user.getNumber("orderStatus").intValue());
                             estimatedData.setTaxId(user.getString("taxId"));
-                            estimatedData.setObjectId(objectId);
+                            estimatedData.setObjectId(user.getObjectId());
+                            //   estimatedData.setObjectId(objectId);
                             estimatedData.setDiscountAmount(user.getString("discountAmount"));
                             estimatedData.setOfferEnanbled(user.getBoolean("offerEnabled"));
                             State state = new State();
-                            state.setCreatedAt(user.getInt("createdAt"));
+                            state.setCreatedAt(user.getCreatedAt().toString());
                             order.setState(state);
                             ParseObject customer = user.getParseObject("user");
                             ParseObject shop = user.getParseObject("shop");
@@ -725,8 +775,10 @@ public class OrderListActivityNew extends AppCompatActivity {
                                 estimatedData.setCustomerName(customer.fetchIfNeeded().getString("name"));
                                 estimatedData.setCarDetails(customer.fetchIfNeeded().getString("carDetails"));
                                 estimatedData.setShopLocationName(shop.fetchIfNeeded().getString("locationName"));
-                                estimatedData.setShopPhoneNo(shop.fetchIfNeeded().getInt("phoneNo"));
-                                estimatedData.setCustomerPhoneNumber(customer.fetchIfNeeded().getInt("phoneNumber"));
+                                estimatedData.setLocationId(shop.fetchIfNeeded().getObjectId());
+                                estimatedData.setShopPhoneNo(shop.fetchIfNeeded().getNumber("phoneNo"));
+                                estimatedData.setCustomerPhoneNumber(customer.fetchIfNeeded().getNumber("phoneNumber"));
+                                phoneNo = customer.fetchIfNeeded().getNumber("phoneNumber");
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
                                 if (point != null) {
                                     Location location = new Location();
@@ -741,18 +793,23 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                             estimatedData.setUserId(user.getString("userString"));
                             estimatedData.setIsPaid(user.getBoolean("isPaid"));
-                            estimatedData.setRefundCost(user.getInt("refundCost"));
+                            if (user.getNumber("refundCost") != null) {
+                                estimatedData.setRefundCost(user.getNumber("refundCost").doubleValue());
+
+                            }
                             estimatedData.setCancelledBy(user.getString("cancelledBy"));
                             estimatedData.setRefund(user.getString("refund"));
                             estimatedData.setRefund(user.getString("cancelNote"));
                             estimatedData.setPin(Integer.parseInt(pin));
                             estimatedData.setShopStatus(Integer.parseInt(shopStatus));
-                            estimatedData.setPhoneNo(Integer.parseInt(phoneNo));
-                            estimatedData.setTax(user.getInt("tax"));
+                            estimatedData.setPhoneNo(phoneNo);
+                            estimatedData.setTax(user.getNumber("tax").intValue());
+                            Log.d("chk", "onPostExecute: " + user.getNumber("tax"));
+
                             estimatedData.setOrder(user.getString("order"));
                             estimatedData.setCurrency(user.getString("currency"));
                             estimatedData.setCancelNote(user.getString("cancelNote"));
-                            estimatedData.setTotalTime(user.getInt("totalTime"));
+                            estimatedData.setTotalTime(user.getNumber("totalTime").doubleValue());
                             estimatedData.setCreatedDateAt(user.getCreatedAt().toString());
                             estimatedData.setTime(String.valueOf(user.getJSONArray("time")));
                             //  estimatedData.setTime(user.getJSONArray("time").toString());
@@ -763,9 +820,13 @@ public class OrderListActivityNew extends AppCompatActivity {
                             business.setBusinessEstimatedData(businessEstimateData);
                             estimatedData.setBusiness(business);
                             Location location = new Location();
-                            location.setLatitude(latitude);
-                            location.setLongitude(longitude);
-                            estimatedData.setLocation(location);
+                            if (latitude != null) {
+                                if (latitude.length() > 0) {
+                                    location.setLatitude(Double.valueOf(latitude));
+                                    location.setLongitude(Double.valueOf(longitude));
+                                    estimatedData.setLocation(location);
+                                }
+                            }
                             estimatedData.setButtonStatus("Ready");
                             order.setEstimatedData(estimatedData);
                             progressList.add(order);
@@ -775,16 +836,17 @@ public class OrderListActivityNew extends AppCompatActivity {
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
                             estimatedData.setNotes(user.getString("notes"));
-                            estimatedData.setTotalCost(user.getInt("totalCost"));
+                            estimatedData.setTotalCost(user.getNumber("totalCost").doubleValue());
                             estimatedData.setTranRef(user.getString("tranRef"));
-                            estimatedData.setSubTotal(user.getInt("subTotal"));
-                            estimatedData.setOrderStatus(user.getInt("orderStatus"));
+                            estimatedData.setSubTotal(user.getNumber("subTotal").doubleValue());
+                            estimatedData.setOrderStatus(user.getNumber("orderStatus").intValue());
                             estimatedData.setTaxId(user.getString("taxId"));
-                            estimatedData.setObjectId(objectId);
+                            estimatedData.setObjectId(user.getObjectId());
+                            //   estimatedData.setObjectId(objectId);
                             estimatedData.setDiscountAmount(user.getString("discountAmount"));
                             estimatedData.setOfferEnanbled(user.getBoolean("offerEnabled"));
                             State state = new State();
-                            state.setCreatedAt(user.getInt("createdAt"));
+                            state.setCreatedAt(user.getCreatedAt().toString());
                             order.setState(state);
                             ParseObject customer = user.getParseObject("user");
                             ParseObject shop = user.getParseObject("shop");
@@ -797,8 +859,10 @@ public class OrderListActivityNew extends AppCompatActivity {
                                 estimatedData.setCustomerName(customer.fetchIfNeeded().getString("name"));
                                 estimatedData.setCarDetails(customer.fetchIfNeeded().getString("carDetails"));
                                 estimatedData.setShopLocationName(shop.fetchIfNeeded().getString("locationName"));
-                                estimatedData.setShopPhoneNo(shop.fetchIfNeeded().getInt("phoneNo"));
-                                estimatedData.setCustomerPhoneNumber(customer.fetchIfNeeded().getInt("phoneNumber"));
+                                estimatedData.setLocationId(shop.fetchIfNeeded().getObjectId());
+                                estimatedData.setShopPhoneNo(shop.fetchIfNeeded().getNumber("phoneNo"));
+                                estimatedData.setCustomerPhoneNumber(customer.fetchIfNeeded().getNumber("phoneNumber"));
+                                phoneNo = customer.fetchIfNeeded().getNumber("phoneNumber");
                                 ParseGeoPoint point = customer.getParseGeoPoint("liveLocation");
                                 if (point != null) {
                                     Location location = new Location();
@@ -813,18 +877,23 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                             estimatedData.setUserId(user.getString("userString"));
                             estimatedData.setIsPaid(user.getBoolean("isPaid"));
-                            estimatedData.setRefundCost(user.getInt("refundCost"));
+                            if (user.getNumber("refundCost") != null) {
+                                estimatedData.setRefundCost(user.getNumber("refundCost").doubleValue());
+
+                            }
+//                            estimatedData.setRefundCost(user.getNumber("refundCost").doubleValue());
                             estimatedData.setCancelledBy(user.getString("cancelledBy"));
                             estimatedData.setRefund(user.getString("refund"));
                             estimatedData.setRefund(user.getString("cancelNote"));
                             estimatedData.setPin(Integer.parseInt(pin));
                             estimatedData.setShopStatus(Integer.parseInt(shopStatus));
-                            estimatedData.setPhoneNo(Integer.parseInt(phoneNo));
-                            estimatedData.setTax(user.getInt("tax"));
+                            estimatedData.setPhoneNo(phoneNo);
+                            estimatedData.setTax(user.getNumber("tax").intValue());
+
                             estimatedData.setOrder(user.getString("order"));
                             estimatedData.setCurrency(user.getString("currency"));
                             estimatedData.setCancelNote(user.getString("cancelNote"));
-                            estimatedData.setTotalTime(user.getInt("totalTime"));
+                            estimatedData.setTotalTime(user.getNumber("totalTime").doubleValue());
                             estimatedData.setCreatedDateAt(user.getCreatedAt().toString());
                             estimatedData.setTime(String.valueOf(user.getJSONArray("time")));
                             //  estimatedData.setTime(user.getJSONArray("time").toString());
@@ -835,9 +904,13 @@ public class OrderListActivityNew extends AppCompatActivity {
                             business.setBusinessEstimatedData(businessEstimateData);
                             estimatedData.setBusiness(business);
                             Location location = new Location();
-                            location.setLatitude(latitude);
-                            location.setLongitude(longitude);
-                            estimatedData.setLocation(location);
+                            if (latitude != null) {
+                                if (latitude.length() > 0) {
+                                    location.setLatitude(Double.valueOf(latitude));
+                                    location.setLongitude(Double.valueOf(longitude));
+                                    estimatedData.setLocation(location);
+                                }
+                            }
                             estimatedData.setButtonStatus("Pick up");
                             order.setEstimatedData(estimatedData);
                             readyList.add(order);
@@ -850,6 +923,7 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                         ll_progressBar.setVisibility(View.GONE);
                         orderExpandableList.setVisibility(View.VISIBLE);
+
                     }
                 } else {
                     ll_progressBar.setVisibility(View.GONE);

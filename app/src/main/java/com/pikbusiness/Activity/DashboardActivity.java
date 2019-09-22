@@ -65,15 +65,12 @@ import com.pikbusiness.model.Response.EstimatedData;
 import com.pikbusiness.model.Response.Location;
 import com.pikbusiness.services.Alertservice;
 import com.pikbusiness.services.Toasty;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-
 import static android.text.Html.fromHtml;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -112,6 +109,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         session = new SessionManager(this);
         mContext = DashboardActivity.this;
+
 
         mAdapter = new ShopLocationAdapter(mContext, estimateDataList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);

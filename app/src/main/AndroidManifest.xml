@@ -154,6 +154,13 @@
 
         </activity>
         <activity
+            android:name=".Activity.OrderListActivityNew"
+            android:label="Orders"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
             android:name=".Activity.EditLocationActivity"
             android:label="Edit Location"
             android:screenOrientation="portrait"
@@ -234,9 +241,5 @@
             android:exported="false"
             android:stopWithTask="false" />
 
-        <activity
-            android:name=".Activity.OrderListActivityNew"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 </manifest>

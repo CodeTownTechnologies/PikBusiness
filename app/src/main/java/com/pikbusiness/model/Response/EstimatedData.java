@@ -24,7 +24,7 @@ public class EstimatedData extends ParseObject {
     private int pin;
     @SerializedName("phoneNo")
     @Expose
-    private int phoneNo;
+    private Number phoneNo;
     @SerializedName("location")
     @Expose
     private Location location;
@@ -51,7 +51,7 @@ public class EstimatedData extends ParseObject {
     private Integer orderStatus;
     @SerializedName("subTotal")
     @Expose
-    private int subTotal;
+    private Number subTotal;
     @SerializedName("tranRef")
     @Expose
     private String tranRef;
@@ -78,7 +78,7 @@ public class EstimatedData extends ParseObject {
 //    private User user;
     @SerializedName("totalCost")
     @Expose
-    private int totalCost;
+    private Number totalCost;
     @SerializedName("cardLast4")
     @Expose
     private String cardLast4;
@@ -96,15 +96,15 @@ public class EstimatedData extends ParseObject {
     private String carDetails;
     @SerializedName("phoneNumber")
     @Expose
-    private int customerPhoneNumber;
+    private Number customerPhoneNumber;
 
     private String offerObjectId;
 
     private String shopLocationName;
 
-    private int shopPhoneNo;
+    private Number shopPhoneNo;
 
-    private int RefundCost;
+    private Number RefundCost;
 
     private String cancelledBy;
 
@@ -112,7 +112,7 @@ public class EstimatedData extends ParseObject {
 
     private String cancelNote;
 
-    private int totalTime;
+    private Number totalTime;
 
     private String time;
 
@@ -121,6 +121,14 @@ public class EstimatedData extends ParseObject {
     private String createdDateAt;
 
     private String buttonStatus;
+
+    private long elapsedHours;
+
+    private long elapsedMinutes;
+
+    private long elapsedSeconds;
+
+    private String locationObjectId;
 
 
     public int getShopStatus() {
@@ -175,15 +183,15 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public int getPhoneNo() {
+    public Number getPhoneNo() {
         return phoneNo;
     }
 
-    public void setPhoneNo(int phoneNo) {
+    public void setPhoneNo(Number phoneNo) {
         this.phoneNo = phoneNo;
     }
 
-    public EstimatedData withPhoneNo(int phoneNo) {
+    public EstimatedData withPhoneNo(Number phoneNo) {
         this.phoneNo = phoneNo;
         return this;
     }
@@ -307,15 +315,15 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public int getSubTotal() {
+    public Number getSubTotal() {
         return subTotal;
     }
 
-    public void setSubTotal(int subTotal) {
+    public void setSubTotal(Number subTotal) {
         this.subTotal = subTotal;
     }
 
-    public EstimatedData withSubTotal(int subTotal) {
+    public EstimatedData withSubTotal(Number subTotal) {
         this.subTotal = subTotal;
         return this;
     }
@@ -426,15 +434,15 @@ public class EstimatedData extends ParseObject {
     }
 */
 
-    public int getTotalCost() {
+    public Number getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(int totalCost) {
+    public void setTotalCost(Number totalCost) {
         this.totalCost = totalCost;
     }
 
-    public EstimatedData withTotalCost(int totalCost) {
+    public EstimatedData withTotalCost(Number totalCost) {
         this.totalCost = totalCost;
         return this;
     }
@@ -478,15 +486,15 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public int getCustomerPhoneNumber() {
+    public Number getCustomerPhoneNumber() {
         return customerPhoneNumber;
     }
 
-    public void setCustomerPhoneNumber(int customerPhoneNumber) {
+    public void setCustomerPhoneNumber(Number customerPhoneNumber) {
         this.customerPhoneNumber = customerPhoneNumber;
     }
 
-    public EstimatedData withcustomerPhoneNumber(int customerPhoneNumber) {
+    public EstimatedData withcustomerPhoneNumber(Number customerPhoneNumber) {
         this.customerPhoneNumber = customerPhoneNumber;
         return this;
     }
@@ -518,7 +526,7 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public String setOfferObjectId() {
+    public String getOfferObjectId() {
         return offerObjectId;
     }
 
@@ -544,15 +552,15 @@ public class EstimatedData extends ParseObject {
         return this;
     }
 
-    public int getShopPhoneNo() {
+    public Number getShopPhoneNo() {
         return shopPhoneNo;
     }
 
-    public void setShopPhoneNo(int shopPhoneNo) {
+    public void setShopPhoneNo(Number shopPhoneNo) {
         this.shopPhoneNo = shopPhoneNo;
     }
 
-    public EstimatedData withShopPhoneNo(int shopPhoneNo) {
+    public EstimatedData withShopPhoneNo(Number shopPhoneNo) {
         this.shopPhoneNo = shopPhoneNo;
         return this;
     }
@@ -565,11 +573,11 @@ public class EstimatedData extends ParseObject {
         this.userString = userString;
     }
 
-    public int getRefundCost() {
+    public Number getRefundCost() {
         return RefundCost;
     }
 
-    public void setRefundCost(int RefundCost) {
+    public void setRefundCost(Number RefundCost) {
         this.RefundCost = RefundCost;
     }
 
@@ -601,11 +609,11 @@ public class EstimatedData extends ParseObject {
         this.cancelNote = cancelNote;
     }
 
-    public int getTotalTime() {
+    public Number getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(int totalTime) {
+    public void setTotalTime(Number totalTime) {
         this.totalTime = totalTime;
     }
 
@@ -632,5 +640,38 @@ public class EstimatedData extends ParseObject {
 
     public String getButtonStatus() {
         return buttonStatus;
+    }
+
+    public long getElapsedHours() {
+        return elapsedHours;
+    }
+
+    public void setElapsedHours(long elapsedHours) {
+        this.elapsedHours = elapsedHours;
+    }
+
+    public long getElapsedMinutes() {
+        return elapsedMinutes;
+    }
+
+    public void setElapsedMinutes(long elapsedMinutes) {
+        this.elapsedMinutes = elapsedMinutes;
+    }
+
+    public long getElapsedSeconds() {
+        return elapsedSeconds;
+    }
+
+    public void setElapsedSeconds(long elapsedSeconds) {
+        this.elapsedSeconds = elapsedSeconds;
+    }
+
+
+    public void setLocationId(String locationId) {
+        locationObjectId = locationId;
+    }
+
+    public String getLocationObjectId() {
+        return locationObjectId;
     }
 }

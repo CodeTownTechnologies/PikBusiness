@@ -875,8 +875,8 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
         @BindView(R.id.vatper) TextView vatper;
         @BindView(R.id.vatprice) TextView vatprice;
         @BindView(R.id.subtotal) TextView subtotal;
-       // @BindView(R.id.itemslist)RecyclerView itemslist;
-        @BindView(R.id.itemslay) LinearLayout itemslay;
+        @BindView(R.id.itemslist)RecyclerView itemslist;
+       // @BindView(R.id.itemslay) LinearLayout itemslay;
         @BindView(R.id.headcolor) LinearLayout headcolor;
         @BindView(R.id.total) TextView total;
         @BindView(R.id.stsbtn) Button stsbtn;
@@ -964,11 +964,11 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
 
             public MyViewHolder2(View itemView) {
                 super(itemView);
-
-                catname = itemView.findViewById(R.id.category_name);
-                itemname = itemView.findViewById(R.id.itemname);
-                itemprice = itemView.findViewById(R.id.itemprice);
-                extraname = itemView.findViewById(R.id.extraname);
+//
+//                catname = itemView.findViewById(R.id.category_name);
+//                itemname = itemView.findViewById(R.id.itemname);
+//                itemprice = itemView.findViewById(R.id.itemprice);
+//                extraname = itemView.findViewById(R.id.extraname);
 
             }
         }

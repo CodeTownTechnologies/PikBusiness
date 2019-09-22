@@ -16,9 +16,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import com.pikbusiness.Activity.DashboardActivity;
-import com.pikbusiness.OrderListActivity;
+import com.pikbusiness.Activity.OrderListActivityNew;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
@@ -141,7 +140,7 @@ public class Splashscreen extends AppCompatActivity {
                              if (aprv.equals("1")) {
                              if (pin != null) {
                                  if (pin.length() > 0) {
-                                     Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
+                                     Intent intent = new Intent(Splashscreen.this, OrderListActivityNew.class);
                                      startActivity(intent);
                                      overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                  } else {
@@ -169,7 +168,7 @@ public class Splashscreen extends AppCompatActivity {
                                  } else if (pin != null) {
                                      if (pin.length() > 0) {
 //                                         Log.d("chk", "onFinish:else111 "+pin);
-                                         Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
+                                         Intent intent = new Intent(Splashscreen.this, OrderListActivityNew.class);
                                          startActivity(intent);
                                          overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                      } else {
@@ -195,7 +194,7 @@ public class Splashscreen extends AppCompatActivity {
                             if (pin != null){
                                 if(pin.length() > 0 ){
 //                                    Log.d("chk", "onFinish:else "+pin);
-                                    Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
+                                    Intent intent = new Intent(Splashscreen.this, OrderListActivityNew.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                 }else{
@@ -220,7 +219,7 @@ public class Splashscreen extends AppCompatActivity {
                          if (pin != null){
                              if(pin.length() >0 ){
                                  Log.d("chk", "onFinish:else111222 "+pin);
-                                 Intent intent = new Intent(Splashscreen.this, OrderListActivity.class);
+                                 Intent intent = new Intent(Splashscreen.this, OrderListActivityNew.class);
                                  startActivity(intent);
                                  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                              }

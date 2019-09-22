@@ -19,7 +19,7 @@ public class State {
     private String className;
     @SerializedName("createdAt")
     @Expose
-    private int createdAt;
+    private String createdAt;
     @SerializedName("isComplete")
     @Expose
     private Boolean isComplete;
@@ -72,15 +72,15 @@ public class State {
         return this;
     }
 
-    public int getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(int createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public State withCreatedAt(int createdAt) {
+    public State withCreatedAt(String createdAt) {
         this.createdAt = createdAt;
         return this;
     }

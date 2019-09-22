@@ -110,10 +110,9 @@ public class EnterPinActivity extends AppCompatActivity {
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
-                //session.Pinlogin(otpPin, lname, bname, id1, shopstatus,
-                //      getIntent().getStringExtra("lat"),
-                //     getIntent().getStringExtra("log"));
-//                    Toast.makeText(EnterPinActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                session.Pinlogin(otpPin, locationName, businessName, objectId, shopStatus,
+                        String.valueOf(latitude), String.valueOf(longitude));
+                    Toast.makeText(EnterPinActivity.this, "Success", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(EnterPinActivity.this, "Incorrect pin" + otpPin, Toast.LENGTH_SHORT).show();
             }

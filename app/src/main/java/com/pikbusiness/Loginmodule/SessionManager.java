@@ -42,10 +42,10 @@ public class SessionManager {
     public void Pinlogin(String pin,String lname,String bname,String id,
                          String shopstatus,String lat,String longg){
 
-        editor.putString(KEY_PIN,pin);
-        editor.putString("lname",lname);
-        editor.putString("bname",bname);
-        editor.putString("id",id);
+        editor.putString("pin",pin);
+        editor.putString("locationName",lname);
+        editor.putString("businessName",bname);
+        editor.putString("objectId",id);
         editor.putString("shopstatus",shopstatus);
         editor.putString("lat", lat);
         editor.putString("log", longg);

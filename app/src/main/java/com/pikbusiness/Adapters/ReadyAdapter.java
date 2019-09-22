@@ -1105,9 +1105,9 @@ public class ReadyAdapter extends RecyclerView.Adapter<ReadyAdapter.MyViewHolder
                 super(itemView);
 
                 catname = itemView.findViewById(R.id.category_name);
-                itemname = itemView.findViewById(R.id.itemname);
-                itemprice = itemView.findViewById(R.id.itemprice);
-                extraname = itemView.findViewById(R.id.extraname);
+//                itemname = itemView.findViewById(R.id.itemname);
+//                itemprice = itemView.findViewById(R.id.itemprice);
+//                extraname = itemView.findViewById(R.id.extraname);
 
             }
         }

@@ -288,15 +288,6 @@ public class ShopLocationAdapter extends RecyclerView.Adapter<ShopLocationAdapte
 
                                 estimateDataList.remove(position);
                                 notifyDataSetChanged();
-//                                dataa.remove(position);
-//                                notifyItemRemoved(position);
-//                                notifyItemRangeChanged(position, dataa.size());
-                                //
-                                //                            notifyItemChanged(position);
-                                //                            Intent i = new Intent(context,DashboardActivity.class);
-                                //                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                //                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                //                            context.startActivity(i);
 
                             } else {
 

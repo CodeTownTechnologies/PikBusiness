@@ -971,10 +971,10 @@ public class NewOrderAdapter extends RecyclerView.Adapter<NewOrderAdapter.MyView
             public MyViewHolder2(View itemView) {
                 super(itemView);
 
-                catname = itemView.findViewById(R.id.category_name);
-                itemname = itemView.findViewById(R.id.itemname);
-                itemprice = itemView.findViewById(R.id.itemprice);
-                extraname = itemView.findViewById(R.id.extraname);
+//                catname = itemView.findViewById(R.id.category_name);
+//                itemname = itemView.findViewById(R.id.itemname);
+//                itemprice = itemView.findViewById(R.id.itemprice);
+//                extraname = itemView.findViewById(R.id.extraname);
 
             }
         }
