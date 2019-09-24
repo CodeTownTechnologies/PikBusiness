@@ -596,7 +596,6 @@ public class OrderListActivityNew extends AppCompatActivity {
 
     public void removeItem(int childPosition, int groupPosition, Orders childData) {
 
-
         if (groupPosition == 0) {
             newOrderList.remove(childData);
         } else if (groupPosition == 1) {
@@ -611,6 +610,23 @@ public class OrderListActivityNew extends AppCompatActivity {
 
         orderAdapter.notifyDataSetChanged();
     }
+
+
+    public void changeStatus(int childPosition, int groupPosition, Orders childData) {
+
+
+        if (checkInternetConnection()) {
+            ll_progressBar.setVisibility(View.VISIBLE);
+            orderExpandableList.setVisibility(View.GONE);
+            initiateData();
+            new getOrderList().execute();
+            orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild, orderExpandableList);
+            orderExpandableList.setAdapter(orderAdapter);
+
+        }
+
+    }
+
 
 
     private class getOrderList extends AsyncTask<Void, Void, List<ParseObject>> {
@@ -653,13 +669,7 @@ public class OrderListActivityNew extends AppCompatActivity {
             if (result != null) {
 
                 if (result.size() > 0) {
-//                m_Runnable.run(result.size());
-//                    Intent serviceIntent = new Intent(OrderListActivityNew.this, Alertservice.class);
-//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                        OrderListActivityNew.this.startForegroundService(serviceIntent);
-//                    } else {
-//                        startService(serviceIntent);
-//                    }
+
                     for (ParseObject user : result) {
 
                         String orderStatus = String.valueOf(user.getNumber("orderStatus"));

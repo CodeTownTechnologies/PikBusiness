@@ -43,7 +43,6 @@ import com.pikbusiness.Activity.OrderListActivityNew;
 import com.pikbusiness.R;
 import com.pikbusiness.model.Response.OrderItem;
 import com.pikbusiness.model.Response.Orders;
-import com.pikbusiness.services.Alertservice;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -139,12 +138,14 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
 
         // Get the stored ViewHolder that also contains our views
         ViewHolder holder = (ViewHolder) row.getTag();
+        View myView = holder.getView(R.id.child_view);
+        tvCustomerName = myView.findViewById(R.id.customer_name);
 
-        tvCustomerName = (TextView) row.findViewById(R.id.customer_name);
+        //  tvCustomerName = (TextView) row.findViewById(R.id.customer_name);
         tvDistance = (TextView) row.findViewById(R.id.tv_distance);
         tvDistanceTime = (TextView) row.findViewById(R.id.tv_distance_time);
         headBackgroundLayout = (LinearLayout) row.findViewById(R.id.head_background_color);
-        tvTimer = (TextView) row.findViewById(R.id.timer);
+        tvTimer = (TextView) myView.findViewById(R.id.timer);
         itemRecyclerView = (RecyclerView) row.findViewById(R.id.item_recycler_view);
         orderItemAdapter = new OrderItemListAdapter(mContext, orderItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
@@ -228,85 +229,238 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
             /* end logic to check distance and distance time*/
         }
 
-        //((OrderListActivityNew) mContext).updateTime(childPosition, groupPosition, childData, tvTimer,headBackgroundLayout);
-
 
 //        /* start logic to set header color and count down timer*/
-        timerTask = new TimerTask() {
-            public void run() {
-                try {
 
-                    SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                    Date date = null;
-                    Date c = Calendar.getInstance().getTime();
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        try {
-                            date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                        try {
-                            date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    long diffTimeMillis = c.getTime() - date.getTime();
+        if (childData.getEstimatedData().getOrderStatus() == 0) {
+            timerTask = new TimerTask() {
+                public void run() {
+                    try {
 
-                    long secondsInMilli = 1000;
-                    long minutesInMilli = secondsInMilli * 60;
-                    long hoursInMilli = minutesInMilli * 60;
-                    long daysInMilli = hoursInMilli * 24;
-
-                    diffTimeMillis = diffTimeMillis % daysInMilli;
-                    long elapsedHours = diffTimeMillis / hoursInMilli;
-                    diffTimeMillis = diffTimeMillis % hoursInMilli;
-                    long elapsedMinutes = diffTimeMillis / minutesInMilli;
-                    diffTimeMillis = diffTimeMillis % minutesInMilli;
-                    long elapsedSeconds = diffTimeMillis / secondsInMilli;
-
-                    Handler mainThread = new Handler(Looper.getMainLooper());
-                    mainThread.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println("group position ===" + groupPosition);
-                            System.out.println("child Position  ===" + childPosition);
-
-                            if (elapsedHours == 0) {
-                                tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
-                            } else {
-                                tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                        "seconds==" + elapsedSeconds);
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                        Date date = null;
+                        Date c = Calendar.getInstance().getTime();
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            try {
+                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            try {
+                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        long diffTimeMillis = c.getTime() - date.getTime();
 
-                            if (elapsedHours == 0) {
-                                if (elapsedMinutes < 3) {
-                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
-                                } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
-                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
-                                } else if (elapsedMinutes >= 5) {
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        diffTimeMillis = diffTimeMillis % daysInMilli;
+                        long elapsedHours = diffTimeMillis / hoursInMilli;
+                        diffTimeMillis = diffTimeMillis % hoursInMilli;
+                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
+                        diffTimeMillis = diffTimeMillis % minutesInMilli;
+                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
+
+                        Handler mainThread = new Handler(Looper.getMainLooper());
+                        mainThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("group position ===" + groupPosition);
+                                System.out.println("child Position  ===" + childPosition);
+
+                                if (elapsedHours == 0) {
+                                    tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
+                                    System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                } else {
+                                    tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
+                                    System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                            "seconds==" + elapsedSeconds);
+                                }
+
+                                if (elapsedHours == 0) {
+                                    if (elapsedMinutes < 3) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+                                    } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+                                    } else if (elapsedMinutes >= 5) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                    }
+                                } else {
                                     headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
                                 }
-                            } else {
-                                headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+
                             }
+                        });
 
-                        }
-                    });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-        };
+            };
 
-        updateTimer.schedule(timerTask, 60, 1000);
+            updateTimer.schedule(timerTask, 60, 1000);
 
+        } else if (childData.getEstimatedData().getOrderStatus() == 1) {
+            timerTask = new TimerTask() {
+                public void run() {
+                    try {
+
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                        Date date = null;
+                        Date c = Calendar.getInstance().getTime();
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            try {
+                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            try {
+                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        long diffTimeMillis = c.getTime() - date.getTime();
+
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        diffTimeMillis = diffTimeMillis % daysInMilli;
+                        long elapsedHours = diffTimeMillis / hoursInMilli;
+                        diffTimeMillis = diffTimeMillis % hoursInMilli;
+                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
+                        diffTimeMillis = diffTimeMillis % minutesInMilli;
+                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
+
+                        Handler mainThread = new Handler(Looper.getMainLooper());
+                        mainThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("group position ===" + groupPosition);
+                                System.out.println("child Position  ===" + childPosition);
+
+                                if (elapsedHours == 0) {
+                                    tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
+                                    System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                } else {
+                                    tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
+                                    System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                            "seconds==" + elapsedSeconds);
+                                }
+
+                                if (elapsedHours == 0) {
+                                    if (elapsedMinutes < 3) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+                                    } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+                                    } else if (elapsedMinutes >= 5) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                    }
+                                } else {
+                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                }
+
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            };
+
+            updateTimer.schedule(timerTask, 60, 1000);
+        } else if (childData.getEstimatedData().getOrderStatus() == 2) {
+            timerTask = new TimerTask() {
+                public void run() {
+                    try {
+
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                        Date date = null;
+                        Date c = Calendar.getInstance().getTime();
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            try {
+                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            try {
+                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        long diffTimeMillis = c.getTime() - date.getTime();
+
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        diffTimeMillis = diffTimeMillis % daysInMilli;
+                        long elapsedHours = diffTimeMillis / hoursInMilli;
+                        diffTimeMillis = diffTimeMillis % hoursInMilli;
+                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
+                        diffTimeMillis = diffTimeMillis % minutesInMilli;
+                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
+
+                        Handler mainThread = new Handler(Looper.getMainLooper());
+                        mainThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("group position ===" + groupPosition);
+                                System.out.println("child Position  ===" + childPosition);
+
+                                if (elapsedHours == 0) {
+                                    tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
+                                    System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                } else {
+                                    tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
+                                    System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                            "seconds==" + elapsedSeconds);
+                                }
+
+                                if (elapsedHours == 0) {
+                                    if (elapsedMinutes < 3) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+                                    } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+                                    } else if (elapsedMinutes >= 5) {
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                    }
+                                } else {
+                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                }
+
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            };
+
+            updateTimer.schedule(timerTask, 60, 1000);
+        } else {
+            tvTimer.setText("");
+        }
         /* end logic to set header color and count down timer*/
 
 
@@ -337,65 +491,182 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                 dialog.setMessage("Please wait.....");
                 dialog.setCancelable(false);
                 dialog.show();
-                SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-                        Locale.ENGLISH);
-                Date d1 = null;
-                Date c = Calendar.getInstance().getTime();
-                try {
-                    double tr;
-                    try {
-                        tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
-                    } catch (NumberFormatException f) {
-                        tr = 0; // your default value
-                    }
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                        // Call some material design APIs here
-                    } else {
-                        DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                        d1 = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                    }
-                    long different = c.getTime() - d1.getTime();
-                    long secondsInMilli = 1000;
-                    long minutesInMilli = secondsInMilli * 60;
-                    long elapsedMinutes = different / minutesInMilli;
-                    different = different % minutesInMilli;
-                    long elapsedSeconds = different / secondsInMilli;
-                    String totalTime = String.valueOf(tr + elapsedMinutes);
-                    String tiim = elapsedMinutes + "." + elapsedSeconds;
-                    JSONArray jsonArray = null;
-                    try {
-                        jsonArray = new JSONArray(childData.getEstimatedData().getTime());
 
-                        if (jsonArray.length() > 0) {
+                if (childData.getEstimatedData().getOrderStatus() == 0 ||
+                        childData.getEstimatedData().getOrderStatus() == 1) {
 
-                            jsonArray.put(tiim);
+                    SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                            Locale.ENGLISH);
+                    Date d1 = null;
+                    Date c = Calendar.getInstance().getTime();
+                    try {
+                        double tr;
+                        try {
+                            tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
+                        } catch (NumberFormatException f) {
+                            tr = 0; // your default value
                         }
-                    } catch (JSONException e) {
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            // Call some material design APIs here
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            d1 = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                        }
+                        long different = c.getTime() - d1.getTime();
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long elapsedMinutes = different / minutesInMilli;
+                        different = different % minutesInMilli;
+                        long elapsedSeconds = different / secondsInMilli;
+                        String totalTime = String.valueOf(tr + elapsedMinutes);
+                        String tiim = elapsedMinutes + "." + elapsedSeconds;
+
+                        JSONArray jsonArray = null;
+
+                        if (childData.getEstimatedData().getOrderStatus() == 1) {
+
+                            try {
+                                jsonArray = new JSONArray(childData.getEstimatedData().getTime());
+
+                                if (jsonArray.length() > 0) {
+
+                                    jsonArray.put(tiim);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.d("chk", "onClick: " + e.getMessage());
+                            }
+
+                            changeStatus(childData.getEstimatedData().getObjectId(),
+                                    childData.getEstimatedData().getLocationName(),
+                                    childData.getEstimatedData().getShopLocationName(),
+                                    childData.getEstimatedData().getLocation().getLatitude(),
+                                    childData.getEstimatedData().getLocation().getLongitude(),
+                                    childData.getEstimatedData().getShopStatus(),
+                                    childData.getEstimatedData().getPin(),
+                                    childData.getEstimatedData().getPhoneNo(),
+                                    childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
+                                    childData.getEstimatedData().getUserId(),
+                                    childData.getEstimatedData().getOrderStatus(),
+                                    childData, childPosition, groupPosition, jsonArray);
+
+                        } else if (childData.getEstimatedData().getOrderStatus() == 0) {
+                            changeStatus(childData.getEstimatedData().getObjectId(),
+                                    childData.getEstimatedData().getLocationName(),
+                                    childData.getEstimatedData().getShopLocationName(),
+                                    childData.getEstimatedData().getLocation().getLatitude(),
+                                    childData.getEstimatedData().getLocation().getLongitude(),
+                                    childData.getEstimatedData().getShopStatus(),
+                                    childData.getEstimatedData().getPin(),
+                                    childData.getEstimatedData().getPhoneNo(),
+                                    childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
+                                    childData.getEstimatedData().getUserId(),
+                                    childData.getEstimatedData().getOrderStatus(),
+                                    childData, childPosition, groupPosition, jsonArray);
+                        } else {
+                            // do nothing
+                        }
+
+
+                    } catch (ParseException e) {
                         e.printStackTrace();
-                        Log.d("chk", "onClick: " + e.getMessage());
                     }
 
-                    changeStatus(childData.getEstimatedData().getObjectId(),
-                            childData.getEstimatedData().getLocationName(),
-                            childData.getEstimatedData().getShopLocationName(),
-                            childData.getEstimatedData().getLocation().getLatitude(),
-                            childData.getEstimatedData().getLocation().getLongitude(),
-                            childData.getEstimatedData().getShopStatus(),
-                            childData.getEstimatedData().getPin(),
-                            childData.getEstimatedData().getPhoneNo(),
-                            childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
-                            childData.getEstimatedData().getUserId(),
-                            childData.getEstimatedData().getOrderStatus(),
-                            childData, childPosition, groupPosition);
+                } else if (childData.getEstimatedData().getOrderStatus() == 2) {
 
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    String pik = "0";
+                    pik = String.valueOf(ParseUser.getCurrentUser().getNumber("pikPercentage"));
+                    if (pik != null) {
+
+                        Double a = Double.valueOf(String.valueOf(childData.getEstimatedData().getTotalCost()));
+                        Double b = Double.valueOf(pik);
+                        Double cres = a * b / 100;
+                        String pikper = String.valueOf(pik);
+                        String tottalcost = String.valueOf(cres);
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                                Locale.ENGLISH);
+                        Date d1 = null;
+                        Date c = Calendar.getInstance().getTime();
+                        try {
+                            double tr;
+                            try {
+                                tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
+                            } catch (NumberFormatException f) {
+                                tr = 0; // your default value
+                            }
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                try {
+                                    d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                // Call some material design APIs here
+                            } else {
+                                DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                                try {
+                                    d1 = (Date) formatter.parse(childData.getEstimatedData().getTime());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            long different = c.getTime() - d1.getTime();
+                            long secondsInMilli = 1000;
+                            long minutesInMilli = secondsInMilli * 60;
+                            long elapsedMinutes = different / minutesInMilli;
+                            different = different % minutesInMilli;
+                            long elapsedSeconds = different / secondsInMilli;
+                            String tot = String.valueOf(tr + elapsedMinutes);
+                            String tiim = elapsedMinutes + "." + elapsedSeconds;
+
+                            JSONArray jsonArray = null;
+                            try {
+                                jsonArray = new JSONArray(childData.getEstimatedData().getTime());
+
+                                if (jsonArray.length() > 0) {
+
+                                    jsonArray.put(tiim);
+                                }
+                            } catch (JSONException t1) {
+                                t1.printStackTrace();
+//                                    Log.d("chk", "onClick:error "+ t1.getMessage());
+                            }
+
+                            try {
+                                jsonArray = new JSONArray(childData.getEstimatedData().getTime());
+
+                                if (jsonArray.length() > 0) {
+
+                                    jsonArray.put(tiim);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.d("chk", "onClick: " + e.getMessage());
+                            }
+
+
+                            changeReadyStatus(childData.getEstimatedData().getObjectId(), childData.getEstimatedData().getLocationObjectId(),
+                                    v, childData.getEstimatedData().getNotes(), childData.getEstimatedData().getTotalTime(),
+                                    childData.getEstimatedData().getSubTotal(), childData.getEstimatedData().getTaxId(),
+                                    childData.getEstimatedData().getTax(), childData.getEstimatedData().getOrder(),
+                                    jsonArray, childData.getEstimatedData().getIsPaid(), childData.getEstimatedData().getCreatedDateAt(),
+                                    pikper, childData.getEstimatedData().getTotalCost(), childData.getEstimatedData().getUserId(),
+                                    childPosition, groupPosition, childData, childData.getEstimatedData().getDiscountAmount(),
+                                    childData.getEstimatedData().getOfferObjectId(), childData.getEstimatedData().getOfferEnanbled(),tot);
+
+                        } catch (Exception t1) {
+                            t1.printStackTrace();
+//                                    Log.d("chk", "onClick:error "+ t1.getMessage());
+                        }
+
+                    }
+                } else {
+                    // do nothing
+
                 }
-
-
             }
         });
+
 
         tvCancelOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -543,55 +814,181 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         return row;
     }
 
-    private void changeStatus(String objectId, String locationName, String shopLocationName, Double latitude, Double longitude,
-                              int shopStatus, int pin, Number phoneNo,
+    private void changeReadyStatus(String objectId, String locationObjectId, View v, String notes, Number
+            totalTime, Number subTotal, String taxId, int tax, String order, JSONArray jsonArray,
+                                   Boolean isPaid, String createdDateAt, String pikper, Number totalCost, String userId,
+                                   int childPosition, int groupPosition, Orders childData, String discountAmount,
+                                   String offerObjectId, Boolean offerEnanbled, String tot) {
+
+
+        ParseObject shop = new ParseObject("OrderHistory");
+        ParseObject obj = ParseObject.createWithoutData("ShopLocations",locationObjectId);
+        shop.put("shop", obj);
+        shop.put("notes",notes);
+        shop.put("orderNo",objectId);
+        shop.put("orderCost", Double.valueOf(String.valueOf(totalCost)));
+        shop.put("orderTime",createdDateAt);
+        shop.put("orderStatus",3);
+        if(taxId != null){
+            shop.put("taxId", taxId);
+        }else{
+            shop.put("taxId", "");
+        }
+        shop.put("tax", tax);
+        shop.put("subTotal",Double.valueOf(String.valueOf(subTotal)));
+        if(jsonArray != null){
+            shop.put("time",jsonArray);
+        }
+        if(userId != null){
+            ParseObject userobj = ParseObject.createWithoutData("_User",userId);
+            shop.put("user",userobj);
+            shop.put("userString",userId);
+        }
+        if(offerObjectId != null){
+            ParseObject offerobj = ParseObject.createWithoutData("Offers",offerObjectId);
+            shop.put("offerDetails",offerobj);
+        }
+        if(discountAmount != null){
+            if(discountAmount.equals("null"))
+            {
+                shop.put("discountAmount",0);
+            }else{
+                shop.put("discountAmount",Double.valueOf(discountAmount));
+            }
+        }
+        if(offerEnanbled != null){
+            if(offerEnanbled.equals("true")){
+                Boolean rf = true;
+                shop.put("offerEnabled",rf);
+            }else if(offerEnanbled.equals("false")){
+                Boolean rf = false;
+                shop.put("offerEnabled",rf);
+            }
+        }
+//        shop.put("refundCost",Double.valueOf(refuncost));
+        DecimalFormat df = new DecimalFormat("###0.00");
+        shop.put("order",order);
+        shop.put("owner", ParseUser.getCurrentUser());
+        shop.put("business",ParseUser.getCurrentUser().getObjectId());
+        shop.put("shopstring",locationObjectId);
+        shop.put("currency",currencyType);
+        shop.put("totalCost",Double.valueOf(String.valueOf(totalCost)));
+
+        tot = tot.replaceAll(",", "");
+        Double chkdis = Double.parseDouble(tot);
+        shop.put("totalTime",Double.valueOf(df.format(chkdis)));
+
+        String totalC = String.valueOf(totalCost).replaceAll(",", "");
+        Double pikstr = Double.parseDouble(totalC);
+        shop.put("pikCharges",Double.valueOf(df.format(pikstr)));
+
+        shop.put("pikPercentage",Double.valueOf(pikper));
+
+        if(isPaid != null){
+            Boolean b = Boolean.valueOf(isPaid);
+            shop.put("isPaid",b);
+        }
+        shop.saveInBackground(e -> {
+            // TODO Auto-generated method stub
+
+            if (e == null) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
+                ParseObject obj1 = ParseObject.createWithoutData("ShopLocations",locationObjectId);
+                query.whereEqualTo("shop", obj1);
+                query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
+                query.getInBackground(objectId, new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, com.parse.ParseException e) {
+                        if (e == null) {
+                            object.deleteInBackground();
+                            HashMap<String, String> params = new HashMap<>();
+                            params.put("status", "3");
+                            params.put("orderNo", objectId);
+                            params.put("business",ParseUser.getCurrentUser().getObjectId());
+                            params.put("location", locationObjectId);
+                            params.put("user", userId);
+                            params.put("sendBy", "business");
+                            params.put("cancelNote", "");
+                            ParseCloud.callFunctionInBackground("push", params, (FunctionCallback<Float>) (ratings, re) -> {
+                            });
+                            if(dialog != null){
+                                dialog.dismiss();
+                            }
+                            ((OrderListActivityNew) mContext).changeStatus(childPosition, groupPosition, childData);
+                            Toast.makeText(mContext, "Order Pickedup ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("chk", "done:ck "+e.getMessage());
+                            // something went wrong
+                        }
+                    }
+
+                });
+
+            } else {
+                Log.d("chk", "done:last "+e.getMessage());
+            }
+        });
+
+
+
+    }
+
+    private void changeStatus(String objectId, String locationName, String shopLocationName, Double latitude,
+                              Double longitude, int shopStatus, int pin, Number phoneNo,
                               String locationObjectId, View v, String tim, String totalTime, String userId,
-                              Integer orderStatus, Orders childData, int childPosition, int groupPosition) {
+                              Integer orderStatus, Orders childData, int childPosition, int groupPosition, JSONArray jsonArray) {
 
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
+        query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
+        query.getInBackground(objectId, (shop, e) -> {
+            if (e == null) {
 
-//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
-//        query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
-//        query.getInBackground(objectId, (shop, e) -> {
-//            if (e == null) {
-//                JSONArray jsonArray = new JSONArray();
-//                jsonArray.put(tim);
-//                shop.put("orderStatus", orderStatus);
-//                shop.put("totalTime", Double.valueOf(tim));
-//                shop.put("time", jsonArray);
-//                shop.saveInBackground(e1 -> {
-//
-//                    if (e1 == null) {
-//                        HashMap<String, String> params = new HashMap<>();
-//
-//                        params.put("status", String.valueOf(orderStatus));
-//                        params.put("orderNo", objectId);
-//                        params.put("business", ParseUser.getCurrentUser().getObjectId());
-//                        params.put("location", locationObjectId);
-//                        params.put("user", userId);
-//                        params.put("sendBy", "business");
-//                        params.put("cancelNote", "");
-//                        ParseCloud.callFunctionInBackground("push", params, (FunctionCallback<Float>) (ratings, re) -> {
-//                            if (re == null) {
-//                                // ratings is 4.5
-////                                    Log.d("chk", "done:chkkk ");
-//                            } else {
-////                                    Log.d("chk", "done:error "+re.getMessage());
-//                            }
-//                        });
-//                        dialog.dismiss();
-//                        ((OrderListActivityNew) mContext).removeItem(childPosition, groupPosition, childData);
-//
-//
-//                        Toast.makeText(mContext, "Order started ", Toast.LENGTH_SHORT).show();
-//                    } else {
-////                            Log.d("chk", "error: "+ e1.getMessage());
-//                    }
-//                });
-//            } else {
-//                e.printStackTrace();
-////                    Log.d("chk", "done: error"+e.getMessage());
-//            }
-//        });
+                if (orderStatus == 1) {
+                    shop.put("orderStatus", 2);
+                    shop.put("totalTime", Double.valueOf(totalTime));
+                    shop.put("time", jsonArray);
+                } else {
+                    JSONArray json = new JSONArray();
+                    json.put(tim);
+                    shop.put("orderStatus", 1);
+                    shop.put("totalTime", Double.valueOf(tim));
+                    shop.put("time", jsonArray);
+                }
+
+                shop.saveInBackground(e1 -> {
+
+                    if (e1 == null) {
+                        HashMap<String, String> params = new HashMap<>();
+
+                        if (orderStatus == 1) {
+                            params.put("status", "2");
+                        } else {
+                            params.put("status", "1");
+                        }
+                        params.put("orderNo", objectId);
+                        params.put("business", ParseUser.getCurrentUser().getObjectId());
+                        params.put("location", locationObjectId);
+                        params.put("user", userId);
+                        params.put("sendBy", "business");
+                        params.put("cancelNote", "");
+                        ParseCloud.callFunctionInBackground("push", params, (FunctionCallback<Float>) (ratings, re) -> {
+                        });
+                        dialog.dismiss();
+                        ((OrderListActivityNew) mContext).changeStatus(childPosition, groupPosition, childData);
+                        if (orderStatus == 1) {
+                            Toast.makeText(mContext, "Order Ready", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, "Order started", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+//                            Log.d("chk", "error: "+ e1.getMessage());
+                    }
+                });
+            } else {
+                e.printStackTrace();
+//                    Log.d("chk", "done: error"+e.getMessage());
+            }
+        });
 
 
     }
@@ -685,8 +1082,6 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                                 String refundForBusiness, String offerObjectId, Boolean offerEnabled, String discountAmount,
                                 String shopLocationName, Number shopPhoneNo, String tranRef, int childPosition,
                                 int groupPosition, Orders childData, ViewGroup parent) {
-
-      //  mContext.stopService(new Intent(mContext, Alertservice.class));
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(tim);
