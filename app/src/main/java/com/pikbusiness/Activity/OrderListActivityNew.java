@@ -154,16 +154,6 @@ public class OrderListActivityNew extends AppCompatActivity {
             shopStatus = pref.getString("shopstatus", null);
 //            phoneNo = getIntent().getStringExtra("phoneNo");
         }
-//
-//        Bundle b = getIntent().getExtras();
-//        latitude = b.getDouble("latitude");
-//        longitude = b.getDouble("longitude");
-//        locationName = getIntent().getStringExtra("locationName");
-//        businessName = getIntent().getStringExtra("businessName");
-//        pin = getIntent().getStringExtra("pin");
-//        objectId = getIntent().getStringExtra("objectId");
-//        shopStatus = getIntent().getStringExtra("shopStatus");
-//        phoneNo = getIntent().getStringExtra("phoneNo");
 
 
         tvShopName.setText(businessName);

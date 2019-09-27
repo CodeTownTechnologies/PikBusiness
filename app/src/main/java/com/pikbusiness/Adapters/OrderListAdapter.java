@@ -121,10 +121,6 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         Button btnChangeStatus;
         RecyclerView itemRecyclerView;
 
-//        if (convertView == null) {
-//            LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            convertView = infalInflater.inflate(R.layout.order_list_child, null);
-//        }
 
         View row = convertView;
         if (row == null) {
@@ -228,6 +224,71 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
 
             /* end logic to check distance and distance time*/
         }
+
+
+
+        /*  start logic to show category name and other*/
+        double itemPriceIncludingExtra = 0;
+        double totalPrice = 0;
+        double finalPrice = 0;
+        try {
+            JSONArray orderArray = new JSONArray(childData.getEstimatedData().getOrder());
+            orderItemList.clear();
+            for (int i = 0; i < orderArray.length(); i++) {
+                OrderItem item = new OrderItem();
+                JSONObject rowObject = orderArray.getJSONObject(i);
+                System.out.println("row Object ===" + rowObject);
+                String menuName = rowObject.getString("menuName");
+                String count = rowObject.getString("count");
+                String itemTotalPrice = rowObject.getString("itemTotalPrice").replace(currencyType, "");
+                String categoryName = rowObject.getString("categoryName");
+                String menuPrice = rowObject.getString("menuPrice");
+                String tax = String.valueOf(childData.getEstimatedData().getTax());
+                double itemPrice = Integer.parseInt(count) * Double.valueOf(menuPrice);
+                JSONArray extrasArray = rowObject.getJSONArray("extras");
+                StringBuilder sb = new StringBuilder();
+                StringBuilder sb2 = new StringBuilder();
+                if (extrasArray.length() > 0) {
+                    for (int j = 0; j < extrasArray.length(); j++) {
+                        JSONObject nameValueObject = extrasArray.getJSONObject(j);
+                        String extraName = nameValueObject.getString("extraName");
+                        double extraPrice = Double.parseDouble(nameValueObject.getString("extraPrice"));
+                        itemPriceIncludingExtra = extraPrice + itemPrice;
+
+                        sb.append(extraName);
+                        //sb.append(" + ");
+                    }
+                } else {
+                    itemPriceIncludingExtra = itemPrice;
+                }
+                item.setExtraItem(sb.toString());
+                //  tvExtraItem.setText(sb);
+                if (sb.length() > 0) {
+                    sb.deleteCharAt(sb.length() - 2);
+                }
+                item.setCategoryName(categoryName);
+                item.setMenuName(menuName + " x " + count);
+                item.setItemPrice(itemPriceIncludingExtra + " " + currencyType);
+                tvVatText.setText("Vat" + " " + tax + "%");
+                totalPrice = itemPriceIncludingExtra + totalPrice;
+                tvSubTotal.setText(totalPrice + " " + currencyType);
+                Double taxCalculation = totalPrice * (Double.parseDouble(tax)/100);
+                tvVatPrice.setText(taxCalculation + " " + currencyType);
+                finalPrice = totalPrice + taxCalculation;
+                tvTotal.setText(finalPrice + " " + currencyType);
+                // item.setTotalPrice(totalPrice);
+                orderItemList.add(item);
+
+            }
+            orderItemAdapter.notifyDataSetChanged();
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
 
 
 //        /* start logic to set header color and count down timer*/
@@ -652,7 +713,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                                     jsonArray, childData.getEstimatedData().getIsPaid(), childData.getEstimatedData().getCreatedDateAt(),
                                     pikper, childData.getEstimatedData().getTotalCost(), childData.getEstimatedData().getUserId(),
                                     childPosition, groupPosition, childData, childData.getEstimatedData().getDiscountAmount(),
-                                    childData.getEstimatedData().getOfferObjectId(), childData.getEstimatedData().getOfferEnanbled(),tot);
+                                    childData.getEstimatedData().getOfferObjectId(), childData.getEstimatedData().getOfferEnanbled(),tot,d1);
 
                         } catch (Exception t1) {
                             t1.printStackTrace();
@@ -752,64 +813,6 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         });
 
 
-        /*  start logic to show category name and other*/
-        double itemPriceIncludingExtra = 0;
-        double totalPrice = 0;
-        double finalPrice = 0;
-        try {
-            JSONArray orderArray = new JSONArray(childData.getEstimatedData().getOrder());
-            orderItemList.clear();
-            for (int i = 0; i < orderArray.length(); i++) {
-                OrderItem item = new OrderItem();
-                JSONObject rowObject = orderArray.getJSONObject(i);
-                System.out.println("row Object ===" + rowObject);
-                String menuName = rowObject.getString("menuName");
-                String count = rowObject.getString("count");
-                String itemTotalPrice = rowObject.getString("itemTotalPrice").replace(currencyType, "");
-                String categoryName = rowObject.getString("categoryName");
-                String menuPrice = rowObject.getString("menuPrice");
-                String tax = String.valueOf(childData.getEstimatedData().getTax());
-                double itemPrice = Integer.parseInt(count) * Double.valueOf(menuPrice);
-                JSONArray extrasArray = rowObject.getJSONArray("extras");
-                StringBuilder sb = new StringBuilder();
-                StringBuilder sb2 = new StringBuilder();
-                if (extrasArray.length() > 0) {
-                    for (int j = 0; j < extrasArray.length(); j++) {
-                        JSONObject nameValueObject = extrasArray.getJSONObject(j);
-                        String extraName = nameValueObject.getString("extraName");
-                        double extraPrice = Double.parseDouble(nameValueObject.getString("extraPrice"));
-                        itemPriceIncludingExtra = extraPrice + itemPrice;
-
-                        sb.append(extraName);
-                        //sb.append(" + ");
-                    }
-                } else {
-                    itemPriceIncludingExtra = itemPrice;
-                }
-                item.setExtraItem(sb.toString());
-                //  tvExtraItem.setText(sb);
-                if (sb.length() > 0) {
-                    sb.deleteCharAt(sb.length() - 2);
-                }
-                item.setCategoryName(categoryName);
-                item.setMenuName(menuName + " x " + count);
-                item.setItemPrice(itemPriceIncludingExtra + " " + currencyType);
-                tvVatText.setText("Vat" + " " + tax + "%");
-                tvVatPrice.setText(tax + " " + currencyType);
-                totalPrice = itemPriceIncludingExtra + totalPrice;
-                tvSubTotal.setText(totalPrice + " " + currencyType);
-                finalPrice = totalPrice + Double.parseDouble(tax);
-                tvTotal.setText(finalPrice + " " + currencyType);
-                // item.setTotalPrice(totalPrice);
-                orderItemList.add(item);
-
-            }
-            orderItemAdapter.notifyDataSetChanged();
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         return row;
     }
@@ -818,7 +821,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
             totalTime, Number subTotal, String taxId, int tax, String order, JSONArray jsonArray,
                                    Boolean isPaid, String createdDateAt, String pikper, Number totalCost, String userId,
                                    int childPosition, int groupPosition, Orders childData, String discountAmount,
-                                   String offerObjectId, Boolean offerEnanbled, String tot) {
+                                   String offerObjectId, Boolean offerEnanbled, String tot, Date d1) {
 
 
         ParseObject shop = new ParseObject("OrderHistory");
@@ -827,7 +830,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         shop.put("notes",notes);
         shop.put("orderNo",objectId);
         shop.put("orderCost", Double.valueOf(String.valueOf(totalCost)));
-        shop.put("orderTime",createdDateAt);
+        shop.put("orderTime",d1);
         shop.put("orderStatus",3);
         if(taxId != null){
             shop.put("taxId", taxId);
@@ -915,7 +918,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                                 dialog.dismiss();
                             }
                             ((OrderListActivityNew) mContext).changeStatus(childPosition, groupPosition, childData);
-                            Toast.makeText(mContext, "Order Pickedup ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Order Pick up ", Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d("chk", "done:ck "+e.getMessage());
                             // something went wrong
