@@ -333,9 +333,6 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                         mainThread.post(new Runnable() {
                             @Override
                             public void run() {
-                                System.out.println("group position ===" + groupPosition);
-                                System.out.println("child Position  ===" + childPosition);
-
                                 if (elapsedHours == 0) {
                                     tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
                                     System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
@@ -585,7 +582,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
 
                         JSONArray jsonArray = null;
 
-                        if (childData.getEstimatedData().getOrderStatus() == 1) {
+                     //   if (childData.getEstimatedData().getOrderStatus() == 1) {
 
                             try {
                                 jsonArray = new JSONArray(childData.getEstimatedData().getTime());
@@ -612,7 +609,12 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                                     childData.getEstimatedData().getOrderStatus(),
                                     childData, childPosition, groupPosition, jsonArray);
 
-                        } else if (childData.getEstimatedData().getOrderStatus() == 0) {
+
+                        /* } else if (childData.getEstimatedData().getOrderStatus() == 0) {
+
+
+
+
                             changeStatus(childData.getEstimatedData().getObjectId(),
                                     childData.getEstimatedData().getLocationName(),
                                     childData.getEstimatedData().getShopLocationName(),
@@ -625,9 +627,9 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                                     childData.getEstimatedData().getUserId(),
                                     childData.getEstimatedData().getOrderStatus(),
                                     childData, childPosition, groupPosition, jsonArray);
-                        } else {
+                        }*/ //else {
                             // do nothing
-                        }
+                      //  }
 
 
                     } catch (ParseException e) {
@@ -955,7 +957,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
                     json.put(tim);
                     shop.put("orderStatus", 1);
                     shop.put("totalTime", Double.valueOf(tim));
-                    shop.put("time", jsonArray);
+                    shop.put("time", json);
                 }
 
                 shop.saveInBackground(e1 -> {

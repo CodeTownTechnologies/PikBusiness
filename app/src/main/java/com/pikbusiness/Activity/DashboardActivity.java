@@ -56,7 +56,6 @@ import com.pikbusiness.Bankdetails;
 import com.pikbusiness.BuildConfig;
 import com.pikbusiness.Editmenu.EditMenuTabsActivity;
 import com.pikbusiness.Loginmodule.SessionManager;
-import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.Profile;
 import com.pikbusiness.R;
 import com.pikbusiness.model.Response.Business;
@@ -144,7 +143,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
             } else {
                 if (pin.length() > 0) {
-                    Intent intent = new Intent(DashboardActivity.this, OrderListActivity.class);
+                    Intent intent = new Intent(DashboardActivity.this, OrderListActivityNew.class);
                     startActivity(intent);
                 }
             }

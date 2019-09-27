@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pikbusiness.Activity.DashboardActivity;
-import com.pikbusiness.OrderListActivity;
+import com.pikbusiness.Activity.OrderListActivityNew;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
@@ -84,7 +84,7 @@ public class LoginScreenActivity extends AppCompatActivity {
         String pin = pref.getString("pin", null);
         if(pin != null){
             if(pin.length()> 1){
-                Intent intent = new Intent(LoginScreenActivity.this, OrderListActivity.class);
+                Intent intent = new Intent(LoginScreenActivity.this, OrderListActivityNew.class);
                 startActivity(intent);
             }
         }

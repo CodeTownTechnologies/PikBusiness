@@ -1,73 +1,73 @@
-package com.pikbusiness;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.pikbusiness.Activity.DashboardActivity;
+//package com.pikbusiness;
+//
+//import android.content.Context;
+//import android.content.Intent;
+//import android.content.SharedPreferences;
+//import android.net.ConnectivityManager;
+//import android.os.AsyncTask;
+//import android.os.Bundle;
+//import android.os.Handler;
+//import android.util.Log;
+//import android.view.Gravity;
+//import android.view.LayoutInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.LinearLayout;
+//import android.widget.Switch;
+//import android.widget.TextView;
+//import android.widget.Toast;
+//
+//import com.pikbusiness.Activity.DashboardActivity;
 //import com.pikbusiness.Adapters.InprogressAdapter;
 //import com.pikbusiness.Adapters.NeworderAdapter;
 //import com.pikbusiness.Adapters.Readyadapter;
 //import com.pikbusiness.Editmenu.EditMenutabs;
-import com.pikbusiness.Loginmodule.SessionManager;
-import com.pikbusiness.services.Alertservice;
-import com.pikbusiness.services.Toasty;
-import com.crashlytics.android.Crashlytics;
-import com.elmargomez.typer.Font;
-import com.elmargomez.typer.Typer;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.OnItemClickListener;
-import com.orhanobut.dialogplus.ViewHolder;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
-
-public class OrderListActivity extends AppCompatActivity {
-
+//import com.pikbusiness.Loginmodule.SessionManager;
+//import com.pikbusiness.services.Alertservice;
+//import com.pikbusiness.services.Toasty;
+//import com.crashlytics.android.Crashlytics;
+//import com.elmargomez.typer.Font;
+//import com.elmargomez.typer.Typer;
+//import com.google.firebase.analytics.FirebaseAnalytics;
+//import com.orhanobut.dialogplus.DialogPlus;
+//import com.orhanobut.dialogplus.OnItemClickListener;
+//import com.orhanobut.dialogplus.ViewHolder;
+//import com.parse.GetCallback;
+//import com.parse.ParseException;
+//import com.parse.ParseGeoPoint;
+//import com.parse.ParseInstallation;
+//import com.parse.ParseObject;
+//import com.parse.ParseQuery;
+//import com.parse.ParseRelation;
+//import com.parse.ParseUser;
+//import com.parse.SaveCallback;
+//
+//import org.json.JSONArray;
+//import org.json.JSONException;
+//import org.json.JSONObject;
+//
+//import java.io.File;
+//import java.util.ArrayList;
+//import java.util.HashMap;
+//import java.util.List;
+//import java.util.Set;
+//
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//import androidx.core.content.ContextCompat;
+//import androidx.core.widget.NestedScrollView;
+//import androidx.recyclerview.widget.DefaultItemAnimator;
+//import androidx.recyclerview.widget.LinearLayoutManager;
+//import androidx.recyclerview.widget.RecyclerView;
+//import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+//import butterknife.BindView;
+//import butterknife.ButterKnife;
+//import io.fabric.sdk.android.Fabric;
+//
+//public class Orderslist extends AppCompatActivity {
+//
 //    @BindView(R.id.neworder)RecyclerView neworders_recyclerView;
 //    @BindView(R.id.inprogress)RecyclerView inprogress_recyclerView;
 //    @BindView(R.id.ready)RecyclerView ready_recyclerView;
@@ -95,12 +95,12 @@ public class OrderListActivity extends AppCompatActivity {
 //    //    ArrayList<HashMap<String, String>> maplist1,maplist2,maplist3;
 //    private AlertDialog alertDialog1;
 //
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orderslist);
+//
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_orderslist);
 //        ButterKnife.bind(this);
 //        Fabric.with(this, new Crashlytics());
 //        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -1450,5 +1450,4 @@ public class OrderListActivity extends AppCompatActivity {
 //        txt_ready.setText("READY FOR PICK UP" + " - " + s3);
 //
 //    }
-    }
-}
+//}

@@ -155,6 +155,7 @@ public class OrderListActivityNew extends AppCompatActivity {
 //            phoneNo = getIntent().getStringExtra("phoneNo");
         }
 
+        start();
 
         tvShopName.setText(businessName);
         tvShopLocation.setText(locationName);
@@ -528,12 +529,16 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                         if (shopStatus != null) {
                             if (shopStatus.equals("0")) {
+                                stop();
+                                stopService(new Intent(OrderListActivityNew.this, Alertservice.class));
                                 toggleSwitch.setChecked(false);
                                 tvShopStatus.setText("Offline");
                             } else if (shopStatus.equals("1")) {
                                 toggleSwitch.setChecked(true);
                                 tvShopStatus.setText("Online");
                             } else if (shopStatus.equals("2")) {
+                                stop();
+                                stopService(new Intent(OrderListActivityNew.this, Alertservice.class));
                                 toggleSwitch.setChecked(false);
                                 tvShopStatus.setText("Disabled");
                             }
@@ -618,7 +623,6 @@ public class OrderListActivityNew extends AppCompatActivity {
     }
 
 
-
     private class getOrderList extends AsyncTask<Void, Void, List<ParseObject>> {
 
 
@@ -665,7 +669,14 @@ public class OrderListActivityNew extends AppCompatActivity {
                         String orderStatus = String.valueOf(user.getNumber("orderStatus"));
 
                         if (orderStatus.equals("0")) {
-                            m_Runnable.run();
+                            Intent serviceIntent = new Intent(OrderListActivityNew.this, Alertservice.class);
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+                                startForegroundService(serviceIntent);
+                            } else {
+                                startService(serviceIntent);
+                            }
+                            startService(new Intent(OrderListActivityNew.this, Alertservice.class));
                             Orders order = new Orders();
                             EstimatedData estimatedData = new EstimatedData();
                             estimatedData.setNotes(user.getString("notes"));
@@ -915,6 +926,12 @@ public class OrderListActivityNew extends AppCompatActivity {
                             order.setEstimatedData(estimatedData);
                             readyList.add(order);
 
+                        }
+
+                        if (newOrderList.size() > 0) {
+                            // do nothing
+                        } else {
+                            stopService(new Intent(OrderListActivityNew.this, Alertservice.class));
                         }
 
                         listDataChild.put(listDataHeader.get(0), newOrderList);

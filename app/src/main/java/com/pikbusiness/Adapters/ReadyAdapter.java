@@ -33,7 +33,6 @@ import com.parse.ParseCloud;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.R;
 import com.pikbusiness.model.Response.Orders;
 
@@ -939,21 +938,21 @@ public class ReadyAdapter extends RecyclerView.Adapter<ReadyAdapter.MyViewHolder
                             }
 
 //                            Log.d("chk", "done:chkkk =2");
-                            Intent i = new Intent(v.getContext(), OrderListActivity.class);
-                            i.putExtra("lname", lname);
-                            i.putExtra("tvBusinessName", bname);
-                            i.putExtra("id", id);
-                            i.putExtra("lat", lat);
-                            i.putExtra("log", log);
-                            i.putExtra("shopStatus", shopStatus);
-                            i.putExtra("pin", pin);
-                            if (dataa.size() == 1) {
-                                i.putExtra("lastitem", "1");
-                            }
-                            i.putExtra("phoneNo", phoneNo);
-                            i.putExtra("stschk", "2");
-                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            v.getContext().startActivity(i);
+//                            Intent i = new Intent(v.getContext(), OrderListActivity.class);
+//                            i.putExtra("lname", lname);
+//                            i.putExtra("tvBusinessName", bname);
+//                            i.putExtra("id", id);
+//                            i.putExtra("lat", lat);
+//                            i.putExtra("log", log);
+//                            i.putExtra("shopStatus", shopStatus);
+//                            i.putExtra("pin", pin);
+//                            if (dataa.size() == 1) {
+//                                i.putExtra("lastitem", "1");
+//                            }
+//                            i.putExtra("phoneNo", phoneNo);
+//                            i.putExtra("stschk", "2");
+//                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                            v.getContext().startActivity(i);
 //                             update(dataa);
                             Toast.makeText(context, "Order Pickedup ", Toast.LENGTH_SHORT).show();
 //                            deleteItem(pos);
