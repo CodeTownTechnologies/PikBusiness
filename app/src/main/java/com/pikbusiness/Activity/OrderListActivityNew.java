@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.elmargomez.typer.Font;
@@ -113,6 +115,8 @@ public class OrderListActivityNew extends AppCompatActivity {
     private List<OrderItem> orderItemList;
     TimerTask timerTask;
     Timer updateTimer = new Timer();
+//    @BindView(R.id.swipe_refresh)
+//    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,6 +198,17 @@ public class OrderListActivityNew extends AppCompatActivity {
         orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild, orderExpandableList);
         orderExpandableList.setAdapter(orderAdapter);
 
+//        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary));
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (checkInternetConnection()) {
+//                    new getOrderList().execute();
+//                    mSwipeRefreshLayout.setRefreshing(false);
+//                }
+//            }
+//        });
+
         toggleSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,7 +274,7 @@ public class OrderListActivityNew extends AppCompatActivity {
                         dialog.dismiss();
                         Intent e = new Intent(OrderListActivityNew.this, EditMenuTabsActivity.class);
                         e.putExtra("locationName", locationName);
-                        e.putExtra("objectId", objectId);
+                        e.putExtra("id", objectId);
                         e.putExtra("lat", latitude);
                         e.putExtra("log", longitude);
                         e.putExtra("pin", getIntent().getStringExtra("pin"));

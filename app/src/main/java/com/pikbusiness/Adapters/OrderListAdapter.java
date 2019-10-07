@@ -1,6 +1,7 @@
 package com.pikbusiness.Adapters;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,13 +24,11 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
 import com.parse.FunctionCallback;
@@ -63,8 +61,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class OrderListAdapter extends BaseExpandableListAdapter {
-
+public class OrderListAdapter extends BaseExpandableListAdapter
+{
     private Context mContext;
     private List<String> listDataHeader; // header titles
     // child data in format of header title, child title
@@ -74,19 +72,48 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
     ProgressDialog dialog;
     private List<OrderItem> orderItemList;
     private OrderItemListAdapter orderItemAdapter;
-    Timer updateTimer = new Timer();
-    int count = 0;
-    TimerTask timerTask;
     ExpandableListView expandableList;
 
-    public OrderListAdapter(OrderListActivityNew context, List<String> Header, HashMap<String, List<Orders>> Child,
-                            ExpandableListView orderExpandableList) {
+    private Handler mHandler = new Handler();
+    private List<ViewHolder> lstHolders;
+    private Runnable updateRemainingTimeRunnable = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            synchronized (lstHolders)
+            {
+                for (ViewHolder holder : lstHolders)
+                {
+                    holder.updateUI(Calendar.getInstance().getTime().getTime());
+                }
+            }
+        }
+    };
+
+    public OrderListAdapter(OrderListActivityNew context, List<String> Header, HashMap<String, List<Orders>> Child,ExpandableListView orderExpandableList)
+    {
         mContext = context;
         listDataHeader = Header;
         listDataChild = Child;
         orderItemList = new ArrayList<>();
         expandableList = orderExpandableList;
 
+        lstHolders = new ArrayList<>();
+        startUpdateTimer();
+    }
+
+    private void startUpdateTimer()
+    {
+        new Timer().schedule(new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                System.out.println("Task Running ===");
+                mHandler.post(updateRemainingTimeRunnable);
+            }
+        }, 1000, 1000);
     }
 
     @Override
@@ -100,722 +127,59 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView,
-                             ViewGroup parent) {
-
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView,ViewGroup parent)
+    {
         final Orders childData = (Orders) getChild(groupPosition, childPosition);
-
-        TextView tvCustomerName;
-        TextView tvDistance;
-        TextView tvDistanceTime;
-        TextView tvTimer;
-        TextView tvNote;
-        TextView tvSubTotal;
-        TextView tvVatText;
-        TextView tvVatPrice;
-        TextView tvTotal;
-        TextView tvCancelOrder;
-        TextView tvTagLine;
-        TextView btnCall;
-        LinearLayout headBackgroundLayout;
-        Button btnChangeStatus;
-        RecyclerView itemRecyclerView;
-
-
         View row = convertView;
-        if (row == null) {
+
+        if (row == null)
+        {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.order_list_child, parent, false);
-            View myView = row.findViewById(R.id.child_view);
+
+            TextView tvNote = (TextView) row.findViewById(R.id.tv_note);
+            TextView tvSubTotal = (TextView) row.findViewById(R.id.tv_subtotal);
+            TextView tvVatText = (TextView) row.findViewById(R.id.tv_vat_txt);
+            TextView tvVatPrice = (TextView) row.findViewById(R.id.vatprice);
+            TextView tvTotal = (TextView) row.findViewById(R.id.tv_total);
+            TextView tvCancelOrder = (TextView) row.findViewById(R.id.tv_cancel_order);
+            TextView tvTagLine = (TextView) row.findViewById(R.id.txt_tag_line);
+            TextView tvCustomerName = (TextView) row.findViewById(R.id.customer_name);
+            TextView tvDistance = (TextView) row.findViewById(R.id.tv_distance);
+            TextView tvDistanceTime = (TextView) row.findViewById(R.id.tv_distance_time);
+            TextView tvTimer = (TextView) row.findViewById(R.id.timer);
+            LinearLayout headBackgroundLayout = (LinearLayout) row.findViewById(R.id.head_background_color);
+            RecyclerView itemRecyclerView = (RecyclerView) row.findViewById(R.id.item_recycler_view);
+            Button btnCall = (Button) row.findViewById(R.id.call);
+            Button btnChangeStatus = (Button) row.findViewById(R.id.btn_change_status);
+
             ViewHolder holder = new ViewHolder();
-            holder.addView(myView);
+            holder.addView(tvNote);
+            holder.addView(tvSubTotal);
+            holder.addView(tvVatText);
+            holder.addView(tvVatPrice);
+            holder.addView(tvTotal);
+            holder.addView(tvCancelOrder);
+            holder.addView(tvTagLine);
+            holder.addView(tvCustomerName);
+            holder.addView(tvDistance);
+            holder.addView(tvDistanceTime);
+            holder.addView(tvTimer);
+            holder.addView(headBackgroundLayout);
+            holder.addView(itemRecyclerView);
+            holder.addView(btnCall);
+            holder.addView(btnChangeStatus);
+
             row.setTag(holder);
+            synchronized (lstHolders)
+            {
+                lstHolders.add(holder);
+            }
         }
 
         // Get the stored ViewHolder that also contains our views
         ViewHolder holder = (ViewHolder) row.getTag();
-        View myView = holder.getView(R.id.child_view);
-        tvCustomerName = myView.findViewById(R.id.customer_name);
-
-        //  tvCustomerName = (TextView) row.findViewById(R.id.customer_name);
-        tvDistance = (TextView) row.findViewById(R.id.tv_distance);
-        tvDistanceTime = (TextView) row.findViewById(R.id.tv_distance_time);
-        headBackgroundLayout = (LinearLayout) row.findViewById(R.id.head_background_color);
-        tvTimer = (TextView) myView.findViewById(R.id.timer);
-        itemRecyclerView = (RecyclerView) row.findViewById(R.id.item_recycler_view);
-        orderItemAdapter = new OrderItemListAdapter(mContext, orderItemList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-        itemRecyclerView.setLayoutManager(mLayoutManager);
-        itemRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        itemRecyclerView.setAdapter(orderItemAdapter);
-
-
-        tvNote = (TextView) row.findViewById(R.id.tv_note);
-        tvSubTotal = (TextView) row.findViewById(R.id.tv_subtotal);
-        tvVatText = (TextView) row.findViewById(R.id.tv_vat_txt);
-        tvVatPrice = (TextView) row.findViewById(R.id.vatprice);
-        tvTotal = (TextView) row.findViewById(R.id.tv_total);
-        btnChangeStatus = (Button) row.findViewById(R.id.btn_change_status);
-        tvCancelOrder = (TextView) row.findViewById(R.id.tv_cancel_order);
-        tvTagLine = (TextView) row.findViewById(R.id.txt_tag_line);
-        btnCall = (Button) row.findViewById(R.id.call);
-
-
-        currencyType = childData.getEstimatedData().getCurrency();
-        tvCustomerName.setText(childData.getEstimatedData().getCustomerName());
-        btnChangeStatus.setText(childData.getEstimatedData().getButtonStatus());
-        if (childData.getEstimatedData().getButtonStatus().equals("Pick up")) {
-            tvTagLine.setVisibility(View.GONE);
-        } else {
-            tvTagLine.setVisibility(View.VISIBLE);
-        }
-        if (childData.getEstimatedData().getNotes() != null) {
-            if (childData.getEstimatedData().getNotes().length() > 0) {
-                tvNote.setText("Note : " + childData.getEstimatedData().getNotes());
-            } else {
-                tvNote.setVisibility(View.GONE);
-            }
-        } else {
-            tvNote.setVisibility(View.GONE);
-        }
-
-
-        /*This function is to check distance and distance time start*/
-        if (childData.getEstimatedData().getLocation().getLatitude() != null && childData.getEstimatedData().getLocation().getLongitude() != null
-                && childData.getEstimatedData().getUserLocation().getUserlatitude() != null && childData.getEstimatedData().getUserLocation().getUserlongitude() != null) {
-            Double sl = Double.valueOf(childData.getEstimatedData().getLocation().getLatitude());
-            Double slg = Double.valueOf(childData.getEstimatedData().getLocation().getLongitude());
-            Double ul = Double.valueOf(childData.getEstimatedData().getUserLocation().getUserlatitude());
-            Double ulg = Double.valueOf(childData.getEstimatedData().getUserLocation().getUserlongitude());
-
-            Location startPoint = new Location("Shop");
-            startPoint.setLatitude(sl);
-            startPoint.setLongitude(slg);
-            Location endPoint = new Location("User");
-            endPoint.setLatitude(ul);
-            endPoint.setLongitude(ulg);
-            float distanceInMeters = startPoint.distanceTo(endPoint);
-            Integer intmeters = (int) distanceInMeters;
-            //For example spead is 10 meters per minute.
-            int speedIs10MetersPerMinute = 60;
-            float estimatedDriveTimeInMinutes = distanceInMeters / speedIs10MetersPerMinute;
-            Integer intValue = (int) estimatedDriveTimeInMinutes;
-            if (intValue > 60) {
-
-                if (intValue / 60 > 1) {
-                    tvDistanceTime.setText(intValue / 60 + " hours away");
-                } else {
-                    tvDistanceTime.setText(intValue / 60 + " hour away");
-                }
-            } else {
-                tvDistanceTime.setText(intValue + " minutes away");
-            }
-
-            double distance = startPoint.distanceTo(endPoint) / 1000;
-            NumberFormat nf = NumberFormat.getInstance(); // get instance
-            nf.setMaximumFractionDigits(0); // set decimal places
-            Integer intdist = (int) distance;
-            // String s = nf.format(distance);
-            if (intdist < 1) {
-                tvDistance.setText(intmeters + " m");
-            } else {
-                tvDistance.setText(intdist + " kms");
-            }
-
-            /* end logic to check distance and distance time*/
-        }
-
-
-
-        /*  start logic to show category name and other*/
-        double itemPriceIncludingExtra = 0;
-        double totalPrice = 0;
-        double finalPrice = 0;
-        try {
-            JSONArray orderArray = new JSONArray(childData.getEstimatedData().getOrder());
-            orderItemList.clear();
-            for (int i = 0; i < orderArray.length(); i++) {
-                OrderItem item = new OrderItem();
-                JSONObject rowObject = orderArray.getJSONObject(i);
-                System.out.println("row Object ===" + rowObject);
-                String menuName = rowObject.getString("menuName");
-                String count = rowObject.getString("count");
-                String itemTotalPrice = rowObject.getString("itemTotalPrice").replace(currencyType, "");
-                String categoryName = rowObject.getString("categoryName");
-                String menuPrice = rowObject.getString("menuPrice");
-                String tax = String.valueOf(childData.getEstimatedData().getTax());
-                double itemPrice = Integer.parseInt(count) * Double.valueOf(menuPrice);
-                JSONArray extrasArray = rowObject.getJSONArray("extras");
-                StringBuilder sb = new StringBuilder();
-                StringBuilder sb2 = new StringBuilder();
-                if (extrasArray.length() > 0) {
-                    for (int j = 0; j < extrasArray.length(); j++) {
-                        JSONObject nameValueObject = extrasArray.getJSONObject(j);
-                        String extraName = nameValueObject.getString("extraName");
-                        double extraPrice = Double.parseDouble(nameValueObject.getString("extraPrice"));
-                        itemPriceIncludingExtra = extraPrice + itemPrice;
-
-                        sb.append(extraName);
-                        //sb.append(" + ");
-                    }
-                } else {
-                    itemPriceIncludingExtra = itemPrice;
-                }
-                item.setExtraItem(sb.toString());
-                //  tvExtraItem.setText(sb);
-                if (sb.length() > 0) {
-                    sb.deleteCharAt(sb.length() - 2);
-                }
-                item.setCategoryName(categoryName);
-                item.setMenuName(menuName + " x " + count);
-                item.setItemPrice(itemPriceIncludingExtra + " " + currencyType);
-                tvVatText.setText("Vat" + " " + tax + "%");
-                totalPrice = itemPriceIncludingExtra + totalPrice;
-                tvSubTotal.setText(totalPrice + " " + currencyType);
-                Double taxCalculation = totalPrice * (Double.parseDouble(tax)/100);
-                tvVatPrice.setText(taxCalculation + " " + currencyType);
-                finalPrice = totalPrice + taxCalculation;
-                tvTotal.setText(finalPrice + " " + currencyType);
-                // item.setTotalPrice(totalPrice);
-                orderItemList.add(item);
-
-            }
-            orderItemAdapter.notifyDataSetChanged();
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-//        /* start logic to set header color and count down timer*/
-
-        if (childData.getEstimatedData().getOrderStatus() == 0) {
-            timerTask = new TimerTask() {
-                public void run() {
-                    try {
-
-                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                        Date date = null;
-                        Date c = Calendar.getInstance().getTime();
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            try {
-                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                            try {
-                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        long diffTimeMillis = c.getTime() - date.getTime();
-
-                        long secondsInMilli = 1000;
-                        long minutesInMilli = secondsInMilli * 60;
-                        long hoursInMilli = minutesInMilli * 60;
-                        long daysInMilli = hoursInMilli * 24;
-
-                        diffTimeMillis = diffTimeMillis % daysInMilli;
-                        long elapsedHours = diffTimeMillis / hoursInMilli;
-                        diffTimeMillis = diffTimeMillis % hoursInMilli;
-                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
-                        diffTimeMillis = diffTimeMillis % minutesInMilli;
-                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
-
-                        Handler mainThread = new Handler(Looper.getMainLooper());
-                        mainThread.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (elapsedHours == 0) {
-                                    tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                    System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
-                                } else {
-                                    tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                    System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                            "seconds==" + elapsedSeconds);
-                                }
-
-                                if (elapsedHours == 0) {
-                                    if (elapsedMinutes < 3) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
-                                    } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
-                                    } else if (elapsedMinutes >= 5) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                                    }
-                                } else {
-                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                                }
-
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            };
-
-            updateTimer.schedule(timerTask, 60, 1000);
-
-        } else if (childData.getEstimatedData().getOrderStatus() == 1) {
-            timerTask = new TimerTask() {
-                public void run() {
-                    try {
-
-                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                        Date date = null;
-                        Date c = Calendar.getInstance().getTime();
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            try {
-                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                            try {
-                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        long diffTimeMillis = c.getTime() - date.getTime();
-
-                        long secondsInMilli = 1000;
-                        long minutesInMilli = secondsInMilli * 60;
-                        long hoursInMilli = minutesInMilli * 60;
-                        long daysInMilli = hoursInMilli * 24;
-
-                        diffTimeMillis = diffTimeMillis % daysInMilli;
-                        long elapsedHours = diffTimeMillis / hoursInMilli;
-                        diffTimeMillis = diffTimeMillis % hoursInMilli;
-                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
-                        diffTimeMillis = diffTimeMillis % minutesInMilli;
-                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
-
-                        Handler mainThread = new Handler(Looper.getMainLooper());
-                        mainThread.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("group position ===" + groupPosition);
-                                System.out.println("child Position  ===" + childPosition);
-
-                                if (elapsedHours == 0) {
-                                    tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                    System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
-                                } else {
-                                    tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                    System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                            "seconds==" + elapsedSeconds);
-                                }
-
-                                if (elapsedHours == 0) {
-                                    if (elapsedMinutes < 3) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
-                                    } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
-                                    } else if (elapsedMinutes >= 5) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                                    }
-                                } else {
-                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                                }
-
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            };
-
-            updateTimer.schedule(timerTask, 60, 1000);
-        } else if (childData.getEstimatedData().getOrderStatus() == 2) {
-            timerTask = new TimerTask() {
-                public void run() {
-                    try {
-
-                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                        Date date = null;
-                        Date c = Calendar.getInstance().getTime();
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            try {
-                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                            try {
-                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        long diffTimeMillis = c.getTime() - date.getTime();
-
-                        long secondsInMilli = 1000;
-                        long minutesInMilli = secondsInMilli * 60;
-                        long hoursInMilli = minutesInMilli * 60;
-                        long daysInMilli = hoursInMilli * 24;
-
-                        diffTimeMillis = diffTimeMillis % daysInMilli;
-                        long elapsedHours = diffTimeMillis / hoursInMilli;
-                        diffTimeMillis = diffTimeMillis % hoursInMilli;
-                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
-                        diffTimeMillis = diffTimeMillis % minutesInMilli;
-                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
-
-                        Handler mainThread = new Handler(Looper.getMainLooper());
-                        mainThread.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("group position ===" + groupPosition);
-                                System.out.println("child Position  ===" + childPosition);
-
-                                if (elapsedHours == 0) {
-                                    tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                    System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
-                                } else {
-                                    tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                    System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                            "seconds==" + elapsedSeconds);
-                                }
-
-                                if (elapsedHours == 0) {
-                                    if (elapsedMinutes < 3) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
-                                    } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
-                                    } else if (elapsedMinutes >= 5) {
-                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                                    }
-                                } else {
-                                    headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
-                                }
-
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            };
-
-            updateTimer.schedule(timerTask, 60, 1000);
-        } else {
-            tvTimer.setText("");
-        }
-        /* end logic to set header color and count down timer*/
-
-
-        btnCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (String.valueOf(childData.getEstimatedData().getCustomerPhoneNumber()) != null) {
-                    if (String.valueOf(childData.getEstimatedData().getCustomerPhoneNumber()).length() > 0) {
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        intent.setData(Uri.parse("tel:" + "+" + childData.getEstimatedData().getCustomerPhoneNumber()));
-                        mContext.startActivity(intent);
-                    } else {
-                        Toast.makeText(mContext, "user not provided phone number", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Toast.makeText(mContext, "user not provided phone number", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-
-        btnChangeStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog = new ProgressDialog(v.getContext());
-                dialog.setMessage("Please wait.....");
-                dialog.setCancelable(false);
-                dialog.show();
-
-                if (childData.getEstimatedData().getOrderStatus() == 0 ||
-                        childData.getEstimatedData().getOrderStatus() == 1) {
-
-                    SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-                            Locale.ENGLISH);
-                    Date d1 = null;
-                    Date c = Calendar.getInstance().getTime();
-                    try {
-                        double tr;
-                        try {
-                            tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
-                        } catch (NumberFormatException f) {
-                            tr = 0; // your default value
-                        }
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                            // Call some material design APIs here
-                        } else {
-                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                            d1 = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                        }
-                        long different = c.getTime() - d1.getTime();
-                        long secondsInMilli = 1000;
-                        long minutesInMilli = secondsInMilli * 60;
-                        long elapsedMinutes = different / minutesInMilli;
-                        different = different % minutesInMilli;
-                        long elapsedSeconds = different / secondsInMilli;
-                        String totalTime = String.valueOf(tr + elapsedMinutes);
-                        String tiim = elapsedMinutes + "." + elapsedSeconds;
-
-                        JSONArray jsonArray = null;
-
-                     //   if (childData.getEstimatedData().getOrderStatus() == 1) {
-
-                            try {
-                                jsonArray = new JSONArray(childData.getEstimatedData().getTime());
-
-                                if (jsonArray.length() > 0) {
-
-                                    jsonArray.put(tiim);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Log.d("chk", "onClick: " + e.getMessage());
-                            }
-
-                            changeStatus(childData.getEstimatedData().getObjectId(),
-                                    childData.getEstimatedData().getLocationName(),
-                                    childData.getEstimatedData().getShopLocationName(),
-                                    childData.getEstimatedData().getLocation().getLatitude(),
-                                    childData.getEstimatedData().getLocation().getLongitude(),
-                                    childData.getEstimatedData().getShopStatus(),
-                                    childData.getEstimatedData().getPin(),
-                                    childData.getEstimatedData().getPhoneNo(),
-                                    childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
-                                    childData.getEstimatedData().getUserId(),
-                                    childData.getEstimatedData().getOrderStatus(),
-                                    childData, childPosition, groupPosition, jsonArray);
-
-
-                        /* } else if (childData.getEstimatedData().getOrderStatus() == 0) {
-
-
-
-
-                            changeStatus(childData.getEstimatedData().getObjectId(),
-                                    childData.getEstimatedData().getLocationName(),
-                                    childData.getEstimatedData().getShopLocationName(),
-                                    childData.getEstimatedData().getLocation().getLatitude(),
-                                    childData.getEstimatedData().getLocation().getLongitude(),
-                                    childData.getEstimatedData().getShopStatus(),
-                                    childData.getEstimatedData().getPin(),
-                                    childData.getEstimatedData().getPhoneNo(),
-                                    childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
-                                    childData.getEstimatedData().getUserId(),
-                                    childData.getEstimatedData().getOrderStatus(),
-                                    childData, childPosition, groupPosition, jsonArray);
-                        }*/ //else {
-                            // do nothing
-                      //  }
-
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                } else if (childData.getEstimatedData().getOrderStatus() == 2) {
-
-                    String pik = "0";
-                    pik = String.valueOf(ParseUser.getCurrentUser().getNumber("pikPercentage"));
-                    if (pik != null) {
-
-                        Double a = Double.valueOf(String.valueOf(childData.getEstimatedData().getTotalCost()));
-                        Double b = Double.valueOf(pik);
-                        Double cres = a * b / 100;
-                        String pikper = String.valueOf(pik);
-                        String tottalcost = String.valueOf(cres);
-                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-                                Locale.ENGLISH);
-                        Date d1 = null;
-                        Date c = Calendar.getInstance().getTime();
-                        try {
-                            double tr;
-                            try {
-                                tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
-                            } catch (NumberFormatException f) {
-                                tr = 0; // your default value
-                            }
-                            if (Build.VERSION.SDK_INT >= 23) {
-                                try {
-                                    d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                // Call some material design APIs here
-                            } else {
-                                DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                                try {
-                                    d1 = (Date) formatter.parse(childData.getEstimatedData().getTime());
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            long different = c.getTime() - d1.getTime();
-                            long secondsInMilli = 1000;
-                            long minutesInMilli = secondsInMilli * 60;
-                            long elapsedMinutes = different / minutesInMilli;
-                            different = different % minutesInMilli;
-                            long elapsedSeconds = different / secondsInMilli;
-                            String tot = String.valueOf(tr + elapsedMinutes);
-                            String tiim = elapsedMinutes + "." + elapsedSeconds;
-
-                            JSONArray jsonArray = null;
-                            try {
-                                jsonArray = new JSONArray(childData.getEstimatedData().getTime());
-
-                                if (jsonArray.length() > 0) {
-
-                                    jsonArray.put(tiim);
-                                }
-                            } catch (JSONException t1) {
-                                t1.printStackTrace();
-//                                    Log.d("chk", "onClick:error "+ t1.getMessage());
-                            }
-
-                            try {
-                                jsonArray = new JSONArray(childData.getEstimatedData().getTime());
-
-                                if (jsonArray.length() > 0) {
-
-                                    jsonArray.put(tiim);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Log.d("chk", "onClick: " + e.getMessage());
-                            }
-
-
-                            changeReadyStatus(childData.getEstimatedData().getObjectId(), childData.getEstimatedData().getLocationObjectId(),
-                                    v, childData.getEstimatedData().getNotes(), childData.getEstimatedData().getTotalTime(),
-                                    childData.getEstimatedData().getSubTotal(), childData.getEstimatedData().getTaxId(),
-                                    childData.getEstimatedData().getTax(), childData.getEstimatedData().getOrder(),
-                                    jsonArray, childData.getEstimatedData().getIsPaid(), childData.getEstimatedData().getCreatedDateAt(),
-                                    pikper, childData.getEstimatedData().getTotalCost(), childData.getEstimatedData().getUserId(),
-                                    childPosition, groupPosition, childData, childData.getEstimatedData().getDiscountAmount(),
-                                    childData.getEstimatedData().getOfferObjectId(), childData.getEstimatedData().getOfferEnanbled(),tot,d1);
-
-                        } catch (Exception t1) {
-                            t1.printStackTrace();
-//                                    Log.d("chk", "onClick:error "+ t1.getMessage());
-                        }
-
-                    }
-                } else {
-                    // do nothing
-
-                }
-            }
-        });
-
-
-        tvCancelOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog = new ProgressDialog(v.getContext());
-                dialog.setMessage("Please wait.....");
-                dialog.setCancelable(false);
-                dialog.show();
-                String id1 = childData.getEstimatedData().getObjectId();
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("cancelledBy", "business");
-                params.put("status", childData.getEstimatedData().getOrderStatus());
-                params.put("orderNo", id1);
-                params.put("totalCost", childData.getEstimatedData().getTotalCost());
-                ParseCloud.callFunctionInBackground("refund", params,
-                        (FunctionCallback<Map<String, List<ParseObject>>>) (object, e) -> {
-                            if (e == null) {
-//                        Log.d("chk", "onClick:refund "+object);
-                                SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-                                        Locale.ENGLISH);
-                                Date d1 = null;
-                                Date c = Calendar.getInstance().getTime();
-                                String cacenlby = String.valueOf(object.get("cancelledBy"));
-                                String refuncost = String.valueOf(object.get("refundCost"));
-                                String refundtrans = String.valueOf(object.get("refundTrans"));
-                                String refundper = String.valueOf(object.get("refundPercentage"));
-                                String pikPercentage = String.valueOf(object.get("pikPercentage"));
-                                String pikCharges = String.valueOf(object.get("pikCharges"));
-                                String refundForBusiness = String.valueOf(object.get("refundForBusiness"));
-                                String refund = String.valueOf(object.get("refund"));
-
-                                if (Build.VERSION.SDK_INT >= 23) {
-                                    try {
-                                        d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
-                                    } catch (java.text.ParseException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                    // Call some material design APIs here
-                                } else {
-                                    DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                                    try {
-                                        d1 = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
-                                    } catch (java.text.ParseException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                }
-
-                                long different = c.getTime() - d1.getTime();
-                                long secondsInMilli = 1000;
-                                long minutesInMilli = secondsInMilli * 60;
-                                long elapsedMinutes = different / minutesInMilli;
-                                different = different % minutesInMilli;
-                                long elapsedSeconds = different / secondsInMilli;
-                                String tiim = elapsedMinutes + "." + elapsedSeconds;
-
-                                cancelOrder(childData.getEstimatedData().getObjectId(),
-                                        refuncost, cacenlby, v,
-                                        childData.getEstimatedData().getLocationObjectId(),
-                                        childData.getEstimatedData().getNotes(),
-                                        childData.getEstimatedData().getTotalCost(),
-                                        childData.getEstimatedData().getSubTotal(),
-                                        childData.getEstimatedData().getTaxId(),
-                                        childData.getEstimatedData().getTax(),
-                                        childData.getEstimatedData().getOrder(),
-                                        tiim, childData.getEstimatedData().getIsPaid(), d1,
-                                        refundtrans, refundper, pikCharges, pikPercentage,
-                                        childData.getEstimatedData().getUserId(), refund,
-                                        refundForBusiness,
-                                        childData.getEstimatedData().getDiscountAmount(),
-                                        childData.getEstimatedData().getOfferObjectId(),
-                                        childData.getEstimatedData().getOfferEnanbled(),
-                                        childData.getEstimatedData().getShopLocationName(),
-                                        childData.getEstimatedData().getShopPhoneNo(),
-                                        childData.getEstimatedData().getTranRef(), childPosition, groupPosition, childData, parent);
-
-
-                            } else {
-                                Log.d("chk", "done:error ==" + e.getMessage());
-                            }
-                        });
-            }
-        });
-
-
-
+        holder.setData(childData,groupPosition, childPosition,parent);
         return row;
     }
 
@@ -994,8 +358,6 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
 //                    Log.d("chk", "done: error"+e.getMessage());
             }
         });
-
-
     }
 
     private void cancelOrder(String objectId, String refundCost, String cancelBy, View v, String locationObjectId,
@@ -1269,7 +631,6 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         return listDataHeader.get(groupPosition);
     }
 
-
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
         super.registerDataSetObserver(observer);
@@ -1291,26 +652,30 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
+    {
         String headerTitle = (String) getGroup(groupPosition);
         View v = convertView;
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        if (v == null)
+        {
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.order_list_group, null);
             ViewHolder holder = new ViewHolder();
-            holder.addView(v.findViewById(R.id.group_header));
+            holder.addView(v.findViewById(R.id.tv_order_count));
+            holder.addView(v.findViewById(R.id.txt_order_type));
             v.setTag(holder);
         }
+
         ViewHolder holder = (ViewHolder) v.getTag();
         expandableList.expandGroup(groupPosition);
-        TextView tvOrderCount = (TextView) v.findViewById(R.id.tv_order_count);
-        TextView txt_order_type = (TextView) v.findViewById(R.id.txt_order_type);
+        TextView tvOrderCount = (TextView) holder.getView(R.id.tv_order_count);
+        TextView txt_order_type = (TextView) holder.getView(R.id.txt_order_type);
         txt_order_type.setTypeface(null, Typeface.BOLD);
         txt_order_type.setText(headerTitle);
         tvOrderCount.setText("" + listDataChild.get(listDataHeader.get(groupPosition)).size());
         tvOrderCount.setTypeface(null, Typeface.BOLD);
+
         return v;
     }
 
@@ -1334,61 +699,25 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    /**
-     * Called when a group is expanded.
-     *
-     * @param groupPosition The group being expanded.
-     */
     @Override
     public void onGroupExpanded(int groupPosition) {
 
     }
 
-    /**
-     * Called when a group is collapsed.
-     *
-     * @param groupPosition The group being collapsed.
-     */
     @Override
     public void onGroupCollapsed(int groupPosition) {
 
     }
 
-    /**
-     * Gets an ID for a child that is unique across any item (either group or
-     * child) that is in list. Expandable lists require each item (group or
-     * child) to have a unique ID among all children and groups in the list.
-     * This method is responsible for returning that unique ID given a child's
-     * ID and its group's ID. Furthermore, if {@link #hasStableIds()} is true, the
-     * returned ID must be stable as well.
-     *
-     * @param groupId The ID of the group that contains this child.
-     * @param childId The ID of the child.
-     * @return The unique (and possibly stable) ID of the child across all
-     * groups and children in this list.
-     */
     @Override
     public long getCombinedChildId(long groupId, long childId) {
         return childId;
     }
 
-    /**
-     * Gets an ID for a group that is unique across any item (either group or
-     * child) that is in this list. Expandable lists require each item (group or
-     * child) to have a unique ID among all children and groups in the list.
-     * This method is responsible for returning that unique ID given a group's
-     * ID. Furthermore, if {@link #hasStableIds()} is true, the returned ID must be
-     * stable as well.
-     *
-     * @param groupId The ID of the group
-     * @return The unique (and possibly stable) ID of the group across all
-     * groups and children in this list.
-     */
     @Override
     public long getCombinedGroupId(long groupId) {
         return groupId;
     }
-
 
     public class OrderItemListAdapter extends RecyclerView.Adapter<OrderItemListAdapter.MyViewHolder> {
         private List<OrderItem> itemList;
@@ -1416,9 +745,9 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
 
 
         @Override
-        public OrderItemListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.orderitems_layout, parent, false);
-            return new OrderItemListAdapter.MyViewHolder(v);
+            return new MyViewHolder(v);
         }
 
 
@@ -1441,24 +770,752 @@ public class OrderListAdapter extends BaseExpandableListAdapter {
         }
     }
 
-    public class ViewHolder {
+    public class ViewHolder
+    {
+        Orders childData;
         private HashMap<Integer, View> storedViews = new HashMap<Integer, View>();
 
-        public ViewHolder() {
+        public ViewHolder()
+        {
         }
 
         /**
          * @param view The view to add; to reference this view later, simply refer to its id.
          * @return This instance to allow for chaining.
          */
-        public ViewHolder addView(View view) {
+        public ViewHolder addView(View view)
+        {
             int id = view.getId();
             storedViews.put(id, view);
             return this;
         }
 
-        public View getView(int id) {
+        public View getView(int id)
+        {
             return storedViews.get(id);
+        }
+
+        public void setData(Orders orderData,int groupPosition, final int childPosition,ViewGroup parent)
+        {
+            try
+            {
+                childData = orderData;
+
+                TextView tvNote = (TextView) getView(R.id.tv_note);
+                TextView tvSubTotal = (TextView) getView(R.id.tv_subtotal);
+                TextView tvVatText = (TextView) getView(R.id.tv_vat_txt);
+                TextView tvVatPrice = (TextView) getView(R.id.vatprice);
+                TextView tvTotal = (TextView) getView(R.id.tv_total);
+                TextView tvCancelOrder = (TextView) getView(R.id.tv_cancel_order);
+                TextView tvTagLine = (TextView) getView(R.id.txt_tag_line);
+                TextView tvCustomerName = (TextView) getView(R.id.customer_name);
+                TextView tvDistance = (TextView) getView(R.id.tv_distance);
+                TextView tvDistanceTime = (TextView) getView(R.id.tv_distance_time);
+                RecyclerView itemRecyclerView = (RecyclerView) getView(R.id.item_recycler_view);
+                Button btnCall = (Button) getView(R.id.call);
+                Button btnChangeStatus = (Button) getView(R.id.btn_change_status);
+
+                orderItemAdapter = new OrderItemListAdapter(mContext, orderItemList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                itemRecyclerView.setLayoutManager(mLayoutManager);
+                itemRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                itemRecyclerView.setAdapter(orderItemAdapter);
+
+                currencyType = childData.getEstimatedData().getCurrency();
+                tvCustomerName.setText(childData.getEstimatedData().getCustomerName());
+                btnChangeStatus.setText(childData.getEstimatedData().getButtonStatus());
+                if (childData.getEstimatedData().getButtonStatus().equals("Pick up")) {
+                    tvTagLine.setVisibility(View.GONE);
+                } else {
+                    tvTagLine.setVisibility(View.VISIBLE);
+                }
+                if (childData.getEstimatedData().getNotes() != null) {
+                    if (childData.getEstimatedData().getNotes().length() > 0) {
+                        tvNote.setText("Note : " + childData.getEstimatedData().getNotes());
+                    } else {
+                        tvNote.setVisibility(View.GONE);
+                    }
+                } else {
+                    tvNote.setVisibility(View.GONE);
+                }
+
+
+                /*This function is to check distance and distance time start*/
+                if (childData.getEstimatedData().getLocation().getLatitude() != null && childData.getEstimatedData().getLocation().getLongitude() != null
+                        && childData.getEstimatedData().getUserLocation().getUserlatitude() != null && childData.getEstimatedData().getUserLocation().getUserlongitude() != null) {
+                    Double sl = Double.valueOf(childData.getEstimatedData().getLocation().getLatitude());
+                    Double slg = Double.valueOf(childData.getEstimatedData().getLocation().getLongitude());
+                    Double ul = Double.valueOf(childData.getEstimatedData().getUserLocation().getUserlatitude());
+                    Double ulg = Double.valueOf(childData.getEstimatedData().getUserLocation().getUserlongitude());
+
+                    Location startPoint = new Location("Shop");
+                    startPoint.setLatitude(sl);
+                    startPoint.setLongitude(slg);
+                    Location endPoint = new Location("User");
+                    endPoint.setLatitude(ul);
+                    endPoint.setLongitude(ulg);
+                    float distanceInMeters = startPoint.distanceTo(endPoint);
+                    Integer intmeters = (int) distanceInMeters;
+                    //For example spead is 10 meters per minute.
+                    int speedIs10MetersPerMinute = 60;
+                    float estimatedDriveTimeInMinutes = distanceInMeters / speedIs10MetersPerMinute;
+                    Integer intValue = (int) estimatedDriveTimeInMinutes;
+                    if (intValue > 60) {
+
+                        if (intValue / 60 > 1) {
+                            tvDistanceTime.setText(intValue / 60 + " hours away");
+                        } else {
+                            tvDistanceTime.setText(intValue / 60 + " hour away");
+                        }
+                    } else {
+                        tvDistanceTime.setText(intValue + " minutes away");
+                    }
+
+                    double distance = startPoint.distanceTo(endPoint) / 1000;
+                    NumberFormat nf = NumberFormat.getInstance(); // get instance
+                    nf.setMaximumFractionDigits(0); // set decimal places
+                    Integer intdist = (int) distance;
+                    // String s = nf.format(distance);
+                    if (intdist < 1) {
+                        tvDistance.setText(intmeters + " m");
+                    } else {
+                        tvDistance.setText(intdist + " kms");
+                    }
+
+                    /* end logic to check distance and distance time*/
+                }
+
+
+                /*  start logic to show category name and other*/
+                double itemPriceIncludingExtra = 0;
+                double totalPrice = 0;
+                double finalPrice = 0;
+                try {
+                    JSONArray orderArray = new JSONArray(childData.getEstimatedData().getOrder());
+                    orderItemList.clear();
+                    for (int i = 0; i < orderArray.length(); i++) {
+                        OrderItem item = new OrderItem();
+                        JSONObject rowObject = orderArray.getJSONObject(i);
+                        System.out.println("row Object ===" + rowObject);
+                        String menuName = rowObject.getString("menuName");
+                        String count = rowObject.getString("count");
+                        String itemTotalPrice = rowObject.getString("itemTotalPrice").replace(currencyType, "");
+                        String categoryName = rowObject.getString("categoryName");
+                        String menuPrice = rowObject.getString("menuPrice");
+                        String tax = String.valueOf(childData.getEstimatedData().getTax());
+                        double itemPrice = Integer.parseInt(count) * Double.valueOf(menuPrice);
+                        JSONArray extrasArray = rowObject.getJSONArray("extras");
+                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb2 = new StringBuilder();
+                        if (extrasArray.length() > 0) {
+                            for (int j = 0; j < extrasArray.length(); j++) {
+                                JSONObject nameValueObject = extrasArray.getJSONObject(j);
+                                String extraName = nameValueObject.getString("extraName");
+                                double extraPrice = Double.parseDouble(nameValueObject.getString("extraPrice"));
+                                itemPriceIncludingExtra = extraPrice + itemPrice;
+
+                                sb.append(extraName);
+                                //sb.append(" + ");
+                            }
+                        } else {
+                            itemPriceIncludingExtra = itemPrice;
+                        }
+                        item.setExtraItem(sb.toString());
+                        //  tvExtraItem.setText(sb);
+                        if (sb.length() > 0) {
+                            sb.deleteCharAt(sb.length() - 2);
+                        }
+                        item.setCategoryName(categoryName);
+                        item.setMenuName(menuName + " x " + count);
+                        item.setItemPrice(itemPriceIncludingExtra + " " + currencyType);
+                        tvVatText.setText("Vat" + " " + tax + "%");
+                        totalPrice = itemPriceIncludingExtra + totalPrice;
+                        tvSubTotal.setText(totalPrice + " " + currencyType);
+                        Double taxCalculation = totalPrice * (Double.parseDouble(tax)/100);
+                        tvVatPrice.setText(taxCalculation + " " + currencyType);
+                        finalPrice = totalPrice + taxCalculation;
+                        tvTotal.setText(finalPrice + " " + currencyType);
+                        // item.setTotalPrice(totalPrice);
+                        orderItemList.add(item);
+
+                    }
+                    orderItemAdapter.notifyDataSetChanged();
+
+
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+
+                updateUI(Calendar.getInstance().getTime().getTime());
+
+                btnCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (String.valueOf(childData.getEstimatedData().getCustomerPhoneNumber()) != null) {
+                            if (String.valueOf(childData.getEstimatedData().getCustomerPhoneNumber()).length() > 0) {
+                                Intent intent = new Intent(Intent.ACTION_DIAL);
+                                intent.setData(Uri.parse("tel:" + "+" + childData.getEstimatedData().getCustomerPhoneNumber()));
+                                mContext.startActivity(intent);
+                            } else {
+                                Toast.makeText(mContext, "user not provided phone number", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(mContext, "user not provided phone number", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+
+                btnChangeStatus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dialog = new ProgressDialog(v.getContext());
+                        dialog.setMessage("Please wait.....");
+                        dialog.setCancelable(false);
+                        dialog.show();
+
+                        if (childData.getEstimatedData().getOrderStatus() == 0 ||
+                                childData.getEstimatedData().getOrderStatus() == 1) {
+
+                            SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                                    Locale.ENGLISH);
+                            Date d1 = null;
+                            Date c = Calendar.getInstance().getTime();
+                            try {
+                                double tr;
+                                try {
+                                    tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
+                                } catch (NumberFormatException f) {
+                                    tr = 0; // your default value
+                                }
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                                    // Call some material design APIs here
+                                } else {
+                                    DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                                    d1 = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                                }
+                                long different = c.getTime() - d1.getTime();
+                                long secondsInMilli = 1000;
+                                long minutesInMilli = secondsInMilli * 60;
+                                long elapsedMinutes = different / minutesInMilli;
+                                different = different % minutesInMilli;
+                                long elapsedSeconds = different / secondsInMilli;
+                                String totalTime = String.valueOf(tr + elapsedMinutes);
+                                String tiim = elapsedMinutes + "." + elapsedSeconds;
+
+                                JSONArray jsonArray = null;
+
+                                //   if (childData.getEstimatedData().getOrderStatus() == 1) {
+
+                                try {
+                                    jsonArray = new JSONArray(childData.getEstimatedData().getTime());
+
+                                    if (jsonArray.length() > 0) {
+
+                                        jsonArray.put(tiim);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Log.d("chk", "onClick: " + e.getMessage());
+                                }
+
+                                changeStatus(childData.getEstimatedData().getObjectId(),
+                                        childData.getEstimatedData().getLocationName(),
+                                        childData.getEstimatedData().getShopLocationName(),
+                                        childData.getEstimatedData().getLocation().getLatitude(),
+                                        childData.getEstimatedData().getLocation().getLongitude(),
+                                        childData.getEstimatedData().getShopStatus(),
+                                        childData.getEstimatedData().getPin(),
+                                        childData.getEstimatedData().getPhoneNo(),
+                                        childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
+                                        childData.getEstimatedData().getUserId(),
+                                        childData.getEstimatedData().getOrderStatus(),
+                                        childData, childPosition, groupPosition, jsonArray);
+
+
+                        /* } else if (childData.getEstimatedData().getOrderStatus() == 0) {
+
+
+
+
+                            changeStatus(childData.getEstimatedData().getObjectId(),
+                                    childData.getEstimatedData().getLocationName(),
+                                    childData.getEstimatedData().getShopLocationName(),
+                                    childData.getEstimatedData().getLocation().getLatitude(),
+                                    childData.getEstimatedData().getLocation().getLongitude(),
+                                    childData.getEstimatedData().getShopStatus(),
+                                    childData.getEstimatedData().getPin(),
+                                    childData.getEstimatedData().getPhoneNo(),
+                                    childData.getEstimatedData().getLocationObjectId(), v, tiim, totalTime,
+                                    childData.getEstimatedData().getUserId(),
+                                    childData.getEstimatedData().getOrderStatus(),
+                                    childData, childPosition, groupPosition, jsonArray);
+                        }*/ //else {
+                                // do nothing
+                                //  }
+
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (childData.getEstimatedData().getOrderStatus() == 2) {
+
+                            String pik = "0";
+                            pik = String.valueOf(ParseUser.getCurrentUser().getNumber("pikPercentage"));
+                            if (pik != null) {
+
+                                Double a = Double.valueOf(String.valueOf(childData.getEstimatedData().getTotalCost()));
+                                Double b = Double.valueOf(pik);
+                                Double cres = a * b / 100;
+                                String pikper = String.valueOf(pik);
+                                String tottalcost = String.valueOf(cres);
+                                SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                                        Locale.ENGLISH);
+                                Date d1 = null;
+                                Date c = Calendar.getInstance().getTime();
+                                try {
+                                    double tr;
+                                    try {
+                                        tr = new Double(String.valueOf(childData.getEstimatedData().getTotalTime()));
+                                    } catch (NumberFormatException f) {
+                                        tr = 0; // your default value
+                                    }
+                                    if (Build.VERSION.SDK_INT >= 23) {
+                                        try {
+                                            d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        // Call some material design APIs here
+                                    } else {
+                                        DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                                        try {
+                                            d1 = (Date) formatter.parse(childData.getEstimatedData().getTime());
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    long different = c.getTime() - d1.getTime();
+                                    long secondsInMilli = 1000;
+                                    long minutesInMilli = secondsInMilli * 60;
+                                    long elapsedMinutes = different / minutesInMilli;
+                                    different = different % minutesInMilli;
+                                    long elapsedSeconds = different / secondsInMilli;
+                                    String tot = String.valueOf(tr + elapsedMinutes);
+                                    String tiim = elapsedMinutes + "." + elapsedSeconds;
+
+                                    JSONArray jsonArray = null;
+                                    try {
+                                        jsonArray = new JSONArray(childData.getEstimatedData().getTime());
+
+                                        if (jsonArray.length() > 0) {
+
+                                            jsonArray.put(tiim);
+                                        }
+                                    } catch (JSONException t1) {
+                                        t1.printStackTrace();
+//                                    Log.d("chk", "onClick:error "+ t1.getMessage());
+                                    }
+
+                                    try {
+                                        jsonArray = new JSONArray(childData.getEstimatedData().getTime());
+
+                                        if (jsonArray.length() > 0) {
+
+                                            jsonArray.put(tiim);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        Log.d("chk", "onClick: " + e.getMessage());
+                                    }
+
+
+                                    changeReadyStatus(childData.getEstimatedData().getObjectId(), childData.getEstimatedData().getLocationObjectId(),
+                                            v, childData.getEstimatedData().getNotes(), childData.getEstimatedData().getTotalTime(),
+                                            childData.getEstimatedData().getSubTotal(), childData.getEstimatedData().getTaxId(),
+                                            childData.getEstimatedData().getTax(), childData.getEstimatedData().getOrder(),
+                                            jsonArray, childData.getEstimatedData().getIsPaid(), childData.getEstimatedData().getCreatedDateAt(),
+                                            pikper, childData.getEstimatedData().getTotalCost(), childData.getEstimatedData().getUserId(),
+                                            childPosition, groupPosition, childData, childData.getEstimatedData().getDiscountAmount(),
+                                            childData.getEstimatedData().getOfferObjectId(), childData.getEstimatedData().getOfferEnanbled(),tot,d1);
+
+                                } catch (Exception t1) {
+                                    t1.printStackTrace();
+//                                    Log.d("chk", "onClick:error "+ t1.getMessage());
+                                }
+
+                            }
+                        } else {
+                            // do nothing
+
+                        }
+                    }
+                });
+
+
+                tvCancelOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dialog = new ProgressDialog(v.getContext());
+                        dialog.setMessage("Please wait.....");
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        String id1 = childData.getEstimatedData().getObjectId();
+                        HashMap<String, Object> params = new HashMap<String, Object>();
+                        params.put("cancelledBy", "business");
+                        params.put("status", childData.getEstimatedData().getOrderStatus());
+                        params.put("orderNo", id1);
+                        params.put("totalCost", childData.getEstimatedData().getTotalCost());
+                        ParseCloud.callFunctionInBackground("refund", params,
+                                (FunctionCallback<Map<String, List<ParseObject>>>) (object, e) -> {
+                                    if (e == null) {
+//                        Log.d("chk", "onClick:refund "+object);
+                                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                                                Locale.ENGLISH);
+                                        Date d1 = null;
+                                        Date c = Calendar.getInstance().getTime();
+                                        String cacenlby = String.valueOf(object.get("cancelledBy"));
+                                        String refuncost = String.valueOf(object.get("refundCost"));
+                                        String refundtrans = String.valueOf(object.get("refundTrans"));
+                                        String refundper = String.valueOf(object.get("refundPercentage"));
+                                        String pikPercentage = String.valueOf(object.get("pikPercentage"));
+                                        String pikCharges = String.valueOf(object.get("pikCharges"));
+                                        String refundForBusiness = String.valueOf(object.get("refundForBusiness"));
+                                        String refund = String.valueOf(object.get("refund"));
+
+                                        if (Build.VERSION.SDK_INT >= 23) {
+                                            try {
+                                                d1 = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                                            } catch (ParseException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                            // Call some material design APIs here
+                                        } else {
+                                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                                            try {
+                                                d1 = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                                            } catch (ParseException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+
+                                        long different = c.getTime() - d1.getTime();
+                                        long secondsInMilli = 1000;
+                                        long minutesInMilli = secondsInMilli * 60;
+                                        long elapsedMinutes = different / minutesInMilli;
+                                        different = different % minutesInMilli;
+                                        long elapsedSeconds = different / secondsInMilli;
+                                        String tiim = elapsedMinutes + "." + elapsedSeconds;
+
+                                        cancelOrder(childData.getEstimatedData().getObjectId(),
+                                                refuncost, cacenlby, v,
+                                                childData.getEstimatedData().getLocationObjectId(),
+                                                childData.getEstimatedData().getNotes(),
+                                                childData.getEstimatedData().getTotalCost(),
+                                                childData.getEstimatedData().getSubTotal(),
+                                                childData.getEstimatedData().getTaxId(),
+                                                childData.getEstimatedData().getTax(),
+                                                childData.getEstimatedData().getOrder(),
+                                                tiim, childData.getEstimatedData().getIsPaid(), d1,
+                                                refundtrans, refundper, pikCharges, pikPercentage,
+                                                childData.getEstimatedData().getUserId(), refund,
+                                                refundForBusiness,
+                                                childData.getEstimatedData().getDiscountAmount(),
+                                                childData.getEstimatedData().getOfferObjectId(),
+                                                childData.getEstimatedData().getOfferEnanbled(),
+                                                childData.getEstimatedData().getShopLocationName(),
+                                                childData.getEstimatedData().getShopPhoneNo(),
+                                                childData.getEstimatedData().getTranRef(), childPosition, groupPosition, childData, parent);
+
+
+                                    } else {
+                                        Log.d("chk", "done:error ==" + e.getMessage());
+                                    }
+                                });
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        public void updateUI(long currentTime)
+        {
+            try
+            {
+                /* start logic to set header color and count down timer*/
+                if (childData.getEstimatedData().getOrderStatus() == 0)
+                {
+                    try
+                    {
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                        Date date = null;
+                        //Date c = Calendar.getInstance().getTime();
+                        if (Build.VERSION.SDK_INT >= 23)
+                        {
+                            try
+                            {
+                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            }
+                            catch (ParseException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        else
+                        {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            try
+                            {
+                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                            }
+                            catch (ParseException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        long diffTimeMillis = currentTime - date.getTime();
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        diffTimeMillis = diffTimeMillis % daysInMilli;
+                        long elapsedHours = diffTimeMillis / hoursInMilli;
+                        diffTimeMillis = diffTimeMillis % hoursInMilli;
+                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
+                        diffTimeMillis = diffTimeMillis % minutesInMilli;
+                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
+
+                        ((Activity)mContext).runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                try
+                                {
+                                    if (elapsedHours == 0)
+                                    {
+                                        TextView tvTimer = (TextView) getView(R.id.timer);
+                                        tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
+                                        System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                    }
+                                    else {
+                                        TextView tvTimer = (TextView) getView(R.id.timer);
+                                        tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
+                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                                "seconds==" + elapsedSeconds);
+                                    }
+
+                                    if (elapsedHours == 0) {
+                                        if (elapsedMinutes < 3) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+                                        } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+                                        } else if (elapsedMinutes >= 5) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                        }
+                                    } else {
+                                        LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (childData.getEstimatedData().getOrderStatus() == 1)
+                {
+                    try
+                    {
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                        Date date = null;
+                        //Date c = Calendar.getInstance().getTime();
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            try {
+                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            try {
+                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        long diffTimeMillis = currentTime - date.getTime();
+
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        diffTimeMillis = diffTimeMillis % daysInMilli;
+                        long elapsedHours = diffTimeMillis / hoursInMilli;
+                        diffTimeMillis = diffTimeMillis % hoursInMilli;
+                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
+                        diffTimeMillis = diffTimeMillis % minutesInMilli;
+                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
+
+                        ((Activity)mContext).runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                try
+                                {
+                                    if (elapsedHours == 0) {
+                                        TextView tvTimer = (TextView) getView(R.id.timer);
+                                        tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
+                                        System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                    } else {
+                                        TextView tvTimer = (TextView) getView(R.id.timer);
+                                        tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
+                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                                "seconds==" + elapsedSeconds);
+                                    }
+
+                                    if (elapsedHours == 0) {
+                                        if (elapsedMinutes < 3) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+                                        } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+                                        } else if (elapsedMinutes >= 5) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                        }
+                                    } else {
+                                        LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (childData.getEstimatedData().getOrderStatus() == 2)
+                {
+                    try
+                    {
+                        SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                        Date date = null;
+                        //Date c = Calendar.getInstance().getTime();
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            try {
+                                date = date1.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            try {
+                                date = (Date) formatter.parse(childData.getEstimatedData().getCreatedDateAt());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        long diffTimeMillis = currentTime - date.getTime();
+
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        diffTimeMillis = diffTimeMillis % daysInMilli;
+                        long elapsedHours = diffTimeMillis / hoursInMilli;
+                        diffTimeMillis = diffTimeMillis % hoursInMilli;
+                        long elapsedMinutes = diffTimeMillis / minutesInMilli;
+                        diffTimeMillis = diffTimeMillis % minutesInMilli;
+                        long elapsedSeconds = diffTimeMillis / secondsInMilli;
+
+                        ((Activity)mContext).runOnUiThread(new Runnable()
+                        {
+                            public void run()
+                            {
+                                try
+                                {
+                                    if (elapsedHours == 0) {
+                                        TextView tvTimer = (TextView) getView(R.id.timer);
+                                        tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
+                                        System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                    } else {
+                                        TextView tvTimer = (TextView) getView(R.id.timer);
+                                        tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
+                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                                "seconds==" + elapsedSeconds);
+                                    }
+
+                                    if (elapsedHours == 0) {
+                                        if (elapsedMinutes < 3) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
+                                        } else if (elapsedMinutes >= 3 && elapsedMinutes < 5) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.yellow));
+                                        } else if (elapsedMinutes >= 5) {
+                                            LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                            headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                        }
+                                    } else {
+                                        LinearLayout headBackgroundLayout = (LinearLayout) getView(R.id.head_background_color);
+                                        headBackgroundLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    TextView tvTimer = (TextView) getView(R.id.timer);
+                    tvTimer.setText("");
+                }
+                /* end logic to set header color and count down timer*/
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

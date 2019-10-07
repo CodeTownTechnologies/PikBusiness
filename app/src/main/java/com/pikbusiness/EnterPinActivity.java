@@ -105,6 +105,19 @@ public class EnterPinActivity extends AppCompatActivity {
                 i.putExtra("shopStatus", shopStatus);
                 i.putExtra("pin", pin);
                 i.putExtra("phoneNo", getIntent().getStringExtra("phoneNo"));
+
+
+//                i.putExtra("locationName",locationName);
+//                i.putExtra("bname",businessName);
+//                i.putExtra("objectId", objectId);
+//                Bundle bundle = new Bundle();
+//                i.putExtra("lat",latitude);
+//                i.putExtra("log",longitude);
+//                i.putExtras(bundle);
+//                i.putExtra("shopStatus",shopStatus);
+//                i.putExtra("pin",pin);
+//                i.putExtra("phoneNo",getIntent().getStringExtra("phoneNo"));
+
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

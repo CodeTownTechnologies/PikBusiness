@@ -91,12 +91,20 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!--<androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/swipe_refresh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+
     <ExpandableListView
         android:id="@+id/ordExpandableList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"/>
 
+
+    <!--</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
     <LinearLayout
         android:id="@+id/ll_progressBar"
         android:layout_width="fill_parent"
