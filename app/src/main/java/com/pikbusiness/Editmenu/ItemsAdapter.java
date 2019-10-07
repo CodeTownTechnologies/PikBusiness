@@ -5,23 +5,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.parse.FindCallback;
 import com.pikbusiness.R;
 import com.pikbusiness.services.Toasty;
 import com.crashlytics.android.Crashlytics;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -29,13 +28,12 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder> {
@@ -45,10 +43,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
     String pricee="",sts;
     String shopid;
     HashMap<String, String> mapdata;
+    ParseObject user ;
     ArrayList<HashMap<String, String>> checkeditems;
+    ArrayList<HashMap<String,String>> newfinalobject;
     public ItemsAdapter(Context context, ArrayList<HashMap<String, String>> aryList) {
         this.context = context;
         this.dataa = aryList;
+
     }
 
     @Override
@@ -65,7 +66,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         // set the data in items
-        setFadeAnimation(holder.itemView);
+        //  setFadeAnimation(holder.itemView);
         String item_objid = dataa.get(position).get("item_objid");
         String cat_objid = dataa.get(position).get("cat_objid");
         sts = dataa.get(position).get("sts");
@@ -75,11 +76,111 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
         SharedPreferences.Editor editor = pref.edit();
         shopid = pref.getString("id", null);
         String defaultprice = dataa.get(position).get("defaultPrice");
-        if(sts !=null){
-            if(sts.equals("true")){
-                holder.cost.setText(defaultprice+"  "+dataa.get(position).get("cost"));
+        if (sts != null) {
+            if (sts.equals("true")) {
+                holder.cost.setText(defaultprice + "  " + dataa.get(position).get("cost"));
             }
         }
+
+        /*try {
+             user = ParseObject.create(dataa.get(position).get("user"));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            String s=e.toString();
+        }*/
+        ////
+
+        if (dataa.get(position).get("extras") != null) {
+
+        } else if (dataa.get(position).get("extras").equals("{}") || dataa.get(position).get("extras").isEmpty()) {
+            if (dataa.get(position).get("extras") != null) {
+                addexinmenus(dataa.get(position).get("objectid"), dataa.get(position).get("extras"));
+            }
+        }
+        pricee = String.valueOf(dataa.get(position).get("price"));
+//                            outstock = user.getJSONArray("outOfStock");
+        String basic = String.valueOf(dataa.get(position).get("isEnabled"));
+//                            String defaultprice = dataa.get(position).get("defaultPrice");
+        if (sts != null) {
+            if (sts.equals("false")) {
+                holder.cost.setText(pricee + "  " + dataa.get(position).get("cost"));
+            }
+        }
+        if (basic.equals("1")) {
+            holder.check.setChecked(true);
+            holder.it_name.setTextColor(context.getResources().getColor(R.color.black));
+            holder.cost.setTextColor(context.getResources().getColor(R.color.black));
+        } else {
+            holder.it_name.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
+            holder.cost.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
+            holder.check.setChecked(false);
+        }
+
+        holder.check.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                holder.it_name.setTextColor(context.getResources().getColor(R.color.black));
+                holder.cost.setTextColor(context.getResources().getColor(R.color.black));
+                // for owner
+                checkupdate("1", buttonView, dataa.get(position).get("objectid"));
+//                                    Log.d("chk", "done:checkox true "+user.getObjectId());
+
+            } else {
+                holder.it_name.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
+                holder.cost.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
+                checkupdate("0", buttonView, dataa.get(position).get("objectid"));
+//                                    Log.d("chk", "done:checkox false "+user.getObjectId());
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // Log.d("chk", "onClick:itemclick " + user.getObjectId());
+            }
+        });
+        holder.blurlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              //  Log.d("chk", "onClick:layout " + user.getObjectId());
+                if (checkInternetConenction()) {
+                    if (holder.check.isChecked()) {
+                        Intent i = new Intent(context, Singleitem.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("itemid", item_objid);
+                        i.putExtra("menusid", dataa.get(position).get("objectid"));
+                        i.putExtra("catid", cat_objid);
+                        i.putExtra("sts", dataa.get(position).get("sts"));
+                        i.putExtra("extras", dataa.get(position).get("extras"));
+                        i.putExtra("price", String.valueOf(dataa.get(position).get("price")));
+                        i.putExtra("currency", dataa.get(position).get("Currency"));
+                        i.putExtra("itemname", dataa.get(position).get("name"));
+                        i.putExtra("itemprice", holder.cost.getText().toString());
+                        context.startActivity(i);
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
+        /////
+
+
+
+////
+////
+
+
+
+
+
+
+
+
+/*
         ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Menus");
         ParseObject obj1 = ParseObject.createWithoutData("Menu",item_objid );
         ParseObject cat = ParseObject.createWithoutData("Category",cat_objid );
@@ -99,8 +200,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
 
                               if(user.getString("extras") != null ){
 
-                              }else if(user.getString("extras").equals("{}" )||
-                                      user.getString("extras").isEmpty()){
+                              }else if(user.getString("extras").equals("{}" )|| user.getString("extras").isEmpty()){
                                   if(dataa.get(position).get("extras") != null){
                                       addexinmenus(user.getObjectId(),dataa.get(position).get("extras"));
                                   }
@@ -118,11 +218,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
                                      holder.check.setChecked(true);
                                      holder.it_name.setTextColor(context.getResources().getColor(R.color.black));
                                      holder.cost.setTextColor(context.getResources().getColor(R.color.black));
-                                 }else {
+                                 }
+                                 else
+                                     {
                                      holder.it_name.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                                      holder.cost.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                                      holder.check.setChecked(false);
-                                 }
+                                     }
 
                             holder.check.setOnCheckedChangeListener((buttonView, isChecked) -> {
                                 if(isChecked)
@@ -174,13 +276,29 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
                         additems(item_objid,cat_objid,dataa.get(position).get("cost")
                        ,dataa.get(position).get("defaultPrice"),dataa.get(position).get("extras"));
                     }
-                }else{
+                }
+                else{
 //                    Log.d("chksz", "getlistdata: additemslast+++++");
                 }
             }
-        });
+        });*/
 
+       if (position>0){
+            if (dataa.get(position-1).get("name").equals(dataa.get(position).get("name")))
+            {
+                holder.main_layout.setVisibility(View.GONE);
+            }
+            else {
+                holder.main_layout.setVisibility(View.VISIBLE);
+            }
+        }
+        else
+            {
+            holder.main_layout.setVisibility(View.VISIBLE);
+        }
         holder.it_name.setText(dataa.get(position).get("name"));
+
+
     }
 
     public void additems(String item_objid, String cat_objid, String cost,
@@ -218,36 +336,36 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
         return position;
     }
 
- public void addexinmenus(String itemid,String ex){
+    public void addexinmenus(String itemid,String ex){
 
 //    Log.d("chkk", "addexinmenus: "+itemid+"ex = "+ex);
-    ParseQuery<ParseObject> query = ParseQuery.getQuery("Menus");
-     query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-    query.getInBackground(itemid, new GetCallback<ParseObject>() {
-        public void done(ParseObject shop, ParseException e) {
-            if (e == null) {
-                // Now let's update it with some new data.
-                shop.put("extras",ex);
-                shop.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Menus");
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.getInBackground(itemid, new GetCallback<ParseObject>() {
+            public void done(ParseObject shop, ParseException e) {
+                if (e == null) {
+                    // Now let's update it with some new data.
+                    shop.put("extras",ex);
+                    shop.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
 
-                        if (e == null) {
+                            if (e == null) {
 
+                            }
+                            else {
+
+                            }
                         }
-                        else {
-
-                        }
-                    }
-                });
-            } else {
-                e.printStackTrace();
+                    });
+                } else {
+                    e.printStackTrace();
+                }
             }
-        }
-    });
+        });
 
-}
-    private JSONObject parseObjectToJson(ParseObject parseObject) throws com.parse.ParseException, JSONException {
+    }
+    private JSONObject parseObjectToJson(ParseObject parseObject) throws ParseException, JSONException {
         JSONObject jsonObject = new JSONObject();
         parseObject.fetchIfNeeded();
         Set<String> keys = parseObject.keySet();
@@ -274,7 +392,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
 
         TextView  cost,it_name;
         CheckBox check;
-        LinearLayout blurlayout;
+        LinearLayout blurlayout,main_layout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -283,6 +401,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
             cost = itemView.findViewById(R.id.itemcost);
             check = itemView.findViewById(R.id.checkbox);
             it_name = itemView.findViewById(R.id.it_name);
+            main_layout=itemView.findViewById(R.id.main_layout);
         }
     }
     // Checking Internet connection
@@ -311,14 +430,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Menus");
             query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
             query.getInBackground(objid2, new GetCallback<ParseObject>() {
-                public void done(ParseObject shop, com.parse.ParseException e) {
+                public void done(ParseObject shop, ParseException e) {
                     if (e == null) {
                         // Now let's update it with some new data.
-                            shop.put("isEnabled", Integer.valueOf(sts));
+                        shop.put("isEnabled", Integer.valueOf(sts));
 
                         shop.saveInBackground(new SaveCallback() {
                             @Override
-                            public void done(com.parse.ParseException e) {
+                            public void done(ParseException e) {
 
                                 if (e == null) {
 

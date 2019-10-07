@@ -61,6 +61,7 @@ public class EditMenuTabsActivity extends AppCompatActivity {
     ArrayList<String> catnameslist,catnolist,catidslist,pricelist,itemnames,
             sorted_cat_names,sorted_cat_objids;
     String pin = "";
+    public static int total_cat=0;
     ArrayList<HashMap<Integer,String>> cat_names,cat_objids;
 
     List<ParseObject> object11;
@@ -95,7 +96,7 @@ public class EditMenuTabsActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         TextView txt = new TextView(EditMenuTabsActivity.this);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -193,7 +194,10 @@ public class EditMenuTabsActivity extends AppCompatActivity {
                 else {
                     b.putString("objid",catidslist.get(position));
                 }
-            } else {
+
+            }
+            else
+                {
                 b.putString("objid",catidslist.get(position));
                }
 
@@ -205,7 +209,8 @@ public class EditMenuTabsActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getCount() {
+        public int getCount()
+        {
             return mNumOfTabs;
         }
     }
@@ -331,6 +336,7 @@ public class EditMenuTabsActivity extends AppCompatActivity {
                         viewPager.setAdapter(CatgoriesAdapter);
                         viewPager.setCurrentItem(0);
                         viewPager.setOffscreenPageLimit(sorted_cat_names.size());
+                        total_cat=sorted_cat_names.size();
 //                        Log.d("chk", "onPostExecute: "+sorted_cat_objids);
                     }
                 } else {

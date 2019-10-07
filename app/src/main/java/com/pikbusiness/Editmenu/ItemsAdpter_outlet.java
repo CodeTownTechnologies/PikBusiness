@@ -65,7 +65,7 @@ public class ItemsAdpter_outlet extends RecyclerView.Adapter<ItemsAdpter_outlet
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         // set the data in items
-        setFadeAnimation(holder.itemView);
+     //   setFadeAnimation(holder.itemView);
 
         sts = dataa.get(position).get("sts");
         holder.cost.setText(dataa.get(position).get("price")+"  "+dataa.get(position).get("currency"));
@@ -92,14 +92,18 @@ public class ItemsAdpter_outlet extends RecyclerView.Adapter<ItemsAdpter_outlet
                              holder.it_name.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                              holder.cost.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                              holder.check.setChecked(false);
-                         } else {
+                         }
+                         else
+                             {
                              holder.it_name.setTextColor(context.getResources().getColor(R.color.black));
                              holder.cost.setTextColor(context.getResources().getColor(R.color.black));
                              holder.check.setChecked(true);
                          }
                      }
                  }
-                 else {
+
+                 else
+                     {
                      holder.it_name.setTextColor(context.getResources().getColor(R.color.black));
                      holder.cost.setTextColor(context.getResources().getColor(R.color.black));
                      holder.check.setChecked(true);
@@ -246,7 +250,7 @@ public class ItemsAdpter_outlet extends RecyclerView.Adapter<ItemsAdpter_outlet
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Menus");
             query.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
             query.getInBackground(objid2, new GetCallback<ParseObject>() {
-                public void done(ParseObject shop, com.parse.ParseException e) {
+                public void done(ParseObject shop, ParseException e) {
                     if (e == null) {
                         // Now let's update it with some new data.
 
@@ -255,7 +259,7 @@ public class ItemsAdpter_outlet extends RecyclerView.Adapter<ItemsAdpter_outlet
 
                         shop.saveInBackground(new SaveCallback() {
                             @Override
-                            public void done(com.parse.ParseException e) {
+                            public void done(ParseException e) {
 
                                 if (e == null) {
 
