@@ -674,6 +674,8 @@ public class OrderListAdapter extends BaseExpandableListAdapter
         txt_order_type.setTypeface(null, Typeface.BOLD);
         txt_order_type.setText(headerTitle);
         tvOrderCount.setText("" + listDataChild.get(listDataHeader.get(groupPosition)).size());
+        // tvOrderCount.setText("" + listDataHeader.get(groupPosition).length());
+        tvOrderCount.setText("" + listDataChild.get(listDataHeader.get(groupPosition)).size());
         tvOrderCount.setTypeface(null, Typeface.BOLD);
 
         return v;
