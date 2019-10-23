@@ -1,5 +1,6 @@
 package com.pikbusiness.Editmenu;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -255,12 +256,20 @@ public class DynamicTabsFragment extends Fragment {
                                                     String finalCost1 = cost;
                                                     String finalDefaultpeice1 = defaultpeice;
                                                     String finalExtra1 = extra;
+
+                                                    System.out.println("final cat object id==" + finalCat_objid1);
+                                                    System.out.println("finalCost1==" + finalCost1);
+                                                    System.out.println("finalDefaultpeice1==" + finalDefaultpeice1);
+                                                    System.out.println("finalExtra1==" + finalExtra1);
+
+
                                                     query2.findInBackground(new FindCallback<ParseObject>() {
                                                         public void done(List<ParseObject> object, ParseException e) {
 
                                                             if (e == null) {
 
-                                                                if (object.size() > 0) {
+                                                                if (object.size() > 0)
+                                                                {
 
                                                                     for (ParseObject user : object) {
 
@@ -506,6 +515,28 @@ public class DynamicTabsFragment extends Fragment {
             }
             ll_progressBar.setVisibility(View.GONE);
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // In fragment class callback
+      //  System.out.println("on activity result method called ===");
+        isViewShown = true;
+        if (isViewShown) {
+
+            isViewShown = false;
+            ll_progressBar.setVisibility(View.VISIBLE);
+            if (pin != null) {
+                if (pin.length() > 1) {
+                    new GetCategories().execute(cat_objectid);
+                }
+                else {
+                    getmenuitems(cat_objectid,shopid);
+                }
+            } else {
+                getmenuitems(cat_objectid,shopid);
+            }
         }
     }
     @Override

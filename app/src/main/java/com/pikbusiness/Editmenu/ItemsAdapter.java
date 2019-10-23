@@ -1,5 +1,6 @@
 package com.pikbusiness.Editmenu;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -145,7 +146,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
                 if (checkInternetConenction()) {
                     if (holder.check.isChecked()) {
                         Intent i = new Intent(context, Singleitem.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.putExtra("itemid", item_objid);
                         i.putExtra("menusid", dataa.get(position).get("objectid"));
                         i.putExtra("catid", cat_objid);
@@ -155,7 +156,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
                         i.putExtra("currency", dataa.get(position).get("Currency"));
                         i.putExtra("itemname", dataa.get(position).get("name"));
                         i.putExtra("itemprice", holder.cost.getText().toString());
-                        context.startActivity(i);
+                        ((Activity) context).startActivityForResult(i, 111);
+                     //    context.startActivity(i);
                     }
                 }
             }

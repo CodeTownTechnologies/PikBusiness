@@ -1,12 +1,17 @@
 package com.pikbusiness.Adapters;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.location.Location;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,14 +23,18 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pikbusiness.OrderListActivity;
 import com.pikbusiness.R;
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
@@ -35,8 +44,7 @@ import com.parse.ParseCloud;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.pikbusiness.model.Response.Orders;
-
+import com.parse.SaveCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,16 +72,10 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
     AlertDialog alertDialog;
     ProgressDialog dialog;
     Boolean stat1 = false,stat2 = false;
-    private List<Orders> progressList;
 
     public InProgressAdapter(Context context, ArrayList<HashMap<String, String>> aryList) {
         this.context = context;
         this.dataa = aryList;
-    }
-
-    public InProgressAdapter(Context mContext, List<Orders> OrderList) {
-        context = mContext;
-        progressList = OrderList;
     }
 
     @Override
@@ -142,7 +144,7 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
                         // Call some material design APIs here
                     } else {
                         DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                         d1 = (Date)formatter.parse(dataa.get(position).get("date"));
+                        d1 = (Date)formatter.parse(dataa.get(position).get("date"));
                     }
                     long different = c.getTime() - d1.getTime();
                     long secondsInMilli = 1000;
@@ -203,19 +205,19 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
 //                    Toast.makeText(context, "Shop is disabled. Please contact support", Toast.LENGTH_SHORT).show();
 //
 //                }else {
-                    if (dataa.get(position).get("phno") != null) {
-                        if (dataa.get(position).get("phno").length() > 0) {
-                            Intent intent = new Intent(Intent.ACTION_DIAL);
-                            intent.setData(Uri.parse("tel:" + "+" + dataa.get(position).get("phno")));
-                            context.startActivity(intent);
-                        } else {
-                            Toast.makeText(context, "user not provided phone number", Toast.LENGTH_SHORT).show();
-                        }
-
+                if (dataa.get(position).get("phno") != null) {
+                    if (dataa.get(position).get("phno").length() > 0) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + "+" + dataa.get(position).get("phno")));
+                        context.startActivity(intent);
                     } else {
                         Toast.makeText(context, "user not provided phone number", Toast.LENGTH_SHORT).show();
-
                     }
+
+                } else {
+                    Toast.makeText(context, "user not provided phone number", Toast.LENGTH_SHORT).show();
+
+                }
 //                }
             }
         });
@@ -309,9 +311,9 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
                 maplist1.add(map);
             }
             ItemslistAdapter itemsadapter = new ItemslistAdapter(context, maplist1);
-//            holder.itemslist.setLayoutManager(new LinearLayoutManager(context));
-//            holder.itemslist.setItemAnimator(new DefaultItemAnimator());
-//            holder.itemslist.setAdapter(itemsadapter);
+            holder.itemslist.setLayoutManager(new LinearLayoutManager(context));
+            holder.itemslist.setItemAnimator(new DefaultItemAnimator());
+            holder.itemslist.setAdapter(itemsadapter);
         } catch (Throwable tx) {
             Log.e("My App", "Could not parse JSON:inoprogress \"00" + "" + tx);
         }
@@ -326,7 +328,7 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
         }
 
 //        holder.note.setText("Note : "+notes);
-       holder.stsbtn.setText("Ready");
+        holder.stsbtn.setText("Ready");
         holder.total.setText(total+" "+cur);
         holder.total.setAllCaps(true);
         holder.cancelbtn.setOnClickListener(new View.OnClickListener() {
@@ -336,183 +338,183 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
 //                    Toast.makeText(context, "Shop is disabled. Please contact support", Toast.LENGTH_SHORT).show();
 //
 //                } else {
-                    if (stat2) {
+                if (stat2) {
 
-                    } else {
+                } else {
 
-                        dialog = new ProgressDialog(v.getContext());
-                        dialog.setMessage("Please wait.....");
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        String id1 = dataa.get(position).get("objid");
+                    dialog = new ProgressDialog(v.getContext());
+                    dialog.setMessage("Please wait.....");
+                    dialog.setCancelable(false);
+                    dialog.show();
+                    String id1 = dataa.get(position).get("objid");
 //                Log.d("chk", "onClick: "+id1);
-                        HashMap<String, Object> params = new HashMap<String, Object>();
-                        params.put("cancelledBy", "business");
-                        params.put("status", orderstatus);
-                        params.put("orderNo", id1);
-                        params.put("totalCost", total);
+                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    params.put("cancelledBy", "business");
+                    params.put("status", orderstatus);
+                    params.put("orderNo", id1);
+                    params.put("totalCost", total);
 //                Log.d("cd", "onClick: "+params);
-                        ParseCloud.callFunctionInBackground("refund", params, new FunctionCallback<Map<String, List<ParseObject>>>() {
-                            @Override
-                            public void done(Map<String, List<ParseObject>> object, com.parse.ParseException e) {
-                                if (e == null) {
+                    ParseCloud.callFunctionInBackground("refund", params, new FunctionCallback<Map<String, List<ParseObject>>>() {
+                        @Override
+                        public void done(Map<String, List<ParseObject>> object, com.parse.ParseException e) {
+                            if (e == null) {
 //                            Log.d("chk", "done:res == "+object.get("cancelledBy"));
-                                    SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-                                            Locale.ENGLISH);
-                                    Date d1;
-                                    Date c = Calendar.getInstance().getTime();
-                                    String cacenlby = String.valueOf(object.get("cancelledBy"));
-                                    String refuncost = String.valueOf(object.get("refundCost"));
-                                    String refundtrans = String.valueOf(object.get("refundTrans"));
-                                    String refundper = String.valueOf(object.get("refundPercentage"));
-                                    String pikPercentage = String.valueOf(object.get("pikPercentage"));
-                                    String pikCharges = String.valueOf(object.get("pikCharges"));
-                                    String refundForBusiness = String.valueOf(object.get("refundForBusiness"));
-                                    String refund = String.valueOf(object.get("refund"));
-                                    try {
-                                        Double tr = Double.valueOf(dataa.get(position).get("totaltime"));
-                                        if (Build.VERSION.SDK_INT >= 23) {
-                                            d1 = date1.parse(dataa.get(position).get("date"));
-                                            // Call some material design APIs here
-                                        } else {
-                                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                                            d1 = (Date) formatter.parse(dataa.get(position).get("date"));
-                                        }
-                                        long different = c.getTime() - d1.getTime();
-                                        long secondsInMilli = 1000;
-                                        long minutesInMilli = secondsInMilli * 60;
-                                        long elapsedMinutes = different / minutesInMilli;
-                                        different = different % minutesInMilli;
-                                        long elapsedSeconds = different / secondsInMilli;
-                                        String tot = String.valueOf(tr + elapsedMinutes);
-                                        String tiim = elapsedMinutes + "." + elapsedSeconds;
-
-                                        JSONArray jsonArray = null;
-                                        try {
-                                            jsonArray = new JSONArray(dataa.get(position).get("time"));
-
-                                            if (jsonArray.length() > 0) {
-
-                                                jsonArray.put(tiim);
-                                            }
-                                        } catch (JSONException r) {
-                                            r.printStackTrace();
-                                            Log.d("chk", "onClick:error " + r.getMessage());
-                                        }
-                                        Cancelorder(dataa.get(position).get("objid"), refund, refuncost,
-                                                cacenlby, v, dataa.get(position).get("lname"),
-                                                dataa.get(position).get("sname"),
-                                                dataa.get(position).get("lat"),
-                                                dataa.get(position).get("log"),
-                                                dataa.get(position).get("shopStatus"),
-                                                dataa.get(position).get("pin"),
-                                                dataa.get(position).get("phoneNo"),
-                                                dataa.get(position).get("id"),
-                                                dataa.get(position).get("notes"),
-                                                dataa.get(position).get("total"),
-                                                dataa.get(position).get("subtotal"),
-                                                dataa.get(position).get("taxid"),
-                                                dataa.get(position).get("tax"),
-                                                dataa.get(position).get("order"), jsonArray, tot,
-                                                dataa.get(position).get("ispaid"), d1,
-                                                refundtrans, refundper, pikCharges, pikPercentage,
-                                                dataa.get(position).get("userid"), refundForBusiness,
-                                                dataa.get(position).get("shop_name"),
-                                                dataa.get(position).get("shop_phno"),
-                                                dataa.get(position).get("tranRef"),
-                                                dataa.get(position).get("discountAmount"),
-                                                dataa.get(position).get("offerDetails"),
-                                                dataa.get(position).get("offerEnabled"),position);
-                                    } catch (ParseException r) {
-                                        r.printStackTrace();
+                                SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                                        Locale.ENGLISH);
+                                Date d1;
+                                Date c = Calendar.getInstance().getTime();
+                                String cacenlby = String.valueOf(object.get("cancelledBy"));
+                                String refuncost = String.valueOf(object.get("refundCost"));
+                                String refundtrans = String.valueOf(object.get("refundTrans"));
+                                String refundper = String.valueOf(object.get("refundPercentage"));
+                                String pikPercentage = String.valueOf(object.get("pikPercentage"));
+                                String pikCharges = String.valueOf(object.get("pikCharges"));
+                                String refundForBusiness = String.valueOf(object.get("refundForBusiness"));
+                                String refund = String.valueOf(object.get("refund"));
+                                try {
+                                    Double tr = Double.valueOf(dataa.get(position).get("totaltime"));
+                                    if (Build.VERSION.SDK_INT >= 23) {
+                                        d1 = date1.parse(dataa.get(position).get("date"));
+                                        // Call some material design APIs here
+                                    } else {
+                                        DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                                        d1 = (Date) formatter.parse(dataa.get(position).get("date"));
                                     }
+                                    long different = c.getTime() - d1.getTime();
+                                    long secondsInMilli = 1000;
+                                    long minutesInMilli = secondsInMilli * 60;
+                                    long elapsedMinutes = different / minutesInMilli;
+                                    different = different % minutesInMilli;
+                                    long elapsedSeconds = different / secondsInMilli;
+                                    String tot = String.valueOf(tr + elapsedMinutes);
+                                    String tiim = elapsedMinutes + "." + elapsedSeconds;
 
-                                } else {
-                                    Log.d("chk", "done:error ==" + e.getMessage());
+                                    JSONArray jsonArray = null;
+                                    try {
+                                        jsonArray = new JSONArray(dataa.get(position).get("time"));
+
+                                        if (jsonArray.length() > 0) {
+
+                                            jsonArray.put(tiim);
+                                        }
+                                    } catch (JSONException r) {
+                                        r.printStackTrace();
+                                        Log.d("chk", "onClick:error " + r.getMessage());
+                                    }
+                                    Cancelorder(dataa.get(position).get("objid"), refund, refuncost,
+                                            cacenlby, v, dataa.get(position).get("lname"),
+                                            dataa.get(position).get("sname"),
+                                            dataa.get(position).get("lat"),
+                                            dataa.get(position).get("log"),
+                                            dataa.get(position).get("shopStatus"),
+                                            dataa.get(position).get("pin"),
+                                            dataa.get(position).get("phoneNo"),
+                                            dataa.get(position).get("id"),
+                                            dataa.get(position).get("notes"),
+                                            dataa.get(position).get("total"),
+                                            dataa.get(position).get("subtotal"),
+                                            dataa.get(position).get("taxid"),
+                                            dataa.get(position).get("tax"),
+                                            dataa.get(position).get("order"), jsonArray, tot,
+                                            dataa.get(position).get("ispaid"), d1,
+                                            refundtrans, refundper, pikCharges, pikPercentage,
+                                            dataa.get(position).get("userid"), refundForBusiness,
+                                            dataa.get(position).get("shop_name"),
+                                            dataa.get(position).get("shop_phno"),
+                                            dataa.get(position).get("tranRef"),
+                                            dataa.get(position).get("discountAmount"),
+                                            dataa.get(position).get("offerDetails"),
+                                            dataa.get(position).get("offerEnabled"),position);
+                                } catch (ParseException r) {
+                                    r.printStackTrace();
                                 }
-                            }
-                        });
 
-                    }
-                    stat2 = true;
+                            } else {
+                                Log.d("chk", "done:error ==" + e.getMessage());
+                            }
+                        }
+                    });
+
+                }
+                stat2 = true;
 //                }
             }
         });
 
-       holder.stsbtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
+        holder.stsbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //               if (shop_sts.equals("2")) {
 //                   Toast.makeText(context, "Shop is disabled. Please contact support", Toast.LENGTH_SHORT).show();
 //
 //               } else {
-                   holder.cancelbtn.setEnabled(false);
-                   if (stat1) {
-                       holder.stsbtn.setBackgroundColor(ContextCompat.getColor(context, R.color.blue));
-                   } else {
-                       dialog = new ProgressDialog(v.getContext());
-                       dialog.setMessage("Please wait.....");
-                       dialog.setCancelable(false);
-                       dialog.show();
-                       holder.stsbtn.setBackgroundColor(ContextCompat.getColor(context, R.color.darkblue));
-                       SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-                               Locale.ENGLISH);
-                       Date d1 = null;
-                       Date c = Calendar.getInstance().getTime();
-                       try {
-                           double tr;
-                           try {
-                               tr = new Double(dataa.get(position).get("totaltime"));
-                           } catch (NumberFormatException f) {
-                               tr = 0; // your default value
-                           }
-                           if (Build.VERSION.SDK_INT >= 23) {
-                               d1 = date1.parse(dataa.get(position).get("date"));
-                               // Call some material design APIs here
-                           } else {
-                               DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
-                               d1 = (Date) formatter.parse(dataa.get(position).get("date"));
-                           }
-                           long different = c.getTime() - d1.getTime();
-                           long secondsInMilli = 1000;
-                           long minutesInMilli = secondsInMilli * 60;
-                           long elapsedMinutes = different / minutesInMilli;
-                           different = different % minutesInMilli;
-                           long elapsedSeconds = different / secondsInMilli;
-                           String tot = String.valueOf(tr + elapsedMinutes);
-                           String tiim = elapsedMinutes + "." + elapsedSeconds;
-                           JSONArray jsonArray = null;
-                           try {
-                               jsonArray = new JSONArray(dataa.get(position).get("time"));
+                holder.cancelbtn.setEnabled(false);
+                if (stat1) {
+                    holder.stsbtn.setBackgroundColor(ContextCompat.getColor(context, R.color.blue));
+                } else {
+                    dialog = new ProgressDialog(v.getContext());
+                    dialog.setMessage("Please wait.....");
+                    dialog.setCancelable(false);
+                    dialog.show();
+                    holder.stsbtn.setBackgroundColor(ContextCompat.getColor(context, R.color.darkblue));
+                    SimpleDateFormat date1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                            Locale.ENGLISH);
+                    Date d1 = null;
+                    Date c = Calendar.getInstance().getTime();
+                    try {
+                        double tr;
+                        try {
+                            tr = new Double(dataa.get(position).get("totaltime"));
+                        } catch (NumberFormatException f) {
+                            tr = 0; // your default value
+                        }
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            d1 = date1.parse(dataa.get(position).get("date"));
+                            // Call some material design APIs here
+                        } else {
+                            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+                            d1 = (Date) formatter.parse(dataa.get(position).get("date"));
+                        }
+                        long different = c.getTime() - d1.getTime();
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long elapsedMinutes = different / minutesInMilli;
+                        different = different % minutesInMilli;
+                        long elapsedSeconds = different / secondsInMilli;
+                        String tot = String.valueOf(tr + elapsedMinutes);
+                        String tiim = elapsedMinutes + "." + elapsedSeconds;
+                        JSONArray jsonArray = null;
+                        try {
+                            jsonArray = new JSONArray(dataa.get(position).get("time"));
 
-                               if (jsonArray.length() > 0) {
+                            if (jsonArray.length() > 0) {
 
-                                   jsonArray.put(tiim);
-                               }
-                           } catch (JSONException e) {
-                               e.printStackTrace();
-                               Log.d("chk", "onClick: " + e.getMessage());
-                           }
+                                jsonArray.put(tiim);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.d("chk", "onClick: " + e.getMessage());
+                        }
 
-                           Changestatus(dataa.get(position).get("objid"),
-                                   dataa.get(position).get("lname"),
-                                   dataa.get(position).get("sname"),
-                                   dataa.get(position).get("lat"),
-                                   dataa.get(position).get("log"),
-                                   dataa.get(position).get("shopStatus"),
-                                   dataa.get(position).get("pin"),
-                                   dataa.get(position).get("phoneNo"),
-                                   dataa.get(position).get("id"), v, jsonArray, tot,
-                                   dataa.get(position).get("userid"));
+                        Changestatus(dataa.get(position).get("objid"),
+                                dataa.get(position).get("lname"),
+                                dataa.get(position).get("sname"),
+                                dataa.get(position).get("lat"),
+                                dataa.get(position).get("log"),
+                                dataa.get(position).get("shopStatus"),
+                                dataa.get(position).get("pin"),
+                                dataa.get(position).get("phoneNo"),
+                                dataa.get(position).get("id"), v, jsonArray, tot,
+                                dataa.get(position).get("userid"));
 
-                       } catch (ParseException e) {
-                           e.printStackTrace();
-                       }
-                   }
-                   stat1 = true;
-               }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                stat1 = true;
+            }
 //           }
-       });
+        });
 
     }
     public void update(ArrayList<HashMap<String, String>> data) {
@@ -732,9 +734,9 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
 
                             dataa.remove(position);
                             notifyDataSetChanged();
-                     //       ((OrderListActivity)context).updateInProgressCount(dataa);
+                            ((OrderListActivity)context).updateInProgressCount(dataa);
 
-//                            Intent i = new Intent(v.getContext(),OrderListActivity.class);
+//                            Intent i = new Intent(v.getContext(),Orderslist.class);
 //                            i.putExtra("lname",lname);
 //                            i.putExtra("tvBusinessName",sname);
 //                            i.putExtra("id",id);
@@ -788,7 +790,7 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
                     }
 
                 });
-                    alertDialog.dismiss();
+                alertDialog.dismiss();
 
             } else {
 //                Log.d("chk", "done: "+e.getMessage());
@@ -835,19 +837,19 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
 //                                Log.d("chk", "done:error "+re.getMessage());
                             }
                         });
-//                        Intent i = new Intent(v.getContext(), OrderListActivity.class);
-//                        i.putExtra("lname",lname);
-//                        i.putExtra("tvBusinessName",bname);
-//                        i.putExtra("id",id);
-//                        i.putExtra("lat",lat);
-//                        i.putExtra("log",log);
-//                        i.putExtra("shopStatus",shopStatus);
-//                        i.putExtra("pin",pin);
-//                        i.putExtra("sts","2");
-//                        i.putExtra("phoneNo",phoneNo);
-//                        i.putExtra("stschk", "1");
-//                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//                        v.getContext().startActivity(i);
+                        Intent i = new Intent(v.getContext(),OrderListActivity.class);
+                        i.putExtra("lname",lname);
+                        i.putExtra("tvBusinessName",bname);
+                        i.putExtra("id",id);
+                        i.putExtra("lat",lat);
+                        i.putExtra("log",log);
+                        i.putExtra("shopStatus",shopStatus);
+                        i.putExtra("pin",pin);
+                        i.putExtra("sts","2");
+                        i.putExtra("phoneNo",phoneNo);
+                        i.putExtra("stschk", "1");
+                        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        v.getContext().startActivity(i);
 //                        update(dataa);
 //                        notifyDataSetChanged();
                         Toast.makeText(context, "Order Ready ", Toast.LENGTH_SHORT).show();
@@ -874,7 +876,7 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
         @BindView(R.id.vatprice) TextView vatprice;
         @BindView(R.id.subtotal) TextView subtotal;
         @BindView(R.id.itemslist)RecyclerView itemslist;
-       // @BindView(R.id.itemslay) LinearLayout itemslay;
+        @BindView(R.id.itemslay) LinearLayout itemslay;
         @BindView(R.id.headcolor) LinearLayout headcolor;
         @BindView(R.id.total) TextView total;
         @BindView(R.id.stsbtn) Button stsbtn;
@@ -962,11 +964,11 @@ public class InProgressAdapter extends RecyclerView.Adapter<InProgressAdapter.My
 
             public MyViewHolder2(View itemView) {
                 super(itemView);
-//
-//                catname = itemView.findViewById(R.id.category_name);
-//                itemname = itemView.findViewById(R.id.itemname);
-//                itemprice = itemView.findViewById(R.id.itemprice);
-//                extraname = itemView.findViewById(R.id.extraname);
+
+                catname = itemView.findViewById(R.id.category_name);
+                itemname = itemView.findViewById(R.id.item_name);
+                itemprice = itemView.findViewById(R.id.item_price);
+                extraname = itemView.findViewById(R.id.extra_name);
 
             }
         }

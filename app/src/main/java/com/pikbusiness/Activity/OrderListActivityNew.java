@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
@@ -62,8 +60,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,7 +85,7 @@ public class OrderListActivityNew extends AppCompatActivity {
     private List<Orders> newOrderList;
     private List<Orders> progressList;
     private List<Orders> readyList;
-    private Handler mHandler;
+    //private Handler mHandler;
 
     private AlertDialog alertDialog;
 
@@ -109,15 +105,18 @@ public class OrderListActivityNew extends AppCompatActivity {
     private Context mContext;
     @BindView(R.id.ordExpandableList)
     ExpandableListView orderExpandableList;
+    @BindView(R.id.ll_expandable_list)
+    LinearLayout llExpandableList;
+
     private OrderListAdapter orderAdapter;
     List<String> listDataHeader;
     HashMap<String, List<Orders>> listDataChild;
     private List<OrderItem> orderItemList;
-    TimerTask timerTask;
-    Timer updateTimer = new Timer();
+
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private int lastSelectedSize;
+    int lastNewOrderListSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +131,7 @@ public class OrderListActivityNew extends AppCompatActivity {
 
         orderItemList = new ArrayList<>();
 
-        this.mHandler = new Handler();
+        //  mHandler = new Handler();
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Reg", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         loginPassword = pref.getString("Pass", null);
@@ -160,7 +159,6 @@ public class OrderListActivityNew extends AppCompatActivity {
 //            phoneNo = getIntent().getStringExtra("phoneNo");
         }
 
-        start();
 
         tvShopName.setText(businessName);
         tvShopLocation.setText(locationName);
@@ -177,7 +175,6 @@ public class OrderListActivityNew extends AppCompatActivity {
             }
         }
 
-//        m_Runnable.run();
 
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<Orders>>();
@@ -188,32 +185,24 @@ public class OrderListActivityNew extends AppCompatActivity {
         listDataHeader.add("IN PROGRESS");
         listDataHeader.add("READY FOR PICK UP");
 
-        if (checkInternetConnection()) {
-            ll_progressBar.setVisibility(View.VISIBLE);
-            orderExpandableList.setVisibility(View.GONE);
-            newOrderList = new ArrayList<>();
-            progressList = new ArrayList<>();
-            readyList = new ArrayList<>();
-            initiateData();
-            new getOrderList().execute();
-        }
+
+        ll_progressBar.setVisibility(View.VISIBLE);
+        llExpandableList.setVisibility(View.GONE);
 
 
-//        orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild, orderExpandableList);
-//        orderExpandableList.setAdapter(orderAdapter);
+        executeToGetOrderList();
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)mSwipeRefreshLayout.getLayoutParams();
-        params.setMargins(0, 0, 0, 90);
-        mSwipeRefreshLayout.setLayoutParams(params);
-        mSwipeRefreshLayout.requestLayout();
-        mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary));
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 newOrderList = new ArrayList<>();
                 progressList = new ArrayList<>();
                 readyList = new ArrayList<>();
+                llExpandableList.setVisibility(View.GONE);
+                ll_progressBar.setVisibility(View.VISIBLE);
                 new getOrderList().execute();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -234,11 +223,11 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                             tvShopStatus.setText("Online");
                             onOff(objectId, 1, "You will receive orders now");
-                            restart();
+                            //restart();
                         } else {
-                            stop();
+                            //stop();
                             if (object.size() > 0) {
-                                restart();
+                                //    restart();
                                 offlinePopup();
                                 toggleSwitch.setChecked(true);
                                 tvShopStatus.setText("Online");
@@ -246,7 +235,7 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                                 tvShopStatus.setText("Offline");
                                 onOff(objectId, 0, "You will not receive orders");
-                                stop();
+                                // stop();
 
                             }
                         }
@@ -330,17 +319,49 @@ public class OrderListActivityNew extends AppCompatActivity {
 
     }
 
-    public void start() {
-        mHandler.postDelayed(m_Runnable, 5000);
-    }
+//    private void startThread() {
+//
+//
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            executeToGetOrderList();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//            }
+//        }, 20000);//after 10 second execute API
 
-    public void stop() {
-        mHandler.removeCallbacks(m_Runnable);
-    }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mHandler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        // Actions to do after 10 seconds
+//                        executeToGetOrderList();
+//                    }
+//                }, 5000);
+//            }
+//        }).start();
 
-    public void restart() {
-        mHandler.removeCallbacks(m_Runnable);
-        mHandler.postDelayed(m_Runnable, 5000);
+    // }
+
+
+    public void executeToGetOrderList() {
+        if (checkInternetConnection()) {
+            newOrderList = new ArrayList<>();
+            progressList = new ArrayList<>();
+            readyList = new ArrayList<>();
+            initiateData();
+            new getOrderList().execute();
+            //    startThread();
+        }
     }
 
 
@@ -367,13 +388,6 @@ public class OrderListActivityNew extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mHandler.removeCallbacks(m_Runnable);
-
     }
 
 
@@ -507,41 +521,43 @@ public class OrderListActivityNew extends AppCompatActivity {
         toast.show();
     }
 
-    private final Runnable m_Runnable = new Runnable() {
-        public void run() {
-            Log.d("chk", "running : ");
-            if (checkInternetConnection()) {
-//
-//                ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
-//                ParseObject obj = ParseObject.createWithoutData("ShopLocations", objectId);
-//                query.whereEqualTo("shop", obj);
-//                query.whereEqualTo("orderStatus", 0);
-//                query.whereEqualTo("isPaid", true);
-//                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-//                query.orderByDescending("updatedAt");
-//                query.findInBackground((object, e) -> {
-//                    if (e == null) {
-//
-//                        if (object.size() > 0) {
-//
-//                            newOrderList = new ArrayList<>();
-//                            progressList = new ArrayList<>();
-//                            readyList = new ArrayList<>();
-//                            new getOrderList().execute();
-//                        }
-//                    }
-//                });
-            }
-            OrderListActivityNew.this.mHandler.postDelayed(m_Runnable, 5000);
-        }
 
-    };
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mHandler.removeCallbacks(m_Runnable);
-    }
+    //    private final Runnable m_Runnable = new Runnable() {
+//        public void run() {
+//            Log.d("chk", "running : ");
+//            if (checkInternetConnection()) {
+////
+////                ParseQuery<ParseObject> query = ParseQuery.getQuery("Orders");
+////                ParseObject obj = ParseObject.createWithoutData("ShopLocations", objectId);
+////                query.whereEqualTo("shop", obj);
+////                query.whereEqualTo("orderStatus", 0);
+////                query.whereEqualTo("isPaid", true);
+////                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+////                query.orderByDescending("updatedAt");
+////                query.findInBackground((object, e) -> {
+////                    if (e == null) {
+////
+////                        if (object.size() > 0) {
+////
+////                            newOrderList = new ArrayList<>();
+////                            progressList = new ArrayList<>();
+////                            readyList = new ArrayList<>();
+////                            new getOrderList().execute();
+////                        }
+////                    }
+////                });
+//            }
+//            OrderListActivityNew.this.mHandler.postDelayed(m_Runnable, 5000);
+//        }
+//
+//    };
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mHandler.removeCallbacksAndMessages(null);
+//        //  mHandler.removeCallbacks(m_Runnable);
+//    }
 
 
     private void initiateData() {
@@ -556,7 +572,7 @@ public class OrderListActivityNew extends AppCompatActivity {
 
                         if (shopStatus != null) {
                             if (shopStatus.equals("0")) {
-                                stop();
+                                //stop();
                                 stopService(new Intent(OrderListActivityNew.this, Alertservice.class));
                                 toggleSwitch.setChecked(false);
                                 tvShopStatus.setText("Offline");
@@ -564,7 +580,7 @@ public class OrderListActivityNew extends AppCompatActivity {
                                 toggleSwitch.setChecked(true);
                                 tvShopStatus.setText("Online");
                             } else if (shopStatus.equals("2")) {
-                                stop();
+                                //stop();
                                 stopService(new Intent(OrderListActivityNew.this, Alertservice.class));
                                 toggleSwitch.setChecked(false);
                                 tvShopStatus.setText("Disabled");
@@ -636,14 +652,25 @@ public class OrderListActivityNew extends AppCompatActivity {
 
     public void changeStatus(int childPosition, int groupPosition, Orders childData) {
 
-
         if (checkInternetConnection()) {
+
             ll_progressBar.setVisibility(View.VISIBLE);
-            orderExpandableList.setVisibility(View.GONE);
+            llExpandableList.setVisibility(View.GONE);
+
+            listDataHeader = new ArrayList<String>();
+            listDataChild = new HashMap<String, List<Orders>>();
+
+            // Adding child data
+            listDataHeader.add("NEW ORDER");
+            listDataHeader.add("IN PROGRESS");
+            listDataHeader.add("READY FOR PICK UP");
+
+
             initiateData();
             newOrderList = new ArrayList<>();
             progressList = new ArrayList<>();
             readyList = new ArrayList<>();
+
             new getOrderList().execute();
 //            orderAdapter = new OrderListAdapter(this, listDataHeader, listDataChild, orderExpandableList);
 //            orderExpandableList.setAdapter(orderAdapter);
@@ -967,23 +994,28 @@ public class OrderListActivityNew extends AppCompatActivity {
                         listDataChild.put(listDataHeader.get(2), readyList);
 
                         ll_progressBar.setVisibility(View.GONE);
-                        orderExpandableList.setVisibility(View.VISIBLE);
+                        llExpandableList.setVisibility(View.VISIBLE);
+
 
                         orderAdapter = new OrderListAdapter(OrderListActivityNew.this, listDataHeader, listDataChild, orderExpandableList);
                         orderExpandableList.setAdapter(orderAdapter);
 
+//                        if (lastNewOrderListSize < newOrderList.size() || lastNewOrderListSize == 0) {
+//                            orderAdapter = new OrderListAdapter(OrderListActivityNew.this, listDataHeader, listDataChild, orderExpandableList);
+//                            orderExpandableList.setAdapter(orderAdapter);
+//                            lastNewOrderListSize = newOrderList.size();
+//                        } else {
+//                            // do nothing
+//                        }
+
                     }
                 } else {
                     ll_progressBar.setVisibility(View.GONE);
-                    orderExpandableList.setVisibility(View.VISIBLE);
+                    llExpandableList.setVisibility(View.VISIBLE);
                     listDataChild.put(listDataHeader.get(0), newOrderList);
                     listDataChild.put(listDataHeader.get(1), progressList);
                     listDataChild.put(listDataHeader.get(2), readyList);
                 }
-            }
-
-            if (mSwipeRefreshLayout.isRefreshing()) {
-                mSwipeRefreshLayout.setRefreshing(false);
             }
 
 

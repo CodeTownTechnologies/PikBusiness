@@ -110,7 +110,7 @@ public class OrderListAdapter extends BaseExpandableListAdapter
             @Override
             public void run()
             {
-                System.out.println("Task Running ===");
+              //  System.out.println("Task Running ===");
                 mHandler.post(updateRemainingTimeRunnable);
             }
         }, 1000, 1000);
@@ -1310,13 +1310,13 @@ public class OrderListAdapter extends BaseExpandableListAdapter
                                     {
                                         TextView tvTimer = (TextView) getView(R.id.timer);
                                         tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                        System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                       // System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
                                     }
                                     else {
                                         TextView tvTimer = (TextView) getView(R.id.timer);
                                         tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                                "seconds==" + elapsedSeconds);
+                                        //System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+                                            //    "seconds==" + elapsedSeconds);
                                     }
 
                                     if (elapsedHours == 0) {
@@ -1391,12 +1391,12 @@ public class OrderListAdapter extends BaseExpandableListAdapter
                                     if (elapsedHours == 0) {
                                         TextView tvTimer = (TextView) getView(R.id.timer);
                                         tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                        System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                      //  System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
                                     } else {
                                         TextView tvTimer = (TextView) getView(R.id.timer);
                                         tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                                "seconds==" + elapsedSeconds);
+//                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+//                                                "seconds==" + elapsedSeconds);
                                     }
 
                                     if (elapsedHours == 0) {
@@ -1470,12 +1470,12 @@ public class OrderListAdapter extends BaseExpandableListAdapter
                                     if (elapsedHours == 0) {
                                         TextView tvTimer = (TextView) getView(R.id.timer);
                                         tvTimer.setText(elapsedMinutes + ":" + elapsedSeconds);
-                                        System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
+                                      //  System.out.println("minutes==" + elapsedMinutes + ":" + "seconds==" + elapsedSeconds);
                                     } else {
                                         TextView tvTimer = (TextView) getView(R.id.timer);
                                         tvTimer.setText(elapsedHours + ":" + elapsedMinutes + ":" + elapsedSeconds);
-                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
-                                                "seconds==" + elapsedSeconds);
+//                                        System.out.println("elapsedHours==" + elapsedHours + "minutes==" + elapsedMinutes + ":" +
+//                                                "seconds==" + elapsedSeconds);
                                     }
 
                                     if (elapsedHours == 0) {
