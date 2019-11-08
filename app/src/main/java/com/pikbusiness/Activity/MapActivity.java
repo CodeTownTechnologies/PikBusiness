@@ -57,7 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @BindView(R.id.btn_save_location)
     Button save;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
+git co
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

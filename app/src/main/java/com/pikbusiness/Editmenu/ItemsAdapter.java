@@ -123,12 +123,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
                 holder.it_name.setTextColor(context.getResources().getColor(R.color.black));
                 holder.cost.setTextColor(context.getResources().getColor(R.color.black));
                 // for owner
+                dataa.get(position).put("isEnabled","1");
+
                 checkupdate("1", buttonView, dataa.get(position).get("objectid"));
 //                                    Log.d("chk", "done:checkox true "+user.getObjectId());
 
             } else {
                 holder.it_name.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
                 holder.cost.setTextColor(context.getResources().getColor(R.color.lightcolortrans));
+                dataa.get(position).put("isEnabled","0");
                 checkupdate("0", buttonView, dataa.get(position).get("objectid"));
 //                                    Log.d("chk", "done:checkox false "+user.getObjectId());
             }
@@ -443,6 +446,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
 
                                 if (e == null) {
 
+                                    notifyDataSetChanged();
 //                                    Log.d("chk", "done: menus"+shopid);
                                 }
                                 else {

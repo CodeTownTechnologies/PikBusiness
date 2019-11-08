@@ -199,7 +199,7 @@ public class OrderListActivityNew extends AppCompatActivity {
                 newOrderList = new ArrayList<>();
                 progressList = new ArrayList<>();
                 readyList = new ArrayList<>();
-                llExpandableList.setVisibility(View.GONE);
+             //   llExpandableList.setVisibility(View.GONE);
                 ll_progressBar.setVisibility(View.VISIBLE);
                 new getOrderList().execute();
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -655,7 +655,7 @@ public class OrderListActivityNew extends AppCompatActivity {
         if (checkInternetConnection()) {
 
             ll_progressBar.setVisibility(View.VISIBLE);
-            llExpandableList.setVisibility(View.GONE);
+           // llExpandableList.setVisibility(View.GONE);
 
             listDataHeader = new ArrayList<String>();
             listDataChild = new HashMap<String, List<Orders>>();

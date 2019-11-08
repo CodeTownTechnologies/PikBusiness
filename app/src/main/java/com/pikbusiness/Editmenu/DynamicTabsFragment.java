@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.pikbusiness.R;
@@ -111,6 +110,7 @@ public class DynamicTabsFragment extends Fragment {
             if (pin.length() > 1)
             {
 
+                ll_progressBar.setVisibility(View.VISIBLE);
                 new GetCategories().execute(cat_objectid);
 //                outletmeuitems(cat_objectid,shopid);
             }
@@ -420,8 +420,6 @@ public class DynamicTabsFragment extends Fragment {
     }
 
 
-
-
     private class GetCategories extends AsyncTask<String, Void, List<ParseObject>> {
 
         @Override
@@ -472,6 +470,7 @@ public class DynamicTabsFragment extends Fragment {
                             map.put("sts", String.valueOf(firsttime_login));
                         }
                         map.put("outofstock",String.valueOf(user.getJSONArray("outOfStock")));
+                        System.out.println("out of stock==" + String.valueOf(user.getJSONArray("outOfStock")));
                         map.put("isEnabled",String.valueOf(user.getNumber("isEnabled")));
                         map.put("menus_objectid",user.getObjectId());
                         map.put("price",pricee);
@@ -517,6 +516,8 @@ public class DynamicTabsFragment extends Fragment {
 
         }
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

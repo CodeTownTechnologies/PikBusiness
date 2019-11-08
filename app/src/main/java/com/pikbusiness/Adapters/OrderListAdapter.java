@@ -933,8 +933,9 @@ public class OrderListAdapter extends BaseExpandableListAdapter
                         tvVatText.setText("Vat" + " " + tax + "%");
                         totalPrice = itemPriceIncludingExtra + totalPrice;
                         tvSubTotal.setText(totalPrice + " " + currencyType);
-                        Double taxCalculation = totalPrice * (Double.parseDouble(tax)/100);
-                        tvVatPrice.setText(taxCalculation + " " + currencyType);
+                        Double taxCalculation = totalPrice * (Double.parseDouble(tax)/10);
+                     //   tvVatPrice.setText(new DecimalFormat("##.##").format(taxCalculation) + "" + currencyType);
+                        tvVatPrice.setText(String.format("%.2f", taxCalculation) + " " + currencyType);
                         finalPrice = totalPrice + taxCalculation;
                         tvTotal.setText(finalPrice + " " + currencyType);
                         // item.setTotalPrice(totalPrice);

@@ -53,7 +53,8 @@ import static android.text.Html.fromHtml;
 public class EditMenuTabsActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.progressBar)ProgressBar pDialog;
+    @BindView(R.id.progressBar)
+    ProgressBar pDialog;
     @BindView(R.id.toolbar)Toolbar toolbar;
     @BindView(R.id.viewpager)ViewPager viewPager;
     @BindView(R.id.tabs)TabLayout tabLayout;
@@ -115,6 +116,7 @@ public class EditMenuTabsActivity extends AppCompatActivity {
         savebtn.setVisibility(View.GONE);
         if(pin != null){
             if(pin.length() >0 ){
+                pDialog.setVisibility(View.VISIBLE);
                 new GetCategories().execute();
                 savebtn.setVisibility(View.VISIBLE);
                 savebtn.setOnClickListener(new View.OnClickListener() {
@@ -259,6 +261,7 @@ public class EditMenuTabsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<ParseObject> result) {
+            pDialog.setVisibility(View.GONE);
             if(result != null) {
 
                 cat_objids = new ArrayList<HashMap<Integer,String>>();
